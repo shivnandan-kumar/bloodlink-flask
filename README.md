@@ -1,6 +1,6 @@
 # BloodLink - Blood Donor Network
 
-BloodLink is a Flask-based blood donor network project.
+BloodLink is a full-stack Flask application for blood donor matching, request verification, and emergency blood requests.
 
 ## Step 1
 
