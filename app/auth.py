@@ -1,5 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
 from app.models import User
@@ -43,8 +44,13 @@ def register():
                 blood_group=blood_group,
             )
             user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
+            try:
+                db.session.add(user)
+                db.session.commit()
+            except SQLAlchemyError:
+                db.session.rollback()
+                flash("Registration could not be completed. Please try again.", "danger")
+                return render_template("register.html", blood_groups=BLOOD_GROUPS)
 
             flash("Registration successful. Please login.", "success")
             return redirect(url_for("auth.login"))
@@ -83,4 +89,3 @@ def logout():
     logout_user()
     flash("You have been logged out.", "info")
     return redirect(url_for("main.home"))
-
