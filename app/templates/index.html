@@ -1,26 +1,41 @@
 {% extends "base.html" %}
 
 {% block title %}Home | BloodLink{% endblock %}
+{% block body_class %}home-page{% endblock %}
 
 {% block content %}
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9 col-xl-8">
-                <p class="text-danger fw-semibold mb-2">Blood Donor Network</p>
-                <h1 class="display-5 fw-bold">Connect blood requesters with nearby donors.</h1>
-                <p class="lead text-secondary mt-3">
-                    BloodLink will help users register, become donors, create blood requests,
-                    and find matching donors in their city.
-                </p>
-                <div class="d-flex gap-2 mt-4">
+<section class="home-hero">
+    <div class="container hero-content">
+        <div class="hero-copy">
+            <p class="hero-eyebrow">Blood donor network</p>
+            <h1>BloodLink</h1>
+            <p class="hero-lead">A dependable way to connect people who need blood with donors in their city.</p>
+            <div class="d-flex flex-wrap gap-3 mt-4">
                     {% if current_user.is_authenticated %}
-                        <a class="btn btn-danger" href="{{ url_for('main.dashboard') }}">Open Dashboard</a>
+                        <a class="btn btn-light btn-lg" href="{{ url_for('main.dashboard') }}">Open dashboard</a>
                     {% else %}
-                        <a class="btn btn-danger" href="{{ url_for('auth.register') }}">Get Started</a>
+                        <a class="btn btn-light btn-lg" href="{{ url_for('auth.register') }}">Join BloodLink</a>
+                        <a class="btn btn-hero-outline btn-lg" href="{{ url_for('auth.login') }}">Login</a>
                     {% endif %}
-                    <a class="btn btn-outline-danger" href="#">Learn More</a>
-                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="network-strip" aria-label="BloodLink network overview">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-4 network-stat">
+                <strong>8</strong>
+                <span>Blood groups</span>
+            </div>
+            <div class="col-4 network-stat">
+                <strong>2</strong>
+                <span>Ways to help</span>
+            </div>
+            <div class="col-4 network-stat">
+                <strong>1</strong>
+                <span>Shared network</span>
             </div>
         </div>
     </div>

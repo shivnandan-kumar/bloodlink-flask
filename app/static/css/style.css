@@ -1,50 +1,360 @@
-body {
-    background: #fff8f8;
+:root {
+    --blood: #c81d3a;
+    --blood-dark: #9f1730;
+    --charcoal: #182126;
+    --muted: #667178;
+    --line: #dfe4e4;
+    --surface: #ffffff;
+    --canvas: #f4f6f5;
+    --teal: #167b73;
 }
 
-.auth-container {
+* {
+    letter-spacing: 0;
+}
+
+body {
+    background: var(--canvas);
+    color: var(--charcoal);
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.app-navbar {
+    background: rgba(255, 255, 255, 0.97);
+    border-bottom: 1px solid var(--line);
+    min-height: 68px;
+    position: relative;
+    z-index: 20;
+}
+
+.brand-lockup {
+    align-items: center;
+    color: var(--charcoal);
+    display: inline-flex;
+    font-size: 1.05rem;
+    font-weight: 750;
+    gap: 10px;
+}
+
+.brand-lockup:hover {
+    color: var(--blood);
+}
+
+.brand-mark {
+    align-items: center;
+    background: var(--blood);
+    border-radius: 50% 50% 50% 12%;
+    color: #ffffff;
+    display: inline-flex;
+    font-size: 0.8rem;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+}
+
+.nav-link {
+    color: #39454b;
+    font-size: 0.925rem;
+    font-weight: 600;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--blood);
+}
+
+.user-greeting {
+    color: var(--muted);
+    font-size: 0.875rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn {
+    border-radius: 6px;
+    font-weight: 650;
+}
+
+.btn-blood {
+    background: var(--blood);
+    border-color: var(--blood);
+    color: #ffffff;
+}
+
+.btn-blood:hover,
+.btn-blood:focus {
+    background: var(--blood-dark);
+    border-color: var(--blood-dark);
+    color: #ffffff;
+}
+
+.btn-outline-blood {
+    border-color: #cf9ca5;
+    color: var(--blood);
+}
+
+.btn-outline-blood:hover,
+.btn-outline-blood:focus {
+    background: #fff1f3;
+    border-color: var(--blood);
+    color: var(--blood-dark);
+}
+
+.flash-area {
+    left: 50%;
+    max-width: 1140px;
+    padding: 0 12px;
+    position: fixed;
+    top: 84px;
+    transform: translateX(-50%);
+    width: calc(100% - 24px);
+    z-index: 30;
+}
+
+.alert {
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(15, 27, 32, 0.12);
+}
+
+.home-hero {
+    align-items: center;
+    background-image: url("../images/blood-donation-hero.png");
+    background-position: center;
+    background-size: cover;
+    color: #ffffff;
+    display: flex;
+    min-height: min(72vh, 680px);
+    position: relative;
+}
+
+.home-hero::before {
+    background: rgba(10, 19, 23, 0.63);
+    content: "";
+    inset: 0;
+    position: absolute;
+}
+
+.hero-content {
+    padding-bottom: 72px;
+    padding-top: 72px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-copy {
+    max-width: 620px;
+}
+
+.hero-eyebrow,
+.section-kicker {
+    color: var(--blood);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.hero-eyebrow {
+    color: #ffbbc6;
+    margin-bottom: 12px;
+}
+
+.hero-copy h1 {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.98;
+    margin-bottom: 24px;
+}
+
+.hero-lead {
+    color: #e7ecee;
+    font-size: 1.2rem;
+    line-height: 1.65;
+    max-width: 570px;
+}
+
+.btn-hero-outline {
+    border-color: rgba(255, 255, 255, 0.65);
+    color: #ffffff;
+}
+
+.btn-hero-outline:hover,
+.btn-hero-outline:focus {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: var(--charcoal);
+}
+
+.network-strip {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+}
+
+.network-stat {
+    align-items: baseline;
+    border-right: 1px solid var(--line);
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    min-height: 92px;
+    padding: 24px 12px;
+}
+
+.network-stat:last-child {
+    border-right: 0;
+}
+
+.network-stat strong {
+    color: var(--blood);
+    font-size: 1.75rem;
+}
+
+.network-stat span {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.auth-page {
+    background: var(--surface);
+}
+
+.auth-page main {
+    min-height: calc(100vh - 68px);
+}
+
+.auth-shell {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.9fr) minmax(480px, 1.1fr);
+    min-height: calc(100vh - 68px);
+}
+
+.auth-visual {
+    background-color: rgba(19, 32, 37, 0.2);
+    background-image: url("../images/blood-donation-hero.png");
+    background-blend-mode: multiply;
+    background-position: 66% center;
+    background-size: cover;
+}
+
+.auth-content {
+    align-items: center;
+    display: flex;
+    padding: 48px clamp(28px, 6vw, 88px);
+}
+
+.auth-content-inner {
+    max-width: 500px;
+    width: 100%;
+}
+
+.auth-content-wide {
     max-width: 720px;
 }
 
+.auth-content h1 {
+    font-size: 2rem;
+    font-weight: 780;
+    margin-bottom: 10px;
+}
+
+.auth-intro {
+    color: var(--muted);
+    margin-bottom: 0;
+}
+
 .auth-form {
-    background: #ffffff;
-    border: 1px solid #f1c9c9;
-    border-radius: 8px;
-    padding: 24px;
+    background: transparent;
+}
+
+.form-label {
+    color: #39454b;
+    font-size: 0.875rem;
+    font-weight: 650;
+}
+
+.form-control,
+.form-select {
+    border-color: #cfd6d6;
+    border-radius: 6px;
+    min-height: 46px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--blood);
+    box-shadow: 0 0 0 3px rgba(200, 29, 58, 0.11);
+}
+
+.auth-content a {
+    color: var(--blood);
+    font-weight: 650;
+}
+
+.dashboard-page {
+    background: var(--canvas);
 }
 
 .dashboard-header {
-    background: #ffffff;
+    background: var(--charcoal);
+    color: #ffffff;
+}
+
+.dashboard-header .text-secondary {
+    color: #bbc4c7 !important;
+}
+
+.status-badge {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    color: #ffffff;
+    display: inline-flex;
+    font-size: 0.82rem;
+    gap: 8px;
+    padding: 7px 12px;
+}
+
+.status-badge span {
+    background: #45b99f;
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
 }
 
 .summary-card {
-    background: #ffffff;
-    border: 1px solid #eadede;
+    background: var(--surface);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 20px;
 }
 
 .summary-label {
-    color: #6c757d;
-    font-size: 0.875rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 650;
     margin-bottom: 8px;
 }
 
 .summary-value {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: 750;
     margin-bottom: 0;
     overflow-wrap: anywhere;
 }
 
+.blood-value {
+    color: var(--blood);
+}
+
 .section-heading {
-    border-bottom: 1px solid #eadede;
-    margin-bottom: 0;
+    border-bottom: 1px solid var(--line);
     padding-bottom: 16px;
 }
 
 .account-details > div {
-    border-bottom: 1px solid #eadede;
+    border-bottom: 1px solid var(--line);
     display: grid;
     gap: 8px;
     grid-template-columns: minmax(120px, 1fr) 2fr;
@@ -52,7 +362,7 @@ body {
 }
 
 .account-details dt {
-    color: #6c757d;
+    color: var(--muted);
     font-weight: 500;
 }
 
@@ -62,11 +372,69 @@ body {
 }
 
 .empty-state {
-    border-bottom: 1px solid #eadede;
+    border-bottom: 1px solid var(--line);
     padding: 24px 0;
 }
 
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        padding-bottom: 16px;
+        padding-top: 12px;
+    }
+
+    .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-visual {
+        display: none;
+    }
+
+    .auth-content {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .home-hero {
+        background-position: 62% center;
+        min-height: 68vh;
+    }
+
+    .home-hero::before {
+        background: rgba(10, 19, 23, 0.72);
+    }
+
+    .hero-content {
+        padding-bottom: 56px;
+        padding-top: 56px;
+    }
+
+    .network-stat {
+        align-items: center;
+        flex-direction: column;
+        gap: 2px;
+        text-align: center;
+    }
+
+    .network-stat span {
+        font-size: 0.76rem;
+    }
+
+    .auth-content {
+        padding: 40px 20px;
+    }
+}
+
 @media (max-width: 575.98px) {
+    .hero-copy h1 {
+        font-size: 3rem;
+    }
+
+    .hero-lead {
+        font-size: 1rem;
+    }
+
     .account-details > div {
         grid-template-columns: 1fr;
     }

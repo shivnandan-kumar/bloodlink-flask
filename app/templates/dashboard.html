@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}Dashboard | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
 
 {% block content %}
-<section class="dashboard-header border-bottom">
+<section class="dashboard-header">
     <div class="container py-4 py-md-5">
-        <p class="text-danger fw-semibold mb-2">Dashboard</p>
+        <p class="section-kicker mb-2">Dashboard</p>
         <div class="d-md-flex align-items-end justify-content-between gap-3">
             <div>
                 <h1 class="h2 fw-bold mb-2">Welcome, {{ user.name }}</h1>
                 <p class="text-secondary mb-0">Your BloodLink account overview.</p>
             </div>
-            <span class="badge text-bg-success mt-3 mt-md-0">Account active</span>
+            <span class="status-badge mt-3 mt-md-0"><span></span>Account active</span>
         </div>
     </div>
 </section>
@@ -21,7 +22,7 @@
         <div class="col-sm-6 col-lg-3">
             <div class="summary-card h-100">
                 <p class="summary-label">Blood group</p>
-                <p class="summary-value text-danger">{{ user.blood_group }}</p>
+                <p class="summary-value blood-value">{{ user.blood_group }}</p>
             </div>
         </div>
         <div class="col-sm-6 col-lg-3">
@@ -87,4 +88,3 @@
     </div>
 </section>
 {% endblock %}
-

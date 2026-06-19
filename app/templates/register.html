@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}Register | BloodLink{% endblock %}
+{% block body_class %}auth-page{% endblock %}
 
 {% block content %}
-<section class="py-5">
-    <div class="container auth-container">
-        <div class="mb-4">
-            <p class="text-danger fw-semibold mb-2">Create Account</p>
-            <h1 class="h2 fw-bold">Join the BloodLink network</h1>
-            <p class="text-secondary mb-0">One account can be used as both a donor and a requester.</p>
-        </div>
+<section class="auth-shell auth-shell-register">
+    <div class="auth-visual" aria-hidden="true"></div>
+    <div class="auth-content">
+        <div class="auth-content-inner auth-content-wide">
+            <p class="section-kicker">Create account</p>
+            <h1>Join BloodLink</h1>
+            <p class="auth-intro">One account for donating blood and requesting help.</p>
 
-        <form method="post" class="auth-form">
+        <form method="post" class="auth-form mt-4">
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label" for="name">Full name</label>
@@ -43,13 +44,13 @@
                     <input class="form-control" id="confirm_password" name="confirm_password" type="password" minlength="8" required>
                 </div>
             </div>
-            <button class="btn btn-danger w-100 mt-4" type="submit">Create account</button>
+            <button class="btn btn-blood w-100 mt-4" type="submit">Create account</button>
         </form>
 
         <p class="text-center text-secondary mt-3 mb-0">
             Already registered? <a href="{{ url_for('auth.login') }}">Login</a>
         </p>
+        </div>
     </div>
 </section>
 {% endblock %}
-
