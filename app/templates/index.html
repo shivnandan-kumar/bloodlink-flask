@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Home | BloodLink{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <p class="text-danger fw-semibold mb-2">Blood Donor Network</p>
+                <h1 class="display-5 fw-bold">Connect blood requesters with nearby donors.</h1>
+                <p class="lead text-secondary mt-3">
+                    BloodLink will help users register, become donors, create blood requests,
+                    and find matching donors in their city.
+                </p>
+                <div class="d-flex gap-2 mt-4">
+                    <a class="btn btn-danger" href="#">Get Started</a>
+                    <a class="btn btn-outline-danger" href="#">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="feature-panel p-4">
+                    <h2 class="h5 fw-bold mb-3">Step 1 Features</h2>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">Basic Flask app is ready</li>
+                        <li class="mb-2">Templates folder is connected</li>
+                        <li class="mb-2">Static CSS folder is connected</li>
+                        <li>Config file is added</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
