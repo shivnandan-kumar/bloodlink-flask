@@ -43,19 +43,30 @@ body {
 
 .home-page .brand-lockup,
 .home-page .nav-link,
-.home-page .user-greeting {
+.home-page .user-menu {
     color: #ffffff;
 }
 
 .home-page .brand-lockup:hover,
 .home-page .nav-link:hover,
-.home-page .nav-link:focus {
+.home-page .nav-link:focus,
+.home-page .user-menu:hover,
+.home-page .user-menu:focus {
     color: #ffd7de;
 }
 
 .home-page .brand-mark {
     background: #ffffff;
     color: var(--blood);
+}
+
+.home-page .user-avatar {
+    background: #ffffff;
+    color: var(--blood);
+}
+
+.home-page .nav-link-modern::after {
+    background: #ffffff;
 }
 
 .home-page .btn-outline-blood {
@@ -115,13 +126,82 @@ body {
     color: var(--blood);
 }
 
-.user-greeting {
-    color: var(--muted);
-    font-size: 0.875rem;
-    max-width: 200px;
+.nav-link-modern {
+    position: relative;
+}
+
+.nav-link-modern::after {
+    background: var(--blood);
+    bottom: 2px;
+    content: "";
+    height: 2px;
+    left: 8px;
+    position: absolute;
+    right: 8px;
+    transform: scaleX(0);
+    transition: transform 160ms ease;
+}
+
+.nav-link-modern:hover::after,
+.nav-link-modern:focus::after,
+.nav-link-modern.active::after {
+    transform: scaleX(1);
+}
+
+.user-menu {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--charcoal);
+    display: inline-flex;
+    font-size: 0.9rem;
+    font-weight: 650;
+    gap: 9px;
+    padding: 4px 0 4px 4px;
+}
+
+.user-avatar {
+    align-items: center;
+    background: var(--blood);
+    border-radius: 50%;
+    color: #ffffff;
+    display: inline-flex;
+    font-size: 0.72rem;
+    height: 32px;
+    justify-content: center;
+    width: 32px;
+}
+
+.user-first-name {
+    max-width: 130px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.user-dropdown .dropdown-menu {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 16px 36px rgba(15, 27, 32, 0.14);
+    margin-top: 10px;
+    min-width: 190px;
+    padding: 8px;
+}
+
+.user-dropdown .dropdown-item {
+    border-radius: 5px;
+    font-size: 0.9rem;
+    padding: 9px 10px;
+}
+
+.user-dropdown .dropdown-item:hover,
+.user-dropdown .dropdown-item:focus {
+    background: #f3f5f4;
+    color: var(--charcoal);
+}
+
+.user-dropdown .logout-item {
+    color: var(--blood);
 }
 
 .btn {

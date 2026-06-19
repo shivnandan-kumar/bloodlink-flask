@@ -20,12 +20,26 @@
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                         {% if current_user.is_authenticated %}
-                            <a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
-                            <span class="navbar-text user-greeting">{{ current_user.name }}</span>
-                            <form method="post" action="{{ url_for('auth.logout') }}">
-                                <button class="btn btn-outline-blood btn-sm" type="submit">Logout</button>
-                            </form>
+                            <a class="nav-link nav-link-modern {% if request.endpoint == 'main.home' %}active{% endif %}" href="{{ url_for('main.home') }}">Home</a>
+                            <a class="nav-link nav-link-modern {% if request.endpoint == 'main.dashboard' %}active{% endif %}" href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                            {% set name_parts = current_user.name.split() %}
+                            {% set initials = name_parts[0][0] ~ (name_parts[1][0] if name_parts|length > 1 else '') %}
+                            <div class="dropdown user-dropdown ms-lg-2">
+                                <button class="user-menu dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="user-avatar">{{ initials|upper }}</span>
+                                    <span class="user-first-name">{{ name_parts[0]|title }}</span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" href="{{ url_for('main.dashboard') }}#account-details">Account</a>
+                                    <a class="dropdown-item" href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                                    <div class="dropdown-divider"></div>
+                                    <form method="post" action="{{ url_for('auth.logout') }}">
+                                        <button class="dropdown-item logout-item" type="submit">Logout</button>
+                                    </form>
+                                </div>
+                            </div>
                         {% else %}
+                            <a class="nav-link nav-link-modern {% if request.endpoint == 'main.home' %}active{% endif %}" href="{{ url_for('main.home') }}">Home</a>
                             <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
                             <a class="btn btn-blood btn-sm" href="{{ url_for('auth.register') }}">Register</a>
                         {% endif %}
