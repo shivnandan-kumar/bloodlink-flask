@@ -14,7 +14,11 @@
                     and find matching donors in their city.
                 </p>
                 <div class="d-flex gap-2 mt-4">
-                    <a class="btn btn-danger" href="#">Get Started</a>
+                    {% if current_user.is_authenticated %}
+                        <span class="btn btn-danger disabled">Welcome, {{ current_user.name }}</span>
+                    {% else %}
+                        <a class="btn btn-danger" href="{{ url_for('auth.register') }}">Get Started</a>
+                    {% endif %}
                     <a class="btn btn-outline-danger" href="#">Learn More</a>
                 </div>
             </div>
@@ -33,4 +37,3 @@
     </div>
 </section>
 {% endblock %}
-

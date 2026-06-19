@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Login | BloodLink{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container auth-container">
+        <div class="mb-4">
+            <p class="text-danger fw-semibold mb-2">Welcome Back</p>
+            <h1 class="h2 fw-bold">Login to BloodLink</h1>
+            <p class="text-secondary mb-0">Access your donor and blood request activity.</p>
+        </div>
+
+        <form method="post" class="auth-form">
+            <div class="mb-3">
+                <label class="form-label" for="email">Email address</label>
+                <input class="form-control" id="email" name="email" type="email" value="{{ request.form.get('email', '') }}" maxlength="120" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" id="password" name="password" type="password" required>
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input" id="remember" name="remember" type="checkbox">
+                <label class="form-check-label" for="remember">Remember me</label>
+            </div>
+            <button class="btn btn-danger w-100" type="submit">Login</button>
+        </form>
+
+        <p class="text-center text-secondary mt-3 mb-0">
+            New to BloodLink? <a href="{{ url_for('auth.register') }}">Create an account</a>
+        </p>
+    </div>
+</section>
+{% endblock %}
+

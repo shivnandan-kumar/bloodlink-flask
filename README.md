@@ -22,6 +22,24 @@ This step adds the database foundation:
 - User model
 - First database migration
 
+## Step 3
+
+This step adds user authentication:
+
+- User registration with validation
+- Secure password hashing
+- Login and remember-me session
+- Logout
+- Authentication-aware navbar
+
+Authentication routes:
+
+```text
+/register
+/login
+/logout
+```
+
 ## Run Locally
 
 ```powershell

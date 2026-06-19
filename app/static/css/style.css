@@ -8,3 +8,13 @@ body {
     border-radius: 8px;
 }
 
+.auth-container {
+    max-width: 720px;
+}
+
+.auth-form {
+    background: #ffffff;
+    border: 1px solid #f1c9c9;
+    border-radius: 8px;
+    padding: 24px;
+}

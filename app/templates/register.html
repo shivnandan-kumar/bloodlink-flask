@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Register | BloodLink{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container auth-container">
+        <div class="mb-4">
+            <p class="text-danger fw-semibold mb-2">Create Account</p>
+            <h1 class="h2 fw-bold">Join the BloodLink network</h1>
+            <p class="text-secondary mb-0">One account can be used as both a donor and a requester.</p>
+        </div>
+
+        <form method="post" class="auth-form">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="name">Full name</label>
+                    <input class="form-control" id="name" name="name" type="text" value="{{ request.form.get('name', '') }}" maxlength="100" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="email">Email address</label>
+                    <input class="form-control" id="email" name="email" type="email" value="{{ request.form.get('email', '') }}" maxlength="120" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="city">City</label>
+                    <input class="form-control" id="city" name="city" type="text" value="{{ request.form.get('city', '') }}" maxlength="100" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="blood_group">Blood group</label>
+                    <select class="form-select" id="blood_group" name="blood_group" required>
+                        <option value="">Select blood group</option>
+                        {% for group in blood_groups %}
+                            <option value="{{ group }}" {% if request.form.get('blood_group') == group %}selected{% endif %}>{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="password">Password</label>
+                    <input class="form-control" id="password" name="password" type="password" minlength="8" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="confirm_password">Confirm password</label>
+                    <input class="form-control" id="confirm_password" name="confirm_password" type="password" minlength="8" required>
+                </div>
+            </div>
+            <button class="btn btn-danger w-100 mt-4" type="submit">Create account</button>
+        </form>
+
+        <p class="text-center text-secondary mt-3 mb-0">
+            Already registered? <a href="{{ url_for('auth.login') }}">Login</a>
+        </p>
+    </div>
+</section>
+{% endblock %}
+
