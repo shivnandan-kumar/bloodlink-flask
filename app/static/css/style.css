@@ -27,6 +27,58 @@ body {
     z-index: 20;
 }
 
+.app-navbar .container {
+    min-height: 68px;
+}
+
+.home-page .app-navbar {
+    backdrop-filter: blur(12px);
+    background: rgba(10, 19, 23, 0.42);
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.home-page .brand-lockup,
+.home-page .nav-link,
+.home-page .user-greeting {
+    color: #ffffff;
+}
+
+.home-page .brand-lockup:hover,
+.home-page .nav-link:hover,
+.home-page .nav-link:focus {
+    color: #ffd7de;
+}
+
+.home-page .brand-mark {
+    background: #ffffff;
+    color: var(--blood);
+}
+
+.home-page .btn-outline-blood {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.65);
+    color: #ffffff;
+}
+
+.home-page .btn-outline-blood:hover,
+.home-page .btn-outline-blood:focus {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: var(--blood-dark);
+}
+
+.home-page .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.home-page .navbar-toggler-icon {
+    filter: brightness(0) invert(1);
+}
+
 .brand-lockup {
     align-items: center;
     color: var(--charcoal);
@@ -138,7 +190,7 @@ body {
 
 .hero-content {
     padding-bottom: 72px;
-    padding-top: 72px;
+    padding-top: 140px;
     position: relative;
     z-index: 1;
 }
@@ -382,6 +434,14 @@ body {
         padding-top: 12px;
     }
 
+    .home-page .navbar-collapse {
+        background: rgba(10, 19, 23, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        margin-top: 8px;
+        padding: 14px;
+    }
+
     .auth-shell {
         grid-template-columns: 1fr;
     }
@@ -407,7 +467,7 @@ body {
 
     .hero-content {
         padding-bottom: 56px;
-        padding-top: 56px;
+        padding-top: 124px;
     }
 
     .network-stat {
