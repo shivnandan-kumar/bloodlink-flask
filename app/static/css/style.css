@@ -12,3 +12,62 @@ body {
     border-radius: 8px;
     padding: 24px;
 }
+
+.dashboard-header {
+    background: #ffffff;
+}
+
+.summary-card {
+    background: #ffffff;
+    border: 1px solid #eadede;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.summary-label {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 8px;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    overflow-wrap: anywhere;
+}
+
+.section-heading {
+    border-bottom: 1px solid #eadede;
+    margin-bottom: 0;
+    padding-bottom: 16px;
+}
+
+.account-details > div {
+    border-bottom: 1px solid #eadede;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: minmax(120px, 1fr) 2fr;
+    padding: 16px 0;
+}
+
+.account-details dt {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.account-details dd {
+    margin-bottom: 0;
+    overflow-wrap: anywhere;
+}
+
+.empty-state {
+    border-bottom: 1px solid #eadede;
+    padding: 24px 0;
+}
+
+@media (max-width: 575.98px) {
+    .account-details > div {
+        grid-template-columns: 1fr;
+    }
+}

@@ -15,7 +15,7 @@
                 </p>
                 <div class="d-flex gap-2 mt-4">
                     {% if current_user.is_authenticated %}
-                        <span class="btn btn-danger disabled">Welcome, {{ current_user.name }}</span>
+                        <a class="btn btn-danger" href="{{ url_for('main.dashboard') }}">Open Dashboard</a>
                     {% else %}
                         <a class="btn btn-danger" href="{{ url_for('auth.register') }}">Get Started</a>
                     {% endif %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | BloodLink{% endblock %}
+
+{% block content %}
+<section class="dashboard-header border-bottom">
+    <div class="container py-4 py-md-5">
+        <p class="text-danger fw-semibold mb-2">Dashboard</p>
+        <div class="d-md-flex align-items-end justify-content-between gap-3">
+            <div>
+                <h1 class="h2 fw-bold mb-2">Welcome, {{ user.name }}</h1>
+                <p class="text-secondary mb-0">Your BloodLink account overview.</p>
+            </div>
+            <span class="badge text-bg-success mt-3 mt-md-0">Account active</span>
+        </div>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="summary-card h-100">
+                <p class="summary-label">Blood group</p>
+                <p class="summary-value text-danger">{{ user.blood_group }}</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="summary-card h-100">
+                <p class="summary-label">City</p>
+                <p class="summary-value">{{ user.city }}</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="summary-card h-100">
+                <p class="summary-label">Blood requests</p>
+                <p class="summary-value">0</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="summary-card h-100">
+                <p class="summary-label">Completed donations</p>
+                <p class="summary-value">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <section aria-labelledby="account-heading">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1" id="account-heading">Account details</h2>
+                    <p class="text-secondary mb-0">Information saved during registration.</p>
+                </div>
+                <dl class="account-details mb-0">
+                    <div>
+                        <dt>Full name</dt>
+                        <dd>{{ user.name }}</dd>
+                    </div>
+                    <div>
+                        <dt>Email</dt>
+                        <dd>{{ user.email }}</dd>
+                    </div>
+                    <div>
+                        <dt>Account role</dt>
+                        <dd>{{ "Admin" if user.is_admin else "Member" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Joined</dt>
+                        <dd>{{ user.created_at.strftime("%d %B %Y") }}</dd>
+                    </div>
+                </dl>
+            </section>
+        </div>
+
+        <div class="col-lg-5">
+            <section aria-labelledby="activity-heading">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1" id="activity-heading">Recent activity</h2>
+                    <p class="text-secondary mb-0">Your latest BloodLink activity.</p>
+                </div>
+                <div class="empty-state">
+                    <p class="fw-semibold mb-1">No activity yet</p>
+                    <p class="text-secondary mb-0">Donation and blood request activity will appear here.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

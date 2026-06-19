@@ -40,6 +40,21 @@ Authentication routes:
 /logout
 ```
 
+## Step 4
+
+This step adds the protected user dashboard:
+
+- Account summary
+- Registered user details
+- Account status
+- Empty activity state
+
+Dashboard route:
+
+```text
+/dashboard
+```
+
 ## Run Locally
 
 ```powershell
