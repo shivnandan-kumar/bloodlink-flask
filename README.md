@@ -12,6 +12,16 @@ This step creates the basic Flask project structure:
 - Static folder
 - Basic home page
 
+## Step 2
+
+This step adds the database foundation:
+
+- SQLite database configuration
+- Flask-SQLAlchemy setup
+- Flask-Migrate setup
+- User model
+- First database migration
+
 ## Run Locally
 
 ```powershell
@@ -27,3 +37,9 @@ Open this URL in your browser:
 http://127.0.0.1:5000
 ```
 
+## Database Commands
+
+```powershell
+flask db migrate -m "Create user model"
+flask db upgrade
+```
