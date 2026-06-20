@@ -86,7 +86,7 @@ python run.py
 Open this URL in your browser:
 
 ```text
-http://127.0.0.1:5000
+http://127.0.0.1:5001
 ```
 
 ## Database Commands
