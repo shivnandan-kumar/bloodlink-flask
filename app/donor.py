@@ -150,6 +150,9 @@ def edit():
             donor_profile.is_available = data["is_available"]
             donor_profile.medical_eligible = data["medical_eligible"]
             donor_profile.verification_status = "Pending"
+            donor_profile.reviewed_by_id = None
+            donor_profile.reviewed_at = None
+            donor_profile.rejection_reason = None
             current_user.city = data["city"]
             current_user.blood_group = data["blood_group"]
 

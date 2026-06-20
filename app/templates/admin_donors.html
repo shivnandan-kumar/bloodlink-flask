@@ -11,16 +11,15 @@
     <div class="admin-table-header"><div><h2>All donors</h2><p>{{ donors|length }} donor profile{{ "s" if donors|length != 1 else "" }}</p></div></div>
     <div class="table-responsive admin-table-wrap">
         <table class="table admin-table align-middle mb-0">
-            <thead><tr><th>Donor</th><th>Blood group</th><th>Phone</th><th>Availability</th><th>Verification</th></tr></thead>
+            <thead><tr><th>Donor</th><th>Blood group</th><th>Phone</th><th>Availability</th><th>Verification</th><th></th></tr></thead>
             <tbody>
                 {% for donor in donors %}
-                    <tr><td><div class="table-person"><span class="admin-avatar">{{ donor.user.name[0]|upper }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.user.city }}</small></span></div></td><td><strong class="blood-value">{{ donor.user.blood_group }}</strong></td><td>{{ donor.phone }}</td><td>{{ "Available" if donor.is_available else "Unavailable" }}</td><td><span class="verification-chip donor-status-{{ donor.verification_status|lower }}">{{ donor.verification_status }}</span></td></tr>
+                    <tr><td><div class="table-person"><span class="admin-avatar">{{ donor.user.name[0]|upper }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.user.city }}</small></span></div></td><td><strong class="blood-value">{{ donor.user.blood_group }}</strong></td><td>{{ donor.phone }}</td><td>{{ "Available" if donor.is_available else "Unavailable" }}</td><td><span class="verification-chip donor-status-{{ donor.verification_status|lower }}">{{ donor.verification_status }}</span></td><td><a class="table-action" href="{{ url_for('admin.donor_detail', donor_id=donor.id) }}">Review</a></td></tr>
                 {% else %}
-                    <tr><td colspan="5" class="text-center text-secondary py-5">No donor profiles found.</td></tr>
+                    <tr><td colspan="6" class="text-center text-secondary py-5">No donor profiles found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </section>
 {% endblock %}
-

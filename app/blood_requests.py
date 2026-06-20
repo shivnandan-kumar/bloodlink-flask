@@ -152,8 +152,8 @@ def detail(request_id):
 @login_required
 def edit(request_id):
     blood_request_record = get_owned_request_or_404(request_id)
-    if blood_request_record.status != "Pending":
-        flash("Only pending requests can be edited.", "warning")
+    if blood_request_record.status not in ("Pending", "Rejected"):
+        flash("Only pending or rejected requests can be edited.", "warning")
         return redirect(url_for("blood_request.detail", request_id=request_id))
 
     if request.method == "POST":
@@ -161,6 +161,10 @@ def edit(request_id):
         if data:
             for field, value in data.items():
                 setattr(blood_request_record, field, value)
+            blood_request_record.status = "Pending"
+            blood_request_record.reviewed_by_id = None
+            blood_request_record.reviewed_at = None
+            blood_request_record.rejection_reason = None
             try:
                 db.session.commit()
             except SQLAlchemyError:
@@ -197,4 +201,3 @@ def cancel(request_id):
     else:
         flash("Blood request cancelled.", "info")
     return redirect(url_for("blood_request.detail", request_id=request_id))
-

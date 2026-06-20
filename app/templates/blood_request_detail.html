@@ -16,7 +16,7 @@
                 <h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1>
                 <p class="text-secondary mb-0">{{ blood_request_record.hospital_name }}, {{ blood_request_record.city }}</p>
             </div>
-            {% if blood_request_record.status == "Pending" %}
+            {% if blood_request_record.status in ("Pending", "Rejected") %}
                 <a class="btn btn-blood mt-3 mt-md-0" href="{{ url_for('blood_request.edit', request_id=blood_request_record.id) }}">
                     <i data-lucide="pencil" aria-hidden="true"></i>
                     Edit request
@@ -62,6 +62,12 @@
                 <div class="request-status-panel">
                     <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
                     <p class="mt-3 mb-0">{{ "Waiting for admin verification." if blood_request_record.status == "Pending" else "This request is " ~ blood_request_record.status|lower ~ "." }}</p>
+                    {% if blood_request_record.status == "Rejected" and blood_request_record.rejection_reason %}
+                        <div class="rejection-note"><strong>Rejection reason</strong><p>{{ blood_request_record.rejection_reason }}</p></div>
+                    {% endif %}
+                    {% if blood_request_record.reviewed_at %}
+                        <small class="review-meta">Reviewed {{ blood_request_record.reviewed_at.strftime("%d %b %Y") }}{% if blood_request_record.reviewed_by %} by {{ blood_request_record.reviewed_by.name }}{% endif %}</small>
+                    {% endif %}
                     {% if blood_request_record.status in ("Pending", "Verified") %}
                         <form method="post" action="{{ url_for('blood_request.cancel', request_id=blood_request_record.id) }}" class="mt-4">
                             <button class="btn btn-outline-blood" type="submit">Cancel request</button>
@@ -73,4 +79,3 @@
     </div>
 </section>
 {% endblock %}
-

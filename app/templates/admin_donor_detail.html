@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Review Donor | BloodLink{% endblock %}
+{% block body_class %}dashboard-page admin-page{% endblock %}
+
+{% block content %}
+<section class="admin-header">
+    <div class="container py-4 py-md-5">
+        <a class="admin-back-link" href="{{ url_for('admin.donors') }}">Back to donors</a>
+        <div class="d-md-flex align-items-end justify-content-between gap-3 mt-4">
+            <div><p class="section-kicker mb-2">Donor review #{{ donor.id }}</p><h1 class="h2 fw-bold mb-2">{{ donor.user.name }}</h1><p class="mb-0">{{ donor.user.blood_group }} donor in {{ donor.user.city }}</p></div>
+            <span class="verification-chip donor-status-{{ donor.verification_status|lower }} mt-3 mt-md-0">{{ donor.verification_status }}</span>
+        </div>
+    </div>
+</section>
+<div class="container">{% include "_admin_nav.html" %}</div>
+
+<section class="container py-4 py-md-5">
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="section-heading"><h2 class="h5 fw-bold mb-1">Donor information</h2><p class="text-secondary mb-0">Details submitted by the donor.</p></div>
+            <dl class="account-details mb-0">
+                <div><dt>Email</dt><dd>{{ donor.user.email }}</dd></div>
+                <div><dt>Phone</dt><dd>{{ donor.phone }}</dd></div>
+                <div><dt>Age</dt><dd>{{ donor.age }} years</dd></div>
+                <div><dt>Gender</dt><dd>{{ donor.gender }}</dd></div>
+                <div><dt>Blood group</dt><dd class="blood-value fw-bold">{{ donor.user.blood_group }}</dd></div>
+                <div><dt>City</dt><dd>{{ donor.user.city }}</dd></div>
+                <div><dt>Address</dt><dd>{{ donor.address }}</dd></div>
+                <div><dt>Last donation</dt><dd>{{ donor.last_donation_date.strftime("%d %b %Y") if donor.last_donation_date else "Not recorded" }}</dd></div>
+                <div><dt>Available</dt><dd>{{ "Yes" if donor.is_available else "No" }}</dd></div>
+                <div><dt>Submitted</dt><dd>{{ donor.created_at.strftime("%d %B %Y") }}</dd></div>
+            </dl>
+        </div>
+        <div class="col-lg-5">
+            <div class="section-heading"><h2 class="h5 fw-bold mb-1">Review decision</h2><p class="text-secondary mb-0">Approve or reject this donor profile.</p></div>
+            {% if donor.verification_status == "Pending" %}
+                <div class="review-actions">
+                    <form method="post" action="{{ url_for('admin.verify_donor', donor_id=donor.id) }}">
+                        <button class="btn btn-verify w-100" type="submit"><i data-lucide="check" aria-hidden="true"></i>Verify donor</button>
+                    </form>
+                    <div class="review-divider"><span>or reject</span></div>
+                    <form method="post" action="{{ url_for('admin.reject_donor', donor_id=donor.id) }}">
+                        <label class="form-label" for="rejection_reason">Rejection reason</label>
+                        <textarea class="form-control" id="rejection_reason" name="rejection_reason" rows="4" maxlength="500" required></textarea>
+                        <button class="btn btn-outline-blood w-100 mt-3" type="submit">Reject donor</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="review-complete">
+                    <span class="verification-chip donor-status-{{ donor.verification_status|lower }}">{{ donor.verification_status }}</span>
+                    <p class="mt-3 mb-1">Reviewed by {{ donor.reviewed_by.name if donor.reviewed_by else "Admin" }}</p>
+                    <small>{{ donor.reviewed_at.strftime("%d %b %Y, %I:%M %p") if donor.reviewed_at else "Review date unavailable" }}</small>
+                    {% if donor.rejection_reason %}<div class="rejection-note"><strong>Reason</strong><p>{{ donor.rejection_reason }}</p></div>{% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

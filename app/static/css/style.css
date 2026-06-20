@@ -1030,6 +1030,121 @@ textarea.form-control {
     margin-bottom: 24px;
 }
 
+.admin-back-link {
+    color: #c4cccf;
+    font-size: 0.875rem;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.admin-back-link:hover,
+.admin-back-link:focus {
+    color: #ffffff;
+}
+
+.table-action {
+    color: var(--blood);
+    font-size: 0.82rem;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.table-action:hover,
+.table-action:focus {
+    color: var(--blood-dark);
+}
+
+.review-actions,
+.review-complete {
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+}
+
+.btn-verify {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #ffffff;
+}
+
+.btn-verify:hover,
+.btn-verify:focus {
+    background: #0f625c;
+    border-color: #0f625c;
+    color: #ffffff;
+}
+
+.review-divider {
+    align-items: center;
+    color: var(--muted);
+    display: flex;
+    font-size: 0.75rem;
+    gap: 10px;
+    margin: 22px 0;
+    text-transform: uppercase;
+}
+
+.review-divider::before,
+.review-divider::after {
+    background: var(--line);
+    content: "";
+    flex: 1;
+    height: 1px;
+}
+
+.review-complete small,
+.review-meta {
+    color: var(--muted);
+    display: block;
+}
+
+.rejection-note {
+    background: #fdeff1;
+    border-left: 3px solid var(--blood);
+    margin-top: 20px;
+    padding: 14px 16px;
+}
+
+.rejection-note strong {
+    color: var(--blood-dark);
+    display: block;
+    font-size: 0.82rem;
+    margin-bottom: 4px;
+}
+
+.rejection-note p {
+    color: #5d383e;
+    margin-bottom: 0;
+}
+
+.review-outcome {
+    border-left: 3px solid;
+    padding: 16px 18px;
+}
+
+.review-outcome strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.review-outcome p {
+    margin-bottom: 2px;
+}
+
+.review-outcome span {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.review-outcome-rejected {
+    background: #fdeff1;
+    border-color: var(--blood);
+}
+
+.review-outcome-verified {
+    background: #e9f5f2;
+    border-color: var(--teal);
+}
+
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding-bottom: 16px;

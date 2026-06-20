@@ -49,6 +49,19 @@
         </div>
     </div>
 
+    {% if donor_profile.verification_status == "Rejected" and donor_profile.rejection_reason %}
+        <div class="review-outcome review-outcome-rejected mb-4">
+            <strong>Profile rejected</strong>
+            <p>{{ donor_profile.rejection_reason }}</p>
+            <span>Edit your profile and submit it again for verification.</span>
+        </div>
+    {% elif donor_profile.verification_status == "Verified" %}
+        <div class="review-outcome review-outcome-verified mb-4">
+            <strong>Profile verified</strong>
+            <p>Your donor profile is approved for donor matching.</p>
+        </div>
+    {% endif %}
+
     <section aria-labelledby="donor-details-heading">
         <div class="section-heading">
             <h2 class="h5 fw-bold mb-1" id="donor-details-heading">Donor details</h2>
@@ -64,4 +77,3 @@
     </section>
 </section>
 {% endblock %}
-

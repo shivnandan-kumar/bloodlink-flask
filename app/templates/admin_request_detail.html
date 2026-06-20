@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Review Request | BloodLink{% endblock %}
+{% block body_class %}dashboard-page admin-page{% endblock %}
+
+{% block content %}
+<section class="admin-header">
+    <div class="container py-4 py-md-5">
+        <a class="admin-back-link" href="{{ url_for('admin.requests') }}">Back to requests</a>
+        <div class="d-md-flex align-items-end justify-content-between gap-3 mt-4">
+            <div><p class="section-kicker mb-2">Request review #{{ blood_request_record.id }}</p><h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1><p class="mb-0">{{ blood_request_record.hospital_name }}, {{ blood_request_record.city }}</p></div>
+            <span class="request-status request-status-{{ blood_request_record.status|lower }} mt-3 mt-md-0">{{ blood_request_record.status }}</span>
+        </div>
+    </div>
+</section>
+<div class="container">{% include "_admin_nav.html" %}</div>
+
+<section class="container py-4 py-md-5">
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="section-heading"><h2 class="h5 fw-bold mb-1">Request information</h2><p class="text-secondary mb-0">Patient, hospital and contact details.</p></div>
+            <dl class="account-details mb-0">
+                <div><dt>Submitted by</dt><dd>{{ blood_request_record.requester.name }} ({{ blood_request_record.requester.email }})</dd></div>
+                <div><dt>Blood group</dt><dd class="blood-value fw-bold">{{ blood_request_record.blood_group }}</dd></div>
+                <div><dt>Units</dt><dd>{{ blood_request_record.units_required }}</dd></div>
+                <div><dt>Required by</dt><dd>{{ blood_request_record.needed_by.strftime("%d %b %Y") }}</dd></div>
+                <div><dt>Urgency</dt><dd class="urgency-text-{{ blood_request_record.urgency|lower }} fw-bold">{{ blood_request_record.urgency }}</dd></div>
+                <div><dt>Hospital</dt><dd>{{ blood_request_record.hospital_name }}</dd></div>
+                <div><dt>Address</dt><dd>{{ blood_request_record.hospital_address }}</dd></div>
+                <div><dt>Contact</dt><dd>{{ blood_request_record.contact_phone }}</dd></div>
+                <div><dt>Reason</dt><dd>{{ blood_request_record.reason or "Not provided" }}</dd></div>
+                <div><dt>Submitted</dt><dd>{{ blood_request_record.created_at.strftime("%d %B %Y") }}</dd></div>
+            </dl>
+        </div>
+        <div class="col-lg-5">
+            <div class="section-heading"><h2 class="h5 fw-bold mb-1">Review decision</h2><p class="text-secondary mb-0">Approve or reject this blood request.</p></div>
+            {% if blood_request_record.status == "Pending" %}
+                <div class="review-actions">
+                    <form method="post" action="{{ url_for('admin.verify_request', request_id=blood_request_record.id) }}">
+                        <button class="btn btn-verify w-100" type="submit"><i data-lucide="check" aria-hidden="true"></i>Verify request</button>
+                    </form>
+                    <div class="review-divider"><span>or reject</span></div>
+                    <form method="post" action="{{ url_for('admin.reject_request', request_id=blood_request_record.id) }}">
+                        <label class="form-label" for="rejection_reason">Rejection reason</label>
+                        <textarea class="form-control" id="rejection_reason" name="rejection_reason" rows="4" maxlength="500" required></textarea>
+                        <button class="btn btn-outline-blood w-100 mt-3" type="submit">Reject request</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="review-complete">
+                    <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
+                    <p class="mt-3 mb-1">Reviewed by {{ blood_request_record.reviewed_by.name if blood_request_record.reviewed_by else "Admin" }}</p>
+                    <small>{{ blood_request_record.reviewed_at.strftime("%d %b %Y, %I:%M %p") if blood_request_record.reviewed_at else "Review date unavailable" }}</small>
+                    {% if blood_request_record.rejection_reason %}<div class="rejection-note"><strong>Reason</strong><p>{{ blood_request_record.rejection_reason }}</p></div>{% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

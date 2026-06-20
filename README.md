@@ -122,6 +122,30 @@ Promote a registered user:
 flask promote-admin user@example.com
 ```
 
+## Step 8
+
+This step adds donor and blood request verification:
+
+- Admin donor review page
+- Admin blood request review page
+- Verify and reject POST actions
+- Required rejection reason
+- Reviewing admin and review timestamp
+- User-visible verification outcomes
+- Edit and resubmit rejected records
+- Invalid second-review protection
+
+Verification routes:
+
+```text
+/admin/donors/<id>
+/admin/donors/<id>/verify
+/admin/donors/<id>/reject
+/admin/requests/<id>
+/admin/requests/<id>/verify
+/admin/requests/<id>/reject
+```
+
 ## Run Locally
 
 ```powershell

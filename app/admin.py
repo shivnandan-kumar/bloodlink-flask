@@ -1,8 +1,10 @@
 from functools import wraps
+from datetime import datetime, timezone
 
-from flask import Blueprint, abort, render_template
+from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
 from app.models import BloodRequest, DonorProfile, User
@@ -87,3 +89,143 @@ def requests():
     ).all()
     return render_template("admin_requests.html", requests=requests)
 
+
+def get_donor_or_404(donor_id):
+    donor = db.session.get(DonorProfile, donor_id)
+    if not donor:
+        abort(404)
+    return donor
+
+
+def get_request_or_404(request_id):
+    blood_request_record = db.session.get(BloodRequest, request_id)
+    if not blood_request_record:
+        abort(404)
+    return blood_request_record
+
+
+@admin.route("/donors/<int:donor_id>")
+@login_required
+@admin_required
+def donor_detail(donor_id):
+    donor = get_donor_or_404(donor_id)
+    return render_template("admin_donor_detail.html", donor=donor)
+
+
+@admin.route("/donors/<int:donor_id>/verify", methods=["POST"])
+@login_required
+@admin_required
+def verify_donor(donor_id):
+    donor = get_donor_or_404(donor_id)
+    if donor.verification_status != "Pending":
+        flash("Only pending donor profiles can be reviewed.", "warning")
+        return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+
+    donor.verification_status = "Verified"
+    donor.reviewed_by = current_user
+    donor.reviewed_at = datetime.now(timezone.utc)
+    donor.rejection_reason = None
+    try:
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Donor verification could not be saved.", "danger")
+    else:
+        flash("Donor profile verified.", "success")
+    return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+
+
+@admin.route("/donors/<int:donor_id>/reject", methods=["POST"])
+@login_required
+@admin_required
+def reject_donor(donor_id):
+    donor = get_donor_or_404(donor_id)
+    if donor.verification_status != "Pending":
+        flash("Only pending donor profiles can be reviewed.", "warning")
+        return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+
+    reason = request.form.get("rejection_reason", "").strip()
+    if not reason:
+        flash("Rejection reason is required.", "danger")
+        return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+    if len(reason) > 500:
+        flash("Rejection reason must be 500 characters or fewer.", "danger")
+        return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+
+    donor.verification_status = "Rejected"
+    donor.reviewed_by = current_user
+    donor.reviewed_at = datetime.now(timezone.utc)
+    donor.rejection_reason = reason
+    try:
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Donor rejection could not be saved.", "danger")
+    else:
+        flash("Donor profile rejected.", "info")
+    return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+
+
+@admin.route("/requests/<int:request_id>")
+@login_required
+@admin_required
+def request_detail(request_id):
+    blood_request_record = get_request_or_404(request_id)
+    return render_template(
+        "admin_request_detail.html",
+        blood_request_record=blood_request_record,
+    )
+
+
+@admin.route("/requests/<int:request_id>/verify", methods=["POST"])
+@login_required
+@admin_required
+def verify_request(request_id):
+    blood_request_record = get_request_or_404(request_id)
+    if blood_request_record.status != "Pending":
+        flash("Only pending blood requests can be reviewed.", "warning")
+        return redirect(url_for("admin.request_detail", request_id=request_id))
+
+    blood_request_record.status = "Verified"
+    blood_request_record.reviewed_by = current_user
+    blood_request_record.reviewed_at = datetime.now(timezone.utc)
+    blood_request_record.rejection_reason = None
+    try:
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Request verification could not be saved.", "danger")
+    else:
+        flash("Blood request verified.", "success")
+    return redirect(url_for("admin.request_detail", request_id=request_id))
+
+
+@admin.route("/requests/<int:request_id>/reject", methods=["POST"])
+@login_required
+@admin_required
+def reject_request(request_id):
+    blood_request_record = get_request_or_404(request_id)
+    if blood_request_record.status != "Pending":
+        flash("Only pending blood requests can be reviewed.", "warning")
+        return redirect(url_for("admin.request_detail", request_id=request_id))
+
+    reason = request.form.get("rejection_reason", "").strip()
+    if not reason:
+        flash("Rejection reason is required.", "danger")
+        return redirect(url_for("admin.request_detail", request_id=request_id))
+    if len(reason) > 500:
+        flash("Rejection reason must be 500 characters or fewer.", "danger")
+        return redirect(url_for("admin.request_detail", request_id=request_id))
+
+    blood_request_record.status = "Rejected"
+    blood_request_record.reviewed_by = current_user
+    blood_request_record.reviewed_at = datetime.now(timezone.utc)
+    blood_request_record.rejection_reason = reason
+    try:
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("Request rejection could not be saved.", "danger")
+    else:
+        flash("Blood request rejected.", "info")
+    return redirect(url_for("admin.request_detail", request_id=request_id))

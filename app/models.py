@@ -23,12 +23,14 @@ class User(UserMixin, db.Model):
         "DonorProfile",
         back_populates="user",
         cascade="all, delete-orphan",
+        foreign_keys="DonorProfile.user_id",
         uselist=False,
     )
     blood_requests = db.relationship(
         "BloodRequest",
         back_populates="requester",
         cascade="all, delete-orphan",
+        foreign_keys="BloodRequest.requester_id",
         lazy="select",
     )
 
@@ -62,6 +64,16 @@ class DonorProfile(db.Model):
         default="Pending",
         nullable=False,
     )
+    reviewed_by_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "user.id",
+            name="fk_donor_profile_reviewed_by_id_user",
+        ),
+        nullable=True,
+    )
+    reviewed_at = db.Column(db.DateTime, nullable=True)
+    rejection_reason = db.Column(db.String(500), nullable=True)
     created_at = db.Column(
         db.DateTime,
         default=lambda: datetime.now(timezone.utc),
@@ -74,7 +86,12 @@ class DonorProfile(db.Model):
         nullable=False,
     )
 
-    user = db.relationship("User", back_populates="donor_profile")
+    user = db.relationship(
+        "User",
+        back_populates="donor_profile",
+        foreign_keys=[user_id],
+    )
+    reviewed_by = db.relationship("User", foreign_keys=[reviewed_by_id])
 
     def __repr__(self):
         return f"<DonorProfile user_id={self.user_id}>"
@@ -99,6 +116,16 @@ class BloodRequest(db.Model):
     urgency = db.Column(db.String(20), default="Normal", nullable=False)
     reason = db.Column(db.String(500), nullable=True)
     status = db.Column(db.String(20), default="Pending", nullable=False)
+    reviewed_by_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "user.id",
+            name="fk_blood_request_reviewed_by_id_user",
+        ),
+        nullable=True,
+    )
+    reviewed_at = db.Column(db.DateTime, nullable=True)
+    rejection_reason = db.Column(db.String(500), nullable=True)
     created_at = db.Column(
         db.DateTime,
         default=lambda: datetime.now(timezone.utc),
@@ -111,7 +138,12 @@ class BloodRequest(db.Model):
         nullable=False,
     )
 
-    requester = db.relationship("User", back_populates="blood_requests")
+    requester = db.relationship(
+        "User",
+        back_populates="blood_requests",
+        foreign_keys=[requester_id],
+    )
+    reviewed_by = db.relationship("User", foreign_keys=[reviewed_by_id])
 
     def __repr__(self):
         return f"<BloodRequest id={self.id} status={self.status}>"
