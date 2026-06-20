@@ -41,10 +41,8 @@
         </div>
         <div class="col-sm-6 col-lg-3">
             <div class="summary-card h-100">
-                <p class="summary-label">Availability</p>
-                <p class="summary-value summary-value-small">
-                    {{ "Available" if user.donor_profile and user.donor_profile.is_available else "Unavailable" }}
-                </p>
+                <p class="summary-label">Active requests</p>
+                <p class="summary-value">{{ active_request_count }}</p>
             </div>
         </div>
     </div>
@@ -105,5 +103,36 @@
             </section>
         </div>
     </div>
+
+    <section class="dashboard-requests mt-5" aria-labelledby="dashboard-requests-heading">
+        <div class="section-heading d-flex align-items-end justify-content-between gap-3">
+            <div>
+                <h2 class="h5 fw-bold mb-1" id="dashboard-requests-heading">Blood requests</h2>
+                <p class="text-secondary mb-0">Your patient request activity.</p>
+            </div>
+            <a class="btn btn-blood btn-sm" href="{{ url_for('blood_request.create') }}">
+                <i data-lucide="plus" aria-hidden="true"></i>
+                New request
+            </a>
+        </div>
+        {% if user.blood_requests %}
+            {% set recent_requests = user.blood_requests|sort(attribute='created_at', reverse=true) %}
+            <div class="dashboard-request-list">
+                {% for blood_request_record in recent_requests[:3] %}
+                    <a href="{{ url_for('blood_request.detail', request_id=blood_request_record.id) }}">
+                        <span class="request-blood-group request-blood-group-small">{{ blood_request_record.blood_group }}</span>
+                        <span><strong>{{ blood_request_record.patient_name }}</strong><small>{{ blood_request_record.hospital_name }}</small></span>
+                        <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+            <a class="text-link" href="{{ url_for('blood_request.index') }}">View all requests</a>
+        {% else %}
+            <div class="empty-state">
+                <p class="fw-semibold mb-1">No blood requests yet</p>
+                <p class="text-secondary mb-0">New requests will appear here.</p>
+            </div>
+        {% endif %}
+    </section>
 </section>
 {% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Blood Requests | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-4 py-md-5">
+        <div class="d-md-flex align-items-end justify-content-between gap-3">
+            <div>
+                <p class="section-kicker mb-2">Blood requests</p>
+                <h1 class="h2 fw-bold mb-2">Your requests</h1>
+                <p class="text-secondary mb-0">Track patient requirements and verification status.</p>
+            </div>
+            <a class="btn btn-blood mt-3 mt-md-0" href="{{ url_for('blood_request.create') }}">
+                <i data-lucide="plus" aria-hidden="true"></i>
+                New request
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    {% if requests %}
+        <div class="request-list">
+            {% for blood_request_record in requests %}
+                <a class="request-list-item" href="{{ url_for('blood_request.detail', request_id=blood_request_record.id) }}">
+                    <div class="request-blood-group">{{ blood_request_record.blood_group }}</div>
+                    <div class="request-list-main">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                            <h2>{{ blood_request_record.patient_name }}</h2>
+                            <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
+                            <span class="urgency-label urgency-{{ blood_request_record.urgency|lower }}">{{ blood_request_record.urgency }}</span>
+                        </div>
+                        <p>{{ blood_request_record.hospital_name }} | {{ blood_request_record.city }}</p>
+                    </div>
+                    <div class="request-list-meta">
+                        <strong>{{ blood_request_record.units_required }} unit{{ "s" if blood_request_record.units_required != 1 else "" }}</strong>
+                        <span>By {{ blood_request_record.needed_by.strftime("%d %b %Y") }}</span>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="module-empty-state">
+            <i data-lucide="clipboard-plus" aria-hidden="true"></i>
+            <h2>No blood requests</h2>
+            <p>Create a request when blood is needed for a patient.</p>
+            <a class="btn btn-blood" href="{{ url_for('blood_request.create') }}">Create request</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+

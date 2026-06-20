@@ -16,6 +16,7 @@ def create_app():
     from app.auth import auth
     from app.models import User
     from app.donor import donor
+    from app.blood_requests import blood_request
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -24,5 +25,6 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(auth)
     app.register_blueprint(donor)
+    app.register_blueprint(blood_request)
 
     return app

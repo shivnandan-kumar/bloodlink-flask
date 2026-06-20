@@ -25,6 +25,12 @@ class User(UserMixin, db.Model):
         cascade="all, delete-orphan",
         uselist=False,
     )
+    blood_requests = db.relationship(
+        "BloodRequest",
+        back_populates="requester",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -72,3 +78,40 @@ class DonorProfile(db.Model):
 
     def __repr__(self):
         return f"<DonorProfile user_id={self.user_id}>"
+
+
+class BloodRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    requester_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False,
+        index=True,
+    )
+    patient_name = db.Column(db.String(100), nullable=False)
+    blood_group = db.Column(db.String(5), nullable=False)
+    units_required = db.Column(db.Integer, nullable=False)
+    hospital_name = db.Column(db.String(150), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    hospital_address = db.Column(db.String(255), nullable=False)
+    contact_phone = db.Column(db.String(20), nullable=False)
+    needed_by = db.Column(db.Date, nullable=False)
+    urgency = db.Column(db.String(20), default="Normal", nullable=False)
+    reason = db.Column(db.String(500), nullable=True)
+    status = db.Column(db.String(20), default="Pending", nullable=False)
+    created_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    requester = db.relationship("User", back_populates="blood_requests")
+
+    def __repr__(self):
+        return f"<BloodRequest id={self.id} status={self.status}>"

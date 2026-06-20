@@ -74,6 +74,27 @@ Donor routes:
 /donor/edit
 ```
 
+## Step 6
+
+This step adds the blood request module:
+
+- Create and validate blood requests
+- List and track personal requests
+- Request detail and edit pages
+- Pending verification status
+- Cancel request flow
+- Owner-only request access
+- Dashboard request activity
+
+Blood request routes:
+
+```text
+/requests
+/requests/new
+/requests/<id>
+/requests/<id>/edit
+```
+
 ## Run Locally
 
 ```powershell
@@ -86,7 +107,7 @@ python run.py
 Open this URL in your browser:
 
 ```text
-http://127.0.0.1:5001
+http://127.0.0.1:8000
 ```
 
 ## Database Commands

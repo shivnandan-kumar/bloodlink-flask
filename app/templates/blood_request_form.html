@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-4 py-md-5">
+        <a class="back-link" href="{{ url_for('blood_request.index') }}">Back to blood requests</a>
+        <p class="section-kicker mt-4 mb-2">Blood request</p>
+        <h1 class="h2 fw-bold mb-2">{{ page_title }}</h1>
+        <p class="text-secondary mb-0">Provide accurate patient and hospital details for verification.</p>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    <form method="post" class="donor-form">
+        <div class="form-section">
+            <div class="form-section-heading">
+                <h2>Patient requirement</h2>
+                <p>Blood group, quantity and required date.</p>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="patient_name">Patient name</label>
+                    <input class="form-control" id="patient_name" name="patient_name" type="text" maxlength="100" value="{{ request.form.get('patient_name', blood_request_record.patient_name if blood_request_record else '') }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="blood_group">Blood group needed</label>
+                    {% set selected_group = request.form.get('blood_group', blood_request_record.blood_group if blood_request_record else '') %}
+                    <select class="form-select" id="blood_group" name="blood_group" required>
+                        <option value="">Select blood group</option>
+                        {% for group in blood_groups %}
+                            <option value="{{ group }}" {% if selected_group == group %}selected{% endif %}>{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="units_required">Units required</label>
+                    <input class="form-control" id="units_required" name="units_required" type="number" min="1" max="10" value="{{ request.form.get('units_required', blood_request_record.units_required if blood_request_record else 1) }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="needed_by">Required by</label>
+                    <input class="form-control" id="needed_by" name="needed_by" type="date" value="{{ request.form.get('needed_by', blood_request_record.needed_by.isoformat() if blood_request_record else '') }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="urgency">Urgency</label>
+                    {% set selected_urgency = request.form.get('urgency', blood_request_record.urgency if blood_request_record else 'Normal') %}
+                    <select class="form-select" id="urgency" name="urgency" required>
+                        {% for urgency in urgency_levels %}
+                            <option value="{{ urgency }}" {% if selected_urgency == urgency %}selected{% endif %}>{{ urgency }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="reason">Reason or notes</label>
+                    <textarea class="form-control" id="reason" name="reason" rows="3" maxlength="500">{{ request.form.get('reason', blood_request_record.reason if blood_request_record and blood_request_record.reason else '') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-heading">
+                <h2>Hospital and contact</h2>
+                <p>Location where blood is required and a reachable phone number.</p>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="hospital_name">Hospital name</label>
+                    <input class="form-control" id="hospital_name" name="hospital_name" type="text" maxlength="150" value="{{ request.form.get('hospital_name', blood_request_record.hospital_name if blood_request_record else '') }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="city">City</label>
+                    <input class="form-control" id="city" name="city" type="text" maxlength="100" value="{{ request.form.get('city', blood_request_record.city if blood_request_record else current_user.city) }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="contact_phone">Contact phone</label>
+                    <input class="form-control" id="contact_phone" name="contact_phone" type="tel" maxlength="20" value="{{ request.form.get('contact_phone', blood_request_record.contact_phone if blood_request_record else '') }}" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="hospital_address">Hospital address</label>
+                    <textarea class="form-control" id="hospital_address" name="hospital_address" rows="3" maxlength="255" required>{{ request.form.get('hospital_address', blood_request_record.hospital_address if blood_request_record else '') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-light" href="{{ url_for('blood_request.detail', request_id=blood_request_record.id) if blood_request_record else url_for('blood_request.index') }}">Cancel</a>
+            <button class="btn btn-blood" type="submit">{{ submit_label }}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+

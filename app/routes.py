@@ -13,4 +13,12 @@ def home():
 @main.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html", user=current_user)
+    active_request_count = sum(
+        blood_request.status in ("Pending", "Verified")
+        for blood_request in current_user.blood_requests
+    )
+    return render_template(
+        "dashboard.html",
+        user=current_user,
+        active_request_count=active_request_count,
+    )

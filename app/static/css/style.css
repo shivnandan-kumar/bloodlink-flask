@@ -648,6 +648,197 @@ textarea.form-control {
     max-width: 760px;
 }
 
+.request-list {
+    border-top: 1px solid var(--line);
+}
+
+.request-list-item {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    color: var(--charcoal);
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    padding: 20px 8px;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+}
+
+.request-list-item:hover,
+.request-list-item:focus {
+    background: #ffffff;
+    color: var(--charcoal);
+}
+
+.request-blood-group {
+    align-items: center;
+    background: #fde9ed;
+    border-radius: 8px;
+    color: var(--blood);
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 800;
+    height: 52px;
+    justify-content: center;
+    width: 52px;
+}
+
+.request-list-main {
+    min-width: 0;
+}
+
+.request-list-main h2 {
+    font-size: 1rem;
+    font-weight: 750;
+    margin-bottom: 0;
+}
+
+.request-list-main p,
+.request-list-meta span {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+.request-list-meta {
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-align: right;
+}
+
+.request-list-meta strong {
+    font-size: 0.9rem;
+}
+
+.request-status,
+.urgency-label {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.72rem;
+    font-weight: 750;
+    padding: 5px 8px;
+}
+
+.request-status-pending {
+    background: #f6ead8;
+    color: #8c5100;
+}
+
+.request-status-verified,
+.request-status-fulfilled {
+    background: #e3f3ef;
+    color: #12675f;
+}
+
+.request-status-rejected,
+.request-status-cancelled {
+    background: #ecefef;
+    color: #5f696e;
+}
+
+.urgency-label {
+    background: #edf0f1;
+    color: #59656a;
+}
+
+.urgency-urgent,
+.urgency-text-urgent {
+    color: #a55a00;
+}
+
+.urgency-critical,
+.urgency-text-critical {
+    color: var(--blood);
+}
+
+.urgency-critical {
+    background: #fde9ed;
+}
+
+.module-empty-state {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    padding: 56px 20px;
+    text-align: center;
+}
+
+.module-empty-state > svg {
+    color: var(--blood);
+    height: 32px;
+    margin-bottom: 16px;
+    width: 32px;
+}
+
+.module-empty-state h2 {
+    font-size: 1.1rem;
+    font-weight: 750;
+}
+
+.module-empty-state p {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+.request-status-panel {
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+}
+
+.dashboard-request-list {
+    border-top: 1px solid var(--line);
+    margin-bottom: 14px;
+}
+
+.dashboard-request-list > a {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    color: var(--charcoal);
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    padding: 14px 0;
+    text-decoration: none;
+}
+
+.dashboard-request-list > a:hover strong,
+.dashboard-request-list > a:focus strong {
+    color: var(--blood);
+}
+
+.dashboard-request-list strong,
+.dashboard-request-list small {
+    display: block;
+}
+
+.dashboard-request-list small {
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.request-blood-group-small {
+    border-radius: 6px;
+    font-size: 0.8rem;
+    height: 38px;
+    width: 38px;
+}
+
+.text-link {
+    color: var(--blood);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.text-link:hover,
+.text-link:focus {
+    color: var(--blood-dark);
+}
+
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding-bottom: 16px;
@@ -714,6 +905,22 @@ textarea.form-control {
         align-items: flex-start;
         flex-direction: column;
     }
+
+    .request-list-item {
+        align-items: start;
+        grid-template-columns: 48px minmax(0, 1fr);
+    }
+
+    .request-list-meta {
+        align-items: flex-start;
+        grid-column: 2;
+        text-align: left;
+    }
+
+    .request-blood-group {
+        height: 44px;
+        width: 44px;
+    }
 }
 
 @media (max-width: 575.98px) {
@@ -735,5 +942,14 @@ textarea.form-control {
 
     .form-actions .btn {
         width: 100%;
+    }
+
+    .dashboard-request-list > a {
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+    .dashboard-request-list .request-status {
+        grid-column: 2;
+        justify-self: start;
     }
 }
