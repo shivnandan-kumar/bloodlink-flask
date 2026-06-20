@@ -1,0 +1,7 @@
+<nav class="admin-tabs" aria-label="Admin sections">
+    <a class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">Overview</a>
+    <a class="{% if request.endpoint == 'admin.users' %}active{% endif %}" href="{{ url_for('admin.users') }}">Users</a>
+    <a class="{% if request.endpoint == 'admin.donors' %}active{% endif %}" href="{{ url_for('admin.donors') }}">Donors</a>
+    <a class="{% if request.endpoint == 'admin.requests' %}active{% endif %}" href="{{ url_for('admin.requests') }}">Requests</a>
+</nav>
+

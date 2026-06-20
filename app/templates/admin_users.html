@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users | BloodLink{% endblock %}
+{% block body_class %}dashboard-page admin-page{% endblock %}
+
+{% block content %}
+<section class="admin-header"><div class="container py-4 py-md-5"><p class="section-kicker mb-2">Admin workspace</p><h1 class="h2 fw-bold mb-2">Users</h1><p class="mb-0">Registered BloodLink accounts.</p></div></section>
+<div class="container">{% include "_admin_nav.html" %}</div>
+
+<section class="container py-4 py-md-5">
+    <div class="admin-table-header"><div><h2>All users</h2><p>{{ users|length }} registered account{{ "s" if users|length != 1 else "" }}</p></div></div>
+    <div class="table-responsive admin-table-wrap">
+        <table class="table admin-table align-middle mb-0">
+            <thead><tr><th>User</th><th>Blood group</th><th>City</th><th>Role</th><th>Joined</th></tr></thead>
+            <tbody>
+                {% for user in users %}
+                    <tr><td><div class="table-person"><span class="admin-avatar">{{ user.name[0]|upper }}</span><span><strong>{{ user.name }}</strong><small>{{ user.email }}</small></span></div></td><td><strong class="blood-value">{{ user.blood_group }}</strong></td><td>{{ user.city }}</td><td><span class="role-chip {% if user.is_admin %}role-admin{% endif %}">{{ "Admin" if user.is_admin else "Member" }}</span></td><td>{{ user.created_at.strftime("%d %b %Y") }}</td></tr>
+                {% else %}
+                    <tr><td colspan="5" class="text-center text-secondary py-5">No users found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+

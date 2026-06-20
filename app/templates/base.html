@@ -25,6 +25,9 @@
                                 <span class="visually-hidden">Home</span>
                             </a>
                             <a class="nav-link nav-link-modern {% if request.endpoint == 'main.dashboard' %}active{% endif %}" href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                            {% if current_user.is_admin %}
+                                <a class="nav-link nav-link-modern {% if request.blueprint == 'admin' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">Admin</a>
+                            {% endif %}
                             {% set name_parts = current_user.name.split() %}
                             {% set initials = name_parts[0][0] ~ (name_parts[1][0] if name_parts|length > 1 else '') %}
                             <div class="dropdown user-dropdown ms-lg-2">
@@ -37,6 +40,9 @@
                                     <a class="dropdown-item" href="{{ url_for('main.dashboard') }}">Dashboard</a>
                                     <a class="dropdown-item" href="{{ url_for('donor.profile') if current_user.donor_profile else url_for('donor.register') }}">Donor profile</a>
                                     <a class="dropdown-item" href="{{ url_for('blood_request.index') }}">Blood requests</a>
+                                    {% if current_user.is_admin %}
+                                        <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">Admin panel</a>
+                                    {% endif %}
                                     <div class="dropdown-divider"></div>
                                     <form method="post" action="{{ url_for('auth.logout') }}">
                                         <button class="dropdown-item logout-item" type="submit">Logout</button>

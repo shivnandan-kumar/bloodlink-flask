@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Overview | BloodLink{% endblock %}
+{% block body_class %}dashboard-page admin-page{% endblock %}
+
+{% block content %}
+<section class="admin-header">
+    <div class="container py-4 py-md-5">
+        <p class="section-kicker mb-2">Admin workspace</p>
+        <h1 class="h2 fw-bold mb-2">Platform overview</h1>
+        <p class="mb-0">Monitor BloodLink users, donors and blood requests.</p>
+    </div>
+</section>
+
+<div class="container">{% include "_admin_nav.html" %}</div>
+
+<section class="container py-4 py-md-5">
+    <div class="row g-3 mb-5">
+        <div class="col-sm-6 col-lg-3"><a class="summary-card admin-summary-card h-100" href="{{ url_for('admin.users') }}"><p class="summary-label">Total users</p><p class="summary-value">{{ stats.users }}</p></a></div>
+        <div class="col-sm-6 col-lg-3"><a class="summary-card admin-summary-card h-100" href="{{ url_for('admin.donors') }}"><p class="summary-label">Donor profiles</p><p class="summary-value">{{ stats.donors }}</p></a></div>
+        <div class="col-sm-6 col-lg-3"><a class="summary-card admin-summary-card h-100" href="{{ url_for('admin.requests') }}"><p class="summary-label">Blood requests</p><p class="summary-value">{{ stats.requests }}</p></a></div>
+        <div class="col-sm-6 col-lg-3"><div class="summary-card h-100"><p class="summary-label">Pending review</p><p class="summary-value pending-value">{{ stats.pending }}</p></div></div>
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="section-heading d-flex justify-content-between align-items-end gap-3">
+                <div><h2 class="h5 fw-bold mb-1">Recent users</h2><p class="text-secondary mb-0">Latest registered accounts.</p></div>
+                <a class="text-link" href="{{ url_for('admin.users') }}">View all</a>
+            </div>
+            <div class="admin-compact-list">
+                {% for user in recent_users %}
+                    <div><span class="admin-avatar">{{ user.name[0]|upper }}</span><span><strong>{{ user.name }}</strong><small>{{ user.email }}</small></span><span class="role-chip">{{ "Admin" if user.is_admin else "Member" }}</span></div>
+                {% else %}
+                    <p class="text-secondary py-4 mb-0">No users found.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="section-heading d-flex justify-content-between align-items-end gap-3">
+                <div><h2 class="h5 fw-bold mb-1">Recent requests</h2><p class="text-secondary mb-0">Latest blood requirements.</p></div>
+                <a class="text-link" href="{{ url_for('admin.requests') }}">View all</a>
+            </div>
+            <div class="admin-compact-list">
+                {% for blood_request_record in recent_requests %}
+                    <div><span class="request-blood-group request-blood-group-small">{{ blood_request_record.blood_group }}</span><span><strong>{{ blood_request_record.patient_name }}</strong><small>{{ blood_request_record.city }} | {{ blood_request_record.hospital_name }}</small></span><span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span></div>
+                {% else %}
+                    <p class="text-secondary py-4 mb-0">No blood requests found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

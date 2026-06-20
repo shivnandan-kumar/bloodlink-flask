@@ -95,6 +95,33 @@ Blood request routes:
 /requests/<id>/edit
 ```
 
+## Step 7
+
+This step adds the admin panel:
+
+- Admin-only route protection
+- Platform overview and counts
+- Registered users list
+- Donor profiles list
+- Blood requests list
+- Pending review count
+- CLI command to promote an existing user
+
+Admin routes:
+
+```text
+/admin
+/admin/users
+/admin/donors
+/admin/requests
+```
+
+Promote a registered user:
+
+```powershell
+flask promote-admin user@example.com
+```
+
 ## Run Locally
 
 ```powershell

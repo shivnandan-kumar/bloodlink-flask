@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Requests | BloodLink{% endblock %}
+{% block body_class %}dashboard-page admin-page{% endblock %}
+
+{% block content %}
+<section class="admin-header"><div class="container py-4 py-md-5"><p class="section-kicker mb-2">Admin workspace</p><h1 class="h2 fw-bold mb-2">Blood requests</h1><p class="mb-0">Patient requirements submitted to BloodLink.</p></div></section>
+<div class="container">{% include "_admin_nav.html" %}</div>
+
+<section class="container py-4 py-md-5">
+    <div class="admin-table-header"><div><h2>All requests</h2><p>{{ requests|length }} blood request{{ "s" if requests|length != 1 else "" }}</p></div></div>
+    <div class="table-responsive admin-table-wrap">
+        <table class="table admin-table align-middle mb-0">
+            <thead><tr><th>Patient</th><th>Requirement</th><th>Hospital</th><th>Urgency</th><th>Status</th><th>Submitted by</th></tr></thead>
+            <tbody>
+                {% for blood_request_record in requests %}
+                    <tr><td><strong>{{ blood_request_record.patient_name }}</strong><small class="d-block text-secondary">By {{ blood_request_record.needed_by.strftime("%d %b %Y") }}</small></td><td><strong class="blood-value">{{ blood_request_record.blood_group }}</strong> | {{ blood_request_record.units_required }} unit{{ "s" if blood_request_record.units_required != 1 else "" }}</td><td>{{ blood_request_record.hospital_name }}<small class="d-block text-secondary">{{ blood_request_record.city }}</small></td><td><span class="urgency-label urgency-{{ blood_request_record.urgency|lower }}">{{ blood_request_record.urgency }}</span></td><td><span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span></td><td>{{ blood_request_record.requester.name }}</td></tr>
+                {% else %}
+                    <tr><td colspan="6" class="text-center text-secondary py-5">No blood requests found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
