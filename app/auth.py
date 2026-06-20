@@ -2,13 +2,12 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.constants import BLOOD_GROUPS
 from app.extensions import db
 from app.models import User
 
 
 auth = Blueprint("auth", __name__)
-
-BLOOD_GROUPS = ("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-")
 
 
 @auth.route("/register", methods=["GET", "POST"])

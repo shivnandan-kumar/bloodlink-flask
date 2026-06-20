@@ -523,6 +523,131 @@ body {
     padding: 24px 0;
 }
 
+.module-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+}
+
+.back-link {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.back-link:hover,
+.back-link:focus {
+    color: var(--blood);
+}
+
+.donor-form {
+    max-width: 900px;
+}
+
+.form-section {
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 32px;
+    grid-template-columns: minmax(190px, 0.7fr) minmax(0, 1.8fr);
+    padding: 8px 0 36px;
+}
+
+.form-section + .form-section {
+    padding-top: 36px;
+}
+
+.form-section-heading h2 {
+    font-size: 1rem;
+    font-weight: 750;
+    margin-bottom: 6px;
+}
+
+.form-section-heading p {
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin-bottom: 0;
+}
+
+textarea.form-control {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.form-check-input:checked {
+    background-color: var(--blood);
+    border-color: var(--blood);
+}
+
+.declaration-box {
+    background: #eef7f5;
+    border-left: 3px solid var(--teal);
+    color: #34474a;
+    padding: 16px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 24px;
+}
+
+.btn svg {
+    height: 17px;
+    margin-right: 6px;
+    stroke-width: 2.2;
+    vertical-align: -3px;
+    width: 17px;
+}
+
+.summary-value-small {
+    font-size: 1.12rem;
+    line-height: 1.4;
+}
+
+.donor-status-pending {
+    color: #9a5a00;
+}
+
+.donor-status-verified {
+    color: var(--teal);
+}
+
+.donor-status-rejected {
+    color: var(--blood);
+}
+
+.verification-chip {
+    background: #f6ead8;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.78rem;
+    font-weight: 750;
+    padding: 6px 10px;
+}
+
+.verification-chip.donor-status-verified {
+    background: #e3f3ef;
+}
+
+.verification-chip.donor-status-rejected {
+    background: #fde9ed;
+}
+
+.donor-dashboard-panel {
+    align-items: flex-end;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 24px 0;
+}
+
+.donor-details {
+    max-width: 760px;
+}
+
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding-bottom: 16px;
@@ -579,6 +704,16 @@ body {
     .auth-content {
         padding: 40px 20px;
     }
+
+    .form-section {
+        gap: 20px;
+        grid-template-columns: 1fr;
+    }
+
+    .donor-dashboard-panel {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 575.98px) {
@@ -592,5 +727,13 @@ body {
 
     .account-details > div {
         grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn {
+        width: 100%;
     }
 }

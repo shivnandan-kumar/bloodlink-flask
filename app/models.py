@@ -19,6 +19,12 @@ class User(UserMixin, db.Model):
         default=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+    donor_profile = db.relationship(
+        "DonorProfile",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        uselist=False,
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -28,3 +34,41 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f"<User {self.email}>"
+
+
+class DonorProfile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        unique=True,
+        nullable=False,
+    )
+    age = db.Column(db.Integer, nullable=False)
+    gender = db.Column(db.String(20), nullable=False)
+    phone = db.Column(db.String(20), unique=True, nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    last_donation_date = db.Column(db.Date, nullable=True)
+    is_available = db.Column(db.Boolean, default=True, nullable=False)
+    medical_eligible = db.Column(db.Boolean, default=False, nullable=False)
+    verification_status = db.Column(
+        db.String(20),
+        default="Pending",
+        nullable=False,
+    )
+    created_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    updated_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    user = db.relationship("User", back_populates="donor_profile")
+
+    def __repr__(self):
+        return f"<DonorProfile user_id={self.user_id}>"

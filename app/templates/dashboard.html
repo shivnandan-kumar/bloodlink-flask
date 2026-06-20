@@ -33,14 +33,18 @@
         </div>
         <div class="col-sm-6 col-lg-3">
             <div class="summary-card h-100">
-                <p class="summary-label">Blood requests</p>
-                <p class="summary-value">0</p>
+                <p class="summary-label">Donor status</p>
+                <p class="summary-value summary-value-small {% if user.donor_profile %}donor-status-{{ user.donor_profile.verification_status|lower }}{% endif %}">
+                    {{ user.donor_profile.verification_status if user.donor_profile else "Not enrolled" }}
+                </p>
             </div>
         </div>
         <div class="col-sm-6 col-lg-3">
             <div class="summary-card h-100">
-                <p class="summary-label">Completed donations</p>
-                <p class="summary-value">0</p>
+                <p class="summary-label">Availability</p>
+                <p class="summary-value summary-value-small">
+                    {{ "Available" if user.donor_profile and user.donor_profile.is_available else "Unavailable" }}
+                </p>
             </div>
         </div>
     </div>
@@ -74,15 +78,30 @@
         </div>
 
         <div class="col-lg-5">
-            <section aria-labelledby="activity-heading">
+            <section aria-labelledby="donor-heading">
                 <div class="section-heading">
-                    <h2 class="h5 fw-bold mb-1" id="activity-heading">Recent activity</h2>
-                    <p class="text-secondary mb-0">Your latest BloodLink activity.</p>
+                    <h2 class="h5 fw-bold mb-1" id="donor-heading">Donor profile</h2>
+                    <p class="text-secondary mb-0">Manage your donation readiness.</p>
                 </div>
-                <div class="empty-state">
-                    <p class="fw-semibold mb-1">No activity yet</p>
-                    <p class="text-secondary mb-0">Donation and blood request activity will appear here.</p>
-                </div>
+                {% if user.donor_profile %}
+                    <div class="donor-dashboard-panel">
+                        <div>
+                            <span class="verification-chip donor-status-{{ user.donor_profile.verification_status|lower }}">{{ user.donor_profile.verification_status }}</span>
+                            <p class="fw-semibold mt-3 mb-1">{{ user.blood_group }} donor</p>
+                            <p class="text-secondary mb-0">{{ user.city }} | {{ "Available" if user.donor_profile.is_available else "Not available" }}</p>
+                        </div>
+                        <a class="btn btn-outline-blood" href="{{ url_for('donor.profile') }}">View donor profile</a>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p class="fw-semibold mb-1">You are not enrolled as a donor</p>
+                        <p class="text-secondary mb-3">Create a donor profile to join the matching network.</p>
+                        <a class="btn btn-blood" href="{{ url_for('donor.register') }}">
+                            <i data-lucide="user-plus" aria-hidden="true"></i>
+                            Become a donor
+                        </a>
+                    </div>
+                {% endif %}
             </section>
         </div>
     </div>

@@ -15,6 +15,7 @@ def create_app():
     from app.routes import main
     from app.auth import auth
     from app.models import User
+    from app.donor import donor
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -22,5 +23,6 @@ def create_app():
 
     app.register_blueprint(main)
     app.register_blueprint(auth)
+    app.register_blueprint(donor)
 
     return app

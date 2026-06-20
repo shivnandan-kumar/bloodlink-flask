@@ -55,6 +55,25 @@ Dashboard route:
 /dashboard
 ```
 
+## Step 5
+
+This step adds the donor profile module:
+
+- Donor registration and validation
+- One donor profile per user
+- Donor profile view and edit
+- Availability status
+- Pending verification status
+- Donor dashboard integration
+
+Donor routes:
+
+```text
+/donor/register
+/donor/profile
+/donor/edit
+```
+
 ## Run Locally
 
 ```powershell

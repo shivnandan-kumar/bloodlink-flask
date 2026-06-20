@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-4 py-md-5">
+        <a class="back-link" href="{{ url_for('main.dashboard') }}">Back to dashboard</a>
+        <p class="section-kicker mt-4 mb-2">Donor profile</p>
+        <h1 class="h2 fw-bold mb-2">{{ page_title }}</h1>
+        <p class="text-secondary mb-0">Keep your contact and donation details accurate.</p>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    <form method="post" class="donor-form">
+        <div class="form-section">
+            <div class="form-section-heading">
+                <h2>Personal details</h2>
+                <p>Basic information used during donor verification.</p>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="age">Age</label>
+                    <input class="form-control" id="age" name="age" type="number" min="18" max="65" value="{{ request.form.get('age', donor_profile.age if donor_profile else '') }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="gender">Gender</label>
+                    {% set selected_gender = request.form.get('gender', donor_profile.gender if donor_profile else '') %}
+                    <select class="form-select" id="gender" name="gender" required>
+                        <option value="">Select gender</option>
+                        {% for gender in genders %}
+                            <option value="{{ gender }}" {% if selected_gender == gender %}selected{% endif %}>{{ gender }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="phone">Phone number</label>
+                    <input class="form-control" id="phone" name="phone" type="tel" maxlength="20" value="{{ request.form.get('phone', donor_profile.phone if donor_profile else '') }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="city">City</label>
+                    <input class="form-control" id="city" name="city" type="text" maxlength="100" value="{{ request.form.get('city', current_user.city) }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="blood_group">Blood group</label>
+                    {% set selected_blood_group = request.form.get('blood_group', current_user.blood_group) %}
+                    <select class="form-select" id="blood_group" name="blood_group" required>
+                        {% for group in blood_groups %}
+                            <option value="{{ group }}" {% if selected_blood_group == group %}selected{% endif %}>{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="last_donation_date">Last donation date</label>
+                    <input class="form-control" id="last_donation_date" name="last_donation_date" type="date" value="{{ request.form.get('last_donation_date', donor_profile.last_donation_date.isoformat() if donor_profile and donor_profile.last_donation_date else '') }}">
+                    <div class="form-text">Leave blank if you have never donated.</div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="address">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3" maxlength="255" required>{{ request.form.get('address', donor_profile.address if donor_profile else '') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-heading">
+                <h2>Availability and declaration</h2>
+                <p>Final donation eligibility is decided during blood-bank screening.</p>
+            </div>
+            {% set available_checked = request.form.get('is_available') == 'on' if request.method == 'POST' else (donor_profile.is_available if donor_profile else true) %}
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" id="is_available" name="is_available" type="checkbox" {% if available_checked %}checked{% endif %}>
+                <label class="form-check-label" for="is_available">Available for donor matching</label>
+            </div>
+            <div class="declaration-box">
+                <div class="form-check">
+                    <input class="form-check-input" id="medical_eligible" name="medical_eligible" type="checkbox" required {% if request.form.get('medical_eligible') == 'on' or (request.method != 'POST' and donor_profile and donor_profile.medical_eligible) %}checked{% endif %}>
+                    <label class="form-check-label" for="medical_eligible">
+                        I confirm that these details are accurate and I agree to complete the required medical screening before donating.
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a class="btn btn-light" href="{{ url_for('donor.profile') if donor_profile else url_for('main.dashboard') }}">Cancel</a>
+            <button class="btn btn-blood" type="submit">{{ submit_label }}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
