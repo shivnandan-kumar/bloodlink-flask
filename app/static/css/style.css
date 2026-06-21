@@ -272,7 +272,7 @@ body {
     background-size: cover;
     color: #ffffff;
     display: flex;
-    min-height: min(72vh, 680px);
+    min-height: min(78vh, 760px);
     position: relative;
 }
 
@@ -284,8 +284,8 @@ body {
 }
 
 .hero-content {
-    padding-bottom: 72px;
-    padding-top: 140px;
+    padding-bottom: 88px;
+    padding-top: 156px;
     position: relative;
     z-index: 1;
 }
@@ -311,14 +311,43 @@ body {
     font-size: clamp(3rem, 7vw, 5.5rem);
     font-weight: 800;
     line-height: 0.98;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .hero-lead {
     color: #e7ecee;
     font-size: 1.2rem;
     line-height: 1.65;
-    max-width: 570px;
+    max-width: 610px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    margin-top: 38px;
+}
+
+.hero-trust span {
+    align-items: center;
+    color: #dfe7e9;
+    display: inline-flex;
+    font-size: 0.82rem;
+    font-weight: 600;
+    gap: 7px;
+}
+
+.hero-trust svg {
+    color: #ffbbc6;
+    height: 17px;
+    width: 17px;
 }
 
 .btn-hero-outline {
@@ -360,6 +389,318 @@ body {
 .network-stat span {
     color: var(--muted);
     font-size: 0.9rem;
+}
+
+.home-intro,
+.benefits-section,
+.how-section,
+.verification-section {
+    padding: 104px 0;
+}
+
+.home-intro {
+    background: var(--surface);
+}
+
+.home-intro-grid {
+    align-items: end;
+    display: grid;
+    gap: 64px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+}
+
+.home-section-label {
+    color: var(--blood);
+    font-size: 0.76rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.home-intro h2,
+.home-section-heading h2,
+.verification-copy h2,
+.home-cta h2 {
+    font-family: "Segoe UI Variable Display", Inter, "Segoe UI", Arial, sans-serif;
+    font-size: clamp(2rem, 4vw, 3.7rem);
+    font-weight: 780;
+    line-height: 1.08;
+    margin: 0;
+    max-width: 760px;
+}
+
+.home-intro-copy {
+    color: var(--muted);
+    font-size: 1.08rem;
+    line-height: 1.85;
+    margin: 0;
+}
+
+.benefits-section {
+    background: #edf2f0;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.benefit-item {
+    border-right: 1px solid #cfd9d5;
+    padding: 8px 44px 18px;
+}
+
+.benefit-item:first-child {
+    padding-left: 0;
+}
+
+.benefit-item:last-child {
+    border-right: 0;
+    padding-right: 0;
+}
+
+.benefit-icon {
+    align-items: center;
+    background: var(--blood);
+    border-radius: 50%;
+    color: #ffffff;
+    display: inline-flex;
+    height: 46px;
+    justify-content: center;
+    margin-bottom: 30px;
+    width: 46px;
+}
+
+.benefit-icon svg {
+    height: 21px;
+    width: 21px;
+}
+
+.benefit-number {
+    color: var(--teal);
+    font-size: 0.74rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.benefit-item h3,
+.home-step h3 {
+    font-size: 1.25rem;
+    font-weight: 750;
+    margin-bottom: 12px;
+}
+
+.benefit-item > p:last-child,
+.home-step p {
+    color: var(--muted);
+    line-height: 1.75;
+    margin: 0;
+}
+
+.medical-note {
+    align-items: center;
+    border-top: 1px solid #cfd9d5;
+    color: #52615e;
+    display: flex;
+    font-size: 0.82rem;
+    gap: 9px;
+    margin: 64px 0 0;
+    padding-top: 22px;
+}
+
+.medical-note svg {
+    flex: 0 0 auto;
+    height: 17px;
+    width: 17px;
+}
+
+.how-section {
+    background: var(--surface);
+}
+
+.home-section-heading {
+    align-items: end;
+    display: grid;
+    gap: 50px;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.55fr);
+    margin-bottom: 66px;
+}
+
+.home-section-heading > p {
+    color: var(--muted);
+    line-height: 1.75;
+    margin: 0;
+}
+
+.steps-list {
+    border-top: 1px solid var(--line);
+}
+
+.home-step {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 28px;
+    grid-template-columns: 52px 54px minmax(0, 1fr);
+    padding: 28px 0;
+}
+
+.home-step > span {
+    color: var(--blood);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.home-step > svg {
+    color: var(--teal);
+    height: 28px;
+    width: 28px;
+}
+
+.home-step h3 {
+    margin-bottom: 4px;
+}
+
+.home-quote {
+    background: var(--charcoal);
+    color: #ffffff;
+    padding: 104px 0;
+}
+
+.quote-layout {
+    max-width: 980px;
+    text-align: center;
+}
+
+.quote-layout > svg {
+    color: #ff8398;
+    height: 38px;
+    margin-bottom: 30px;
+    width: 38px;
+}
+
+.quote-layout blockquote {
+    font-family: "Segoe UI Variable Display", Inter, "Segoe UI", Arial, sans-serif;
+    font-size: clamp(2rem, 4.5vw, 4rem);
+    font-weight: 680;
+    line-height: 1.2;
+    margin: 0 auto 28px;
+}
+
+.quote-layout p {
+    color: #aebcc0;
+    font-size: 0.86rem;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.verification-section {
+    background: #f8faf9;
+}
+
+.verification-layout {
+    display: grid;
+    gap: 96px;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 0.8fr);
+}
+
+.verification-copy > p:last-child {
+    color: var(--muted);
+    line-height: 1.8;
+    margin: 28px 0 0;
+    max-width: 650px;
+}
+
+.verification-points > div {
+    align-items: flex-start;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 18px;
+    padding: 20px 0;
+}
+
+.verification-points > div:first-child {
+    padding-top: 0;
+}
+
+.verification-points svg {
+    color: var(--blood);
+    flex: 0 0 auto;
+    height: 24px;
+    margin-top: 2px;
+    width: 24px;
+}
+
+.verification-points span {
+    display: grid;
+    gap: 4px;
+}
+
+.verification-points small {
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.home-cta {
+    background: var(--blood);
+    color: #ffffff;
+    padding: 82px 0;
+}
+
+.home-cta-inner {
+    align-items: center;
+    display: flex;
+    gap: 48px;
+    justify-content: space-between;
+}
+
+.home-cta .home-section-label {
+    color: #ffd0d8;
+}
+
+.home-cta h2 {
+    font-size: clamp(1.8rem, 3.4vw, 3rem);
+    max-width: 720px;
+}
+
+.home-cta-actions {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 12px;
+}
+
+.btn-cta-outline {
+    border-color: rgba(255, 255, 255, 0.75);
+    color: #ffffff;
+}
+
+.btn-cta-outline:hover,
+.btn-cta-outline:focus {
+    background: #ffffff;
+    color: var(--blood-dark);
+}
+
+.home-footer {
+    background: #11191d;
+    color: #ffffff;
+    padding: 30px 0;
+}
+
+.home-footer .container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.home-footer .brand-lockup {
+    color: #ffffff;
+}
+
+.home-footer p {
+    color: #9eaaae;
+    font-size: 0.84rem;
+    margin: 0;
 }
 
 .auth-page {
@@ -1370,6 +1711,22 @@ textarea.form-control {
     .dashboard-match-contact {
         grid-column: 2;
     }
+
+    .home-intro-grid,
+    .home-section-heading,
+    .verification-layout {
+        gap: 32px;
+        grid-template-columns: 1fr;
+    }
+
+    .verification-layout {
+        gap: 56px;
+    }
+
+    .home-cta-inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -1387,6 +1744,10 @@ textarea.form-control {
         padding-top: 124px;
     }
 
+    .hero-trust {
+        margin-top: 30px;
+    }
+
     .network-stat {
         align-items: center;
         flex-direction: column;
@@ -1396,6 +1757,48 @@ textarea.form-control {
 
     .network-stat span {
         font-size: 0.76rem;
+    }
+
+    .home-intro,
+    .benefits-section,
+    .how-section,
+    .verification-section,
+    .home-quote {
+        padding: 72px 0;
+    }
+
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .benefit-item,
+    .benefit-item:first-child,
+    .benefit-item:last-child {
+        border-bottom: 1px solid #cfd9d5;
+        border-right: 0;
+        padding: 32px 0;
+    }
+
+    .benefit-item:first-child {
+        padding-top: 0;
+    }
+
+    .benefit-item:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .benefit-icon {
+        margin-bottom: 20px;
+    }
+
+    .medical-note {
+        align-items: flex-start;
+        margin-top: 48px;
+    }
+
+    .home-section-heading {
+        margin-bottom: 42px;
     }
 
     .auth-content {
@@ -1456,6 +1859,47 @@ textarea.form-control {
 
     .hero-lead {
         font-size: 1rem;
+    }
+
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .hero-trust {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .home-step {
+        align-items: start;
+        gap: 14px;
+        grid-template-columns: 34px minmax(0, 1fr);
+    }
+
+    .home-step > svg {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .home-step > div {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+
+    .home-cta-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .home-cta-actions .btn {
+        width: 100%;
+    }
+
+    .home-footer .container {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
     }
 
     .account-details > div {

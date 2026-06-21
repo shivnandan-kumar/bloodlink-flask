@@ -7,16 +7,22 @@
 <section class="home-hero">
     <div class="container hero-content">
         <div class="hero-copy">
-            <p class="hero-eyebrow">Blood donor network</p>
+            <p class="hero-eyebrow">Verified local blood donor network</p>
             <h1>BloodLink</h1>
-            <p class="hero-lead">A dependable way to connect people who need blood with donors in their city.</p>
-            <div class="d-flex flex-wrap gap-3 mt-4">
-                    {% if current_user.is_authenticated %}
-                        <a class="btn btn-light btn-lg" href="{{ url_for('main.dashboard') }}">Open dashboard</a>
-                    {% else %}
-                        <a class="btn btn-light btn-lg" href="{{ url_for('auth.register') }}">Join BloodLink</a>
-                        <a class="btn btn-hero-outline btn-lg" href="{{ url_for('auth.login') }}">Login</a>
-                    {% endif %}
+            <p class="hero-lead">When blood is needed, every hour matters. Find verified donors in your city or become the person someone is hoping to find.</p>
+            <div class="hero-actions">
+                {% if current_user.is_authenticated %}
+                    <a class="btn btn-light btn-lg" href="{{ url_for('main.dashboard') }}">Open dashboard</a>
+                    <a class="btn btn-hero-outline btn-lg" href="#how-it-works">How it works</a>
+                {% else %}
+                    <a class="btn btn-light btn-lg" href="{{ url_for('auth.register') }}">Join BloodLink</a>
+                    <a class="btn btn-hero-outline btn-lg" href="{{ url_for('auth.login') }}">Login</a>
+                {% endif %}
+            </div>
+            <div class="hero-trust" aria-label="BloodLink verification features">
+                <span><i data-lucide="shield-check" aria-hidden="true"></i>Verified profiles</span>
+                <span><i data-lucide="map-pin" aria-hidden="true"></i>City-based matching</span>
+                <span><i data-lucide="lock-keyhole" aria-hidden="true"></i>Private documents</span>
             </div>
         </div>
     </div>
@@ -25,19 +31,92 @@
 <section class="network-strip" aria-label="BloodLink network overview">
     <div class="container">
         <div class="row g-0">
-            <div class="col-4 network-stat">
-                <strong>8</strong>
-                <span>Blood groups</span>
-            </div>
-            <div class="col-4 network-stat">
-                <strong>2</strong>
-                <span>Ways to help</span>
-            </div>
-            <div class="col-4 network-stat">
-                <strong>1</strong>
-                <span>Shared network</span>
-            </div>
+            <div class="col-4 network-stat"><strong>8</strong><span>Blood groups</span></div>
+            <div class="col-4 network-stat"><strong>2</strong><span>Ways to participate</span></div>
+            <div class="col-4 network-stat"><strong>1</strong><span>Connected community</span></div>
         </div>
     </div>
 </section>
+
+<section class="home-intro">
+    <div class="container home-intro-grid">
+        <div><p class="home-section-label">Why blood donation matters</p><h2>A small act can become someone's second chance.</h2></div>
+        <p class="home-intro-copy">Donated blood supports patients during emergencies, surgery, cancer treatment and complications during childbirth. Because blood cannot be manufactured, a dependable supply begins with voluntary donors.</p>
+    </div>
+</section>
+
+<section class="benefits-section">
+    <div class="container">
+        <div class="benefits-grid">
+            <article class="benefit-item">
+                <span class="benefit-icon"><i data-lucide="heart-pulse" aria-hidden="true"></i></span><p class="benefit-number">01</p>
+                <h3>Support critical care</h3><p>Blood donations help hospitals respond to trauma, major surgery and urgent medical treatment.</p>
+            </article>
+            <article class="benefit-item">
+                <span class="benefit-icon"><i data-lucide="droplets" aria-hidden="true"></i></span><p class="benefit-number">02</p>
+                <h3>Help more than one need</h3><p>After processing, different blood components may be used to support different patients.</p>
+            </article>
+            <article class="benefit-item">
+                <span class="benefit-icon"><i data-lucide="users" aria-hidden="true"></i></span><p class="benefit-number">03</p>
+                <h3>Strengthen local readiness</h3><p>A verified donor community gives requesters a better starting point when time is limited.</p>
+            </article>
+        </div>
+        <p class="medical-note"><i data-lucide="info" aria-hidden="true"></i>Final donation eligibility and blood-group confirmation are always decided by an authorized blood bank.</p>
+    </div>
+</section>
+
+<section class="how-section" id="how-it-works">
+    <div class="container">
+        <div class="home-section-heading">
+            <div><p class="home-section-label">How BloodLink works</p><h2>From request to the right local connection.</h2></div>
+            <p>Every profile and request follows a clear verification path before matching begins.</p>
+        </div>
+        <div class="steps-list">
+            <div class="home-step"><span>01</span><i data-lucide="file-plus-2" aria-hidden="true"></i><div><h3>Submit details</h3><p>Create a donor profile or blood request and attach the required supporting document.</p></div></div>
+            <div class="home-step"><span>02</span><i data-lucide="badge-check" aria-hidden="true"></i><div><h3>Admin verifies</h3><p>The submitted information and document are reviewed before approval.</p></div></div>
+            <div class="home-step"><span>03</span><i data-lucide="map-pinned" aria-hidden="true"></i><div><h3>Local matches appear</h3><p>Verified requests can find available donors with the required blood group in the same city.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<section class="home-quote">
+    <div class="container quote-layout">
+        <i data-lucide="quote" aria-hidden="true"></i>
+        <blockquote>Someone's ordinary day can continue because you chose to donate on yours.</blockquote>
+        <p>Give blood. Keep a family together.</p>
+    </div>
+</section>
+
+<section class="verification-section">
+    <div class="container verification-layout">
+        <div class="verification-copy">
+            <p class="home-section-label">Trust through verification</p><h2>Useful connections begin with responsible checks.</h2>
+            <p>BloodLink asks donors for blood-group proof and requesters for a doctor's prescription. Documents remain private and are available only to the owner and admin.</p>
+        </div>
+        <div class="verification-points">
+            <div><i data-lucide="scan-search" aria-hidden="true"></i><span><strong>Document review</strong><small>Submitted proof is checked before approval.</small></span></div>
+            <div><i data-lucide="user-check" aria-hidden="true"></i><span><strong>Verified participation</strong><small>Only approved, available donors enter matching.</small></span></div>
+            <div><i data-lucide="building-2" aria-hidden="true"></i><span><strong>Medical confirmation</strong><small>Authorized blood banks make the final donation decision.</small></span></div>
+        </div>
+    </div>
+</section>
+
+<section class="home-cta">
+    <div class="container home-cta-inner">
+        <div><p class="home-section-label">Be ready when someone needs help</p><h2>One account. Two meaningful ways to participate.</h2></div>
+        <div class="home-cta-actions">
+            {% if current_user.is_authenticated %}
+                <a class="btn btn-light btn-lg" href="{{ url_for('donor.profile') if current_user.donor_profile else url_for('donor.register') }}">Become a donor</a>
+                <a class="btn btn-cta-outline btn-lg" href="{{ url_for('blood_request.create') }}">Request blood</a>
+            {% else %}
+                <a class="btn btn-light btn-lg" href="{{ url_for('auth.register') }}">Create an account</a>
+                <a class="btn btn-cta-outline btn-lg" href="{{ url_for('auth.login') }}">Sign in</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<footer class="home-footer">
+    <div class="container"><span class="brand-lockup"><span class="brand-mark">B</span><span>BloodLink</span></span><p>Connecting verified needs with willing local donors.</p></div>
+</footer>
 {% endblock %}
