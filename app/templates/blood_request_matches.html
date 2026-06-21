@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Matched Donors | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-4 py-md-5">
+        <a class="back-link" href="{{ url_for('blood_request.detail', request_id=blood_request_record.id) }}">Back to request</a>
+        <p class="section-kicker mt-4 mb-2">Donor matching</p>
+        <h1 class="h2 fw-bold mb-2">Matched donors</h1>
+        <p class="text-secondary mb-0">Verified {{ blood_request_record.blood_group }} donors available in {{ blood_request_record.city }}.</p>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    <div class="match-summary mb-4">
+        <span class="request-blood-group">{{ blood_request_record.blood_group }}</span>
+        <div><strong>{{ donors|length }} donor{{ "s" if donors|length != 1 else "" }} found</strong><p>{{ blood_request_record.units_required }} unit{{ "s" if blood_request_record.units_required != 1 else "" }} required by {{ blood_request_record.needed_by.strftime("%d %b %Y") }}</p></div>
+    </div>
+
+    {% if donors %}
+        <div class="matched-donor-list">
+            {% for donor in donors %}
+                <article class="matched-donor-row">
+                    <span class="match-avatar">{{ donor.user.name[0]|upper }}</span>
+                    <div class="match-person"><h2>{{ donor.user.name }}</h2><p>{{ donor.user.city }} | {{ donor.user.blood_group }} donor</p></div>
+                    <div class="match-detail"><span>Phone</span><strong>{{ donor.phone }}</strong></div>
+                    <div class="match-detail"><span>Last donation</span><strong>{{ donor.last_donation_date.strftime("%d %b %Y") if donor.last_donation_date else "Not recorded" }}</strong></div>
+                    <span class="verification-chip donor-status-verified">Verified</span>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="module-empty-state">
+            <i data-lucide="users" aria-hidden="true"></i>
+            <h2>No matching donors available</h2>
+            <p>BloodLink will show donors here when a verified and available match is found.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+

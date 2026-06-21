@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.constants import BLOOD_GROUPS, URGENCY_LEVELS
 from app.extensions import db
+from app.matching import find_matching_donors
 from app.models import BloodRequest
 
 
@@ -145,6 +146,22 @@ def detail(request_id):
     return render_template(
         "blood_request_detail.html",
         blood_request_record=blood_request_record,
+    )
+
+
+@blood_request.route("/<int:request_id>/matches")
+@login_required
+def matches(request_id):
+    blood_request_record = get_owned_request_or_404(request_id)
+    if blood_request_record.status != "Verified":
+        flash("Donor matches are available after request verification.", "warning")
+        return redirect(url_for("blood_request.detail", request_id=request_id))
+
+    donors = find_matching_donors(blood_request_record)
+    return render_template(
+        "blood_request_matches.html",
+        blood_request_record=blood_request_record,
+        donors=donors,
     )
 
 

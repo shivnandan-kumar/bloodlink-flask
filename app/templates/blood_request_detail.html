@@ -73,6 +73,12 @@
                             <button class="btn btn-outline-blood" type="submit">Cancel request</button>
                         </form>
                     {% endif %}
+                    {% if blood_request_record.status == "Verified" %}
+                        <a class="btn btn-blood mt-3" href="{{ url_for('blood_request.matches', request_id=blood_request_record.id) }}">
+                            <i data-lucide="users" aria-hidden="true"></i>
+                            View matched donors
+                        </a>
+                    {% endif %}
                 </div>
             </section>
         </div>

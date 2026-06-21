@@ -7,6 +7,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
+from app.matching import find_matching_donors
 from app.models import BloodRequest, DonorProfile, User
 
 
@@ -171,9 +172,15 @@ def reject_donor(donor_id):
 @admin_required
 def request_detail(request_id):
     blood_request_record = get_request_or_404(request_id)
+    matched_donors = (
+        find_matching_donors(blood_request_record)
+        if blood_request_record.status == "Verified"
+        else []
+    )
     return render_template(
         "admin_request_detail.html",
         blood_request_record=blood_request_record,
+        matched_donors=matched_donors,
     )
 
 

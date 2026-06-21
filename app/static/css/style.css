@@ -1145,6 +1145,85 @@ textarea.form-control {
     border-color: var(--teal);
 }
 
+.match-summary {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 16px;
+    padding: 18px 0;
+}
+
+.match-summary strong {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.match-summary p {
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+.matched-donor-list {
+    border-top: 1px solid var(--line);
+}
+
+.matched-donor-row {
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 42px minmax(180px, 1fr) minmax(140px, 0.7fr) minmax(140px, 0.7fr) auto;
+    padding: 18px 8px;
+}
+
+.match-avatar {
+    align-items: center;
+    background: #e7ebeb;
+    border-radius: 50%;
+    color: #465258;
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 800;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+
+.match-person h2 {
+    font-size: 0.95rem;
+    font-weight: 750;
+    margin-bottom: 3px;
+}
+
+.match-person p {
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-bottom: 0;
+}
+
+.match-detail span,
+.match-detail strong {
+    display: block;
+}
+
+.match-detail span {
+    color: var(--muted);
+    font-size: 0.72rem;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+
+.match-detail strong {
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.admin-match-section {
+    max-width: 760px;
+}
+
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding-bottom: 16px;
@@ -1169,6 +1248,14 @@ textarea.form-control {
 
     .auth-content {
         justify-content: center;
+    }
+
+    .matched-donor-row {
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+    }
+
+    .matched-donor-row .match-detail {
+        grid-column: 2;
     }
 }
 
@@ -1226,6 +1313,16 @@ textarea.form-control {
     .request-blood-group {
         height: 44px;
         width: 44px;
+    }
+
+    .matched-donor-row {
+        align-items: start;
+        grid-template-columns: 40px minmax(0, 1fr);
+    }
+
+    .matched-donor-row > .verification-chip {
+        grid-column: 2;
+        justify-self: start;
     }
 }
 

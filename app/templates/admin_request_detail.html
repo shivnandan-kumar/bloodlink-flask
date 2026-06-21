@@ -56,6 +56,23 @@
             {% endif %}
         </div>
     </div>
+
+    {% if blood_request_record.status == "Verified" %}
+        <section class="admin-match-section mt-5" aria-labelledby="admin-matches-heading">
+            <div class="section-heading">
+                <h2 class="h5 fw-bold mb-1" id="admin-matches-heading">Matching donors</h2>
+                <p class="text-secondary mb-0">{{ matched_donors|length }} verified and available donor{{ "s" if matched_donors|length != 1 else "" }} in {{ blood_request_record.city }}.</p>
+            </div>
+            {% if matched_donors %}
+                <div class="admin-compact-list">
+                    {% for donor in matched_donors %}
+                        <div><span class="request-blood-group request-blood-group-small">{{ donor.user.blood_group }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.phone }}</small></span><span class="verification-chip donor-status-verified">Verified</span></div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-secondary py-4 mb-0">No matching donors are currently available.</p>
+            {% endif %}
+        </section>
+    {% endif %}
 </section>
 {% endblock %}
-

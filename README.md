@@ -146,6 +146,24 @@ Verification routes:
 /admin/requests/<id>/reject
 ```
 
+## Step 9
+
+This step adds donor matching:
+
+- Exact blood-group matching
+- Case-insensitive city matching
+- Verified donors only
+- Available and medically declared donors only
+- Request owner excluded from matches
+- Matches available after request verification
+- Requester match list and admin match preview
+
+Matching route:
+
+```text
+/requests/<id>/matches
+```
+
 ## Run Locally
 
 ```powershell
