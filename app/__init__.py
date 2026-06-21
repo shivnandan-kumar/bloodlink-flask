@@ -5,9 +5,9 @@ from config import Config
 from app.extensions import db, login_manager, migrate
 
 
-def create_app():
+def create_app(config_class=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -50,5 +50,9 @@ def create_app():
     @app.errorhandler(403)
     def forbidden(error):
         return render_template("403.html"), 403
+
+    @app.errorhandler(413)
+    def file_too_large(error):
+        return render_template("413.html"), 413
 
     return app

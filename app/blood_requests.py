@@ -1,6 +1,15 @@
 from datetime import date
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -8,6 +17,12 @@ from app.constants import BLOOD_GROUPS, URGENCY_LEVELS
 from app.extensions import db
 from app.matching import find_matching_donors
 from app.models import BloodRequest
+from app.uploads import (
+    UploadValidationError,
+    delete_prescription,
+    prescription_upload_directory,
+    save_prescription,
+)
 
 
 blood_request = Blueprint("blood_request", __name__, url_prefix="/requests")
@@ -113,8 +128,24 @@ def create():
     if request.method == "POST":
         data = validate_request_form()
         if data:
+            try:
+                saved_name, original_name = save_prescription(
+                    request.files.get("prescription")
+                )
+            except UploadValidationError as error:
+                flash(str(error), "danger")
+                return render_template(
+                    "blood_request_form.html",
+                    blood_groups=BLOOD_GROUPS,
+                    urgency_levels=URGENCY_LEVELS,
+                    blood_request_record=None,
+                    page_title="Create blood request",
+                    submit_label="Submit request",
+                )
             blood_request_record = BloodRequest(
                 requester=current_user,
+                prescription_filename=saved_name,
+                prescription_original_name=original_name,
                 **data,
             )
             try:
@@ -122,6 +153,7 @@ def create():
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()
+                delete_prescription(saved_name)
                 flash("Blood request could not be created. Please try again.", "danger")
             else:
                 flash("Blood request submitted for verification.", "success")
@@ -146,6 +178,24 @@ def detail(request_id):
     return render_template(
         "blood_request_detail.html",
         blood_request_record=blood_request_record,
+    )
+
+
+@blood_request.route("/<int:request_id>/prescription")
+@login_required
+def prescription(request_id):
+    blood_request_record = db.session.get(BloodRequest, request_id)
+    if not blood_request_record:
+        abort(404)
+    if blood_request_record.requester_id != current_user.id and not current_user.is_admin:
+        abort(403)
+    if not blood_request_record.prescription_filename:
+        abort(404)
+
+    return send_from_directory(
+        prescription_upload_directory(),
+        blood_request_record.prescription_filename,
+        download_name=blood_request_record.prescription_original_name,
     )
 
 
@@ -176,8 +226,26 @@ def edit(request_id):
     if request.method == "POST":
         data = validate_request_form()
         if data:
+            new_saved_name = None
+            uploaded_file = request.files.get("prescription")
+            if uploaded_file and uploaded_file.filename:
+                try:
+                    new_saved_name, new_original_name = save_prescription(uploaded_file)
+                except UploadValidationError as error:
+                    flash(str(error), "danger")
+                    return redirect(
+                        url_for("blood_request.edit", request_id=request_id)
+                    )
+            elif not blood_request_record.prescription_filename:
+                flash("Doctor prescription is required.", "danger")
+                return redirect(url_for("blood_request.edit", request_id=request_id))
+
+            old_saved_name = blood_request_record.prescription_filename
             for field, value in data.items():
                 setattr(blood_request_record, field, value)
+            if new_saved_name:
+                blood_request_record.prescription_filename = new_saved_name
+                blood_request_record.prescription_original_name = new_original_name
             blood_request_record.status = "Pending"
             blood_request_record.reviewed_by_id = None
             blood_request_record.reviewed_at = None
@@ -186,8 +254,11 @@ def edit(request_id):
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()
+                delete_prescription(new_saved_name)
                 flash("Blood request could not be updated. Please try again.", "danger")
             else:
+                if new_saved_name:
+                    delete_prescription(old_saved_name)
                 flash("Blood request updated.", "success")
                 return redirect(url_for("blood_request.detail", request_id=request_id))
 

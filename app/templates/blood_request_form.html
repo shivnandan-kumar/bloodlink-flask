@@ -14,7 +14,7 @@
 </section>
 
 <section class="container py-4 py-md-5">
-    <form method="post" class="donor-form">
+    <form method="post" enctype="multipart/form-data" class="donor-form">
         <div class="form-section">
             <div class="form-section-heading">
                 <h2>Patient requirement</h2>
@@ -84,6 +84,22 @@
             </div>
         </div>
 
+        <div class="form-section">
+            <div class="form-section-heading">
+                <h2>Doctor prescription</h2>
+                <p>This private document helps the admin verify the blood requirement.</p>
+            </div>
+            {% if blood_request_record and blood_request_record.prescription_filename %}
+                <p class="mb-3">
+                    Current document:
+                    <a href="{{ url_for('blood_request.prescription', request_id=blood_request_record.id) }}" target="_blank" rel="noopener">{{ blood_request_record.prescription_original_name }}</a>
+                </p>
+            {% endif %}
+            <label class="form-label" for="prescription">{{ "Replace prescription" if blood_request_record and blood_request_record.prescription_filename else "Upload prescription" }}</label>
+            <input class="form-control" id="prescription" name="prescription" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" {% if not blood_request_record or not blood_request_record.prescription_filename %}required{% endif %}>
+            <div class="form-text">PDF, JPG or PNG only. Maximum size: 5 MB.</div>
+        </div>
+
         <div class="form-actions">
             <a class="btn btn-light" href="{{ url_for('blood_request.detail', request_id=blood_request_record.id) if blood_request_record else url_for('blood_request.index') }}">Cancel</a>
             <button class="btn btn-blood" type="submit">{{ submit_label }}</button>
@@ -91,4 +107,3 @@
     </form>
 </section>
 {% endblock %}
-

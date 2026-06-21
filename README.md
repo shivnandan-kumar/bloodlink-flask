@@ -85,6 +85,9 @@ This step adds the blood request module:
 - Cancel request flow
 - Owner-only request access
 - Dashboard request activity
+- Private doctor prescription upload
+- PDF, JPG and PNG file validation (maximum 5 MB)
+- Prescription access limited to the request owner and admin
 
 Blood request routes:
 
@@ -93,6 +96,7 @@ Blood request routes:
 /requests/new
 /requests/<id>
 /requests/<id>/edit
+/requests/<id>/prescription
 ```
 
 ## Step 7
@@ -134,6 +138,7 @@ This step adds donor and blood request verification:
 - User-visible verification outcomes
 - Edit and resubmit rejected records
 - Invalid second-review protection
+- Prescription required before request verification
 
 Verification routes:
 

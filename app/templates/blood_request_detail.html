@@ -52,6 +52,7 @@
                     <div><dt>Address</dt><dd>{{ blood_request_record.hospital_address }}</dd></div>
                     <div><dt>Contact phone</dt><dd>{{ blood_request_record.contact_phone }}</dd></div>
                     <div><dt>Reason</dt><dd>{{ blood_request_record.reason or "Not provided" }}</dd></div>
+                    <div><dt>Prescription</dt><dd>{% if blood_request_record.prescription_filename %}<a href="{{ url_for('blood_request.prescription', request_id=blood_request_record.id) }}" target="_blank" rel="noopener">View document</a>{% else %}Not uploaded{% endif %}</dd></div>
                     <div><dt>Created</dt><dd>{{ blood_request_record.created_at.strftime("%d %B %Y") }}</dd></div>
                 </dl>
             </section>

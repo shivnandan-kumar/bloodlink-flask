@@ -115,6 +115,8 @@ class BloodRequest(db.Model):
     needed_by = db.Column(db.Date, nullable=False)
     urgency = db.Column(db.String(20), default="Normal", nullable=False)
     reason = db.Column(db.String(500), nullable=True)
+    prescription_filename = db.Column(db.String(100), nullable=True)
+    prescription_original_name = db.Column(db.String(255), nullable=True)
     status = db.Column(db.String(20), default="Pending", nullable=False)
     reviewed_by_id = db.Column(
         db.Integer,

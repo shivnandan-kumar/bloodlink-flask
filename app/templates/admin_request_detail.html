@@ -29,6 +29,7 @@
                 <div><dt>Address</dt><dd>{{ blood_request_record.hospital_address }}</dd></div>
                 <div><dt>Contact</dt><dd>{{ blood_request_record.contact_phone }}</dd></div>
                 <div><dt>Reason</dt><dd>{{ blood_request_record.reason or "Not provided" }}</dd></div>
+                <div><dt>Prescription</dt><dd>{% if blood_request_record.prescription_filename %}<a class="btn btn-sm btn-outline-blood" href="{{ url_for('blood_request.prescription', request_id=blood_request_record.id) }}" target="_blank" rel="noopener"><i data-lucide="file-text" aria-hidden="true"></i>View prescription</a>{% else %}<span class="text-danger fw-semibold">Not uploaded</span>{% endif %}</dd></div>
                 <div><dt>Submitted</dt><dd>{{ blood_request_record.created_at.strftime("%d %B %Y") }}</dd></div>
             </dl>
         </div>
@@ -37,7 +38,7 @@
             {% if blood_request_record.status == "Pending" %}
                 <div class="review-actions">
                     <form method="post" action="{{ url_for('admin.verify_request', request_id=blood_request_record.id) }}">
-                        <button class="btn btn-verify w-100" type="submit"><i data-lucide="check" aria-hidden="true"></i>Verify request</button>
+                        <button class="btn btn-verify w-100" type="submit" {% if not blood_request_record.prescription_filename %}disabled{% endif %}><i data-lucide="check" aria-hidden="true"></i>Verify request</button>
                     </form>
                     <div class="review-divider"><span>or reject</span></div>
                     <form method="post" action="{{ url_for('admin.reject_request', request_id=blood_request_record.id) }}">

@@ -192,6 +192,9 @@ def verify_request(request_id):
     if blood_request_record.status != "Pending":
         flash("Only pending blood requests can be reviewed.", "warning")
         return redirect(url_for("admin.request_detail", request_id=request_id))
+    if not blood_request_record.prescription_filename:
+        flash("A doctor prescription is required before verification.", "danger")
+        return redirect(url_for("admin.request_detail", request_id=request_id))
 
     blood_request_record.status = "Verified"
     blood_request_record.reviewed_by = current_user
