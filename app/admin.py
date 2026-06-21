@@ -9,6 +9,11 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.extensions import db
 from app.matching import find_matching_donors
 from app.models import BloodRequest, DonorProfile, User
+from app.notifications import (
+    create_notification,
+    notify_matching_requests_for_donor,
+    notify_request_matches,
+)
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
@@ -130,6 +135,15 @@ def verify_donor(donor_id):
     donor.reviewed_at = datetime.now(timezone.utc)
     donor.rejection_reason = None
     try:
+        create_notification(
+            user_id=donor.user_id,
+            title="Donor profile verified",
+            message="Your donor profile has been verified and can now appear in donor matching.",
+            category="success",
+            link="/donor/profile",
+            event_key=f"donor-{donor.id}-verified-{donor.updated_at.isoformat()}",
+        )
+        notify_matching_requests_for_donor(donor)
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
@@ -161,6 +175,14 @@ def reject_donor(donor_id):
     donor.reviewed_at = datetime.now(timezone.utc)
     donor.rejection_reason = reason
     try:
+        create_notification(
+            user_id=donor.user_id,
+            title="Donor profile needs changes",
+            message=f"Your donor profile was rejected. Reason: {reason}",
+            category="warning",
+            link="/donor/profile",
+            event_key=f"donor-{donor.id}-rejected-{donor.updated_at.isoformat()}",
+        )
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
@@ -204,6 +226,18 @@ def verify_request(request_id):
     blood_request_record.reviewed_at = datetime.now(timezone.utc)
     blood_request_record.rejection_reason = None
     try:
+        create_notification(
+            user_id=blood_request_record.requester_id,
+            title="Blood request verified",
+            message=f"Blood request #{blood_request_record.id} has been verified.",
+            category="success",
+            link=f"/requests/{blood_request_record.id}",
+            event_key=f"blood-request-{blood_request_record.id}-verified-{blood_request_record.updated_at.isoformat()}",
+        )
+        notify_request_matches(
+            blood_request_record,
+            find_matching_donors(blood_request_record),
+        )
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
@@ -235,6 +269,14 @@ def reject_request(request_id):
     blood_request_record.reviewed_at = datetime.now(timezone.utc)
     blood_request_record.rejection_reason = reason
     try:
+        create_notification(
+            user_id=blood_request_record.requester_id,
+            title="Blood request needs changes",
+            message=f"Blood request #{blood_request_record.id} was rejected. Reason: {reason}",
+            category="warning",
+            link=f"/requests/{blood_request_record.id}",
+            event_key=f"blood-request-{blood_request_record.id}-rejected-{blood_request_record.updated_at.isoformat()}",
+        )
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()

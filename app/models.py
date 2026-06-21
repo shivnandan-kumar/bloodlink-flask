@@ -33,6 +33,12 @@ class User(UserMixin, db.Model):
         foreign_keys="BloodRequest.requester_id",
         lazy="select",
     )
+    notifications = db.relationship(
+        "Notification",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -151,3 +157,38 @@ class BloodRequest(db.Model):
 
     def __repr__(self):
         return f"<BloodRequest id={self.id} status={self.status}>"
+
+
+class Notification(db.Model):
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "event_key",
+            name="uq_notification_user_event_key",
+        ),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False,
+        index=True,
+    )
+    title = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.String(500), nullable=False)
+    category = db.Column(db.String(20), default="info", nullable=False)
+    link = db.Column(db.String(255), nullable=True)
+    event_key = db.Column(db.String(150), nullable=True)
+    is_read = db.Column(db.Boolean, default=False, nullable=False, index=True)
+    created_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    read_at = db.Column(db.DateTime, nullable=True)
+
+    user = db.relationship("User", back_populates="notifications")
+
+    def __repr__(self):
+        return f"<Notification id={self.id} user_id={self.user_id}>"

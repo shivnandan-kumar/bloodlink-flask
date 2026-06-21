@@ -24,6 +24,11 @@
                                 <i data-lucide="house" aria-hidden="true"></i>
                                 <span class="visually-hidden">Home</span>
                             </a>
+                            <a class="nav-link nav-link-modern nav-icon-link notification-link {% if request.blueprint == 'notifications' %}active{% endif %}" href="{{ url_for('notifications.index') }}" aria-label="Notifications{% if unread_notification_count %}, {{ unread_notification_count }} unread{% endif %}" title="Notifications">
+                                <i data-lucide="bell" aria-hidden="true"></i>
+                                {% if unread_notification_count %}<span class="notification-badge">{{ unread_notification_count if unread_notification_count < 100 else "99+" }}</span>{% endif %}
+                                <span class="visually-hidden">Notifications</span>
+                            </a>
                             <a class="nav-link nav-link-modern {% if request.endpoint == 'main.dashboard' %}active{% endif %}" href="{{ url_for('main.dashboard') }}">Dashboard</a>
                             {% if current_user.is_admin %}
                                 <a class="nav-link nav-link-modern {% if request.blueprint == 'admin' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">Admin</a>

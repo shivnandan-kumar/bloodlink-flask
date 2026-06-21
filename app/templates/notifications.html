@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header notification-header">
+    <div class="container py-4 py-md-5">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+            <div>
+                <p class="section-kicker mb-2">Updates</p>
+                <h1 class="h2 fw-bold mb-2">Notifications</h1>
+                <p class="text-secondary mb-0">Verification decisions and donor-match updates.</p>
+            </div>
+            {% if unread_notification_count %}
+                <form method="post" action="{{ url_for('notifications.read_all') }}">
+                    <input type="hidden" name="next" value="{{ url_for('notifications.index') }}">
+                    <button class="btn btn-outline-blood" type="submit"><i data-lucide="check-check" aria-hidden="true"></i>Mark all as read</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    {% if notifications %}
+        <div class="notification-list">
+            {% for notification in notifications %}
+                <form method="post" action="{{ url_for('notifications.open_notification', notification_id=notification.id) }}" class="notification-row {% if not notification.is_read %}notification-unread{% endif %}">
+                    <button type="submit" aria-label="Open notification: {{ notification.title }}">
+                        <span class="notification-type notification-type-{{ notification.category }}">
+                            {% if notification.category == "success" %}
+                                <i data-lucide="circle-check" aria-hidden="true"></i>
+                            {% elif notification.category == "warning" %}
+                                <i data-lucide="triangle-alert" aria-hidden="true"></i>
+                            {% elif notification.category == "match" %}
+                                <i data-lucide="users" aria-hidden="true"></i>
+                            {% else %}
+                                <i data-lucide="bell" aria-hidden="true"></i>
+                            {% endif %}
+                        </span>
+                        <span class="notification-content">
+                            <span class="notification-title-line">
+                                <strong>{{ notification.title }}</strong>
+                                {% if not notification.is_read %}<span class="unread-dot" aria-label="Unread"></span>{% endif %}
+                            </span>
+                            <span class="notification-message">{{ notification.message }}</span>
+                            <small>{{ notification.created_at.strftime("%d %b %Y, %I:%M %p") }}</small>
+                        </span>
+                        <i class="notification-arrow" data-lucide="chevron-right" aria-hidden="true"></i>
+                    </button>
+                </form>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="notification-empty">
+            <i data-lucide="bell-ring" aria-hidden="true"></i>
+            <h2>No notifications yet</h2>
+            <p>Verification decisions and donor matches will appear here.</p>
+            <a class="btn btn-blood" href="{{ url_for('main.dashboard') }}">Back to dashboard</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

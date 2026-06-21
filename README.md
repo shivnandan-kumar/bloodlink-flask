@@ -174,6 +174,28 @@ Matching route:
 /requests/<id>/matches
 ```
 
+## Step 10
+
+This step adds persistent in-app notifications:
+
+- Navbar bell with unread notification count
+- Donor profile verified or rejected updates
+- Blood request verified or rejected updates
+- Matching donor available alerts
+- Notification inbox ordered by newest first
+- Open a notification and mark it as read
+- Mark all notifications as read
+- Owner-only notification access
+- Duplicate matching notification protection
+
+Notification routes:
+
+```text
+/notifications
+/notifications/<id>/open
+/notifications/read-all
+```
+
 ## Run Locally
 
 ```powershell

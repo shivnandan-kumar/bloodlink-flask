@@ -1,5 +1,6 @@
 import click
 from flask import Flask, render_template
+from flask_login import current_user
 
 from config import Config
 from app.extensions import db, login_manager, migrate
@@ -15,10 +16,11 @@ def create_app(config_class=Config):
 
     from app.routes import main
     from app.auth import auth
-    from app.models import User
+    from app.models import Notification, User
     from app.donor import donor
     from app.blood_requests import blood_request
     from app.admin import admin
+    from app.notifications import notifications
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -29,6 +31,21 @@ def create_app(config_class=Config):
     app.register_blueprint(donor)
     app.register_blueprint(blood_request)
     app.register_blueprint(admin)
+    app.register_blueprint(notifications)
+
+    @app.context_processor
+    def notification_context():
+        if not current_user.is_authenticated:
+            return {"unread_notification_count": 0}
+        unread_count = db.session.scalar(
+            db.select(db.func.count())
+            .select_from(Notification)
+            .where(
+                Notification.user_id == current_user.id,
+                Notification.is_read.is_(False),
+            )
+        )
+        return {"unread_notification_count": unread_count}
 
     @app.cli.command("promote-admin")
     @click.argument("email")

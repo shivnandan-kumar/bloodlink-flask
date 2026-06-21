@@ -145,6 +145,32 @@ body {
     width: 19px;
 }
 
+.notification-link {
+    position: relative;
+}
+
+.notification-badge {
+    align-items: center;
+    background: var(--blood);
+    border: 2px solid var(--surface);
+    border-radius: 999px;
+    color: #ffffff;
+    display: inline-flex;
+    font-size: 0.62rem;
+    font-weight: 800;
+    height: 19px;
+    justify-content: center;
+    min-width: 19px;
+    padding: 0 4px;
+    position: absolute;
+    right: -4px;
+    top: -3px;
+}
+
+.home-page .notification-badge {
+    border-color: #253237;
+}
+
 .nav-link-modern::after {
     background: var(--blood);
     bottom: 2px;
@@ -1431,6 +1457,130 @@ textarea.form-control {
     margin: 0;
 }
 
+.notification-header {
+    border-bottom: 1px solid var(--line);
+}
+
+.notification-list {
+    border-top: 1px solid var(--line);
+}
+
+.notification-row {
+    border-bottom: 1px solid var(--line);
+    margin: 0;
+}
+
+.notification-row > button {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 46px minmax(0, 1fr) 24px;
+    padding: 22px 18px;
+    text-align: left;
+    transition: background 160ms ease;
+    width: 100%;
+}
+
+.notification-row > button:hover,
+.notification-row > button:focus-visible {
+    background: #f1f5f3;
+    outline: 0;
+}
+
+.notification-unread > button {
+    background: #fff7f8;
+}
+
+.notification-type {
+    align-items: center;
+    background: #e7ecea;
+    border-radius: 50%;
+    color: #52605e;
+    display: inline-flex;
+    height: 44px;
+    justify-content: center;
+    width: 44px;
+}
+
+.notification-type svg {
+    height: 21px;
+    width: 21px;
+}
+
+.notification-type-success {
+    background: #e0f2ed;
+    color: var(--teal);
+}
+
+.notification-type-warning {
+    background: #fff0d8;
+    color: #94650b;
+}
+
+.notification-type-match {
+    background: #fde5e9;
+    color: var(--blood);
+}
+
+.notification-content {
+    display: grid;
+    gap: 5px;
+}
+
+.notification-title-line {
+    align-items: center;
+    display: flex;
+    gap: 9px;
+}
+
+.unread-dot {
+    background: var(--blood);
+    border-radius: 50%;
+    height: 7px;
+    width: 7px;
+}
+
+.notification-message {
+    color: #4f5b60;
+    line-height: 1.55;
+}
+
+.notification-content small {
+    color: var(--muted);
+    font-size: 0.76rem;
+}
+
+.notification-arrow {
+    color: #929da0;
+    height: 19px;
+    width: 19px;
+}
+
+.notification-empty {
+    padding: 72px 20px;
+    text-align: center;
+}
+
+.notification-empty > svg {
+    color: var(--blood);
+    height: 36px;
+    margin-bottom: 20px;
+    width: 36px;
+}
+
+.notification-empty h2 {
+    font-size: 1.35rem;
+    font-weight: 750;
+}
+
+.notification-empty p {
+    color: var(--muted);
+    margin: 0 auto 24px;
+}
+
 .btn-verify {
     background: var(--teal);
     border-color: var(--teal);
@@ -1853,6 +2003,21 @@ textarea.form-control {
 }
 
 @media (max-width: 575.98px) {
+    .notification-row > button {
+        gap: 12px;
+        grid-template-columns: 40px minmax(0, 1fr);
+        padding: 18px 8px;
+    }
+
+    .notification-type {
+        height: 40px;
+        width: 40px;
+    }
+
+    .notification-arrow {
+        display: none;
+    }
+
     .hero-copy h1 {
         font-size: 3rem;
     }
