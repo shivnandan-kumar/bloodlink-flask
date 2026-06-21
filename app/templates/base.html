@@ -67,7 +67,7 @@
                 {% if messages %}
                     <div class="flash-area">
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" data-auto-dismiss="3000">
                             {{ message }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -84,6 +84,13 @@
             if (window.lucide) {
                 window.lucide.createIcons();
             }
+
+            document.querySelectorAll("[data-auto-dismiss]").forEach((alertElement) => {
+                const delay = Number(alertElement.dataset.autoDismiss);
+                window.setTimeout(() => {
+                    bootstrap.Alert.getOrCreateInstance(alertElement).close();
+                }, delay);
+            });
         </script>
     </body>
 </html>
