@@ -32,6 +32,15 @@
                 <div><dt>Blood group proof</dt><dd>{% if donor.blood_group_proof_filename %}<a class="btn btn-sm btn-outline-blood" href="{{ url_for('donor.blood_group_proof', donor_id=donor.id) }}" target="_blank" rel="noopener"><i data-lucide="file-text" aria-hidden="true"></i>View proof</a>{% else %}<span class="text-danger fw-semibold">Not uploaded</span>{% endif %}</dd></div>
                 <div><dt>Submitted</dt><dd>{{ donor.created_at.strftime("%d %B %Y") }}</dd></div>
             </dl>
+            {% if donor.verification_status == "Pending" %}
+                <div class="document-review-note">
+                    <i data-lucide="shield-check" aria-hidden="true"></i>
+                    <div>
+                        <strong>Verify the document before approval</strong>
+                        <p>Open the blood group proof and confirm the donor name, reported blood group, lab or hospital details, report date, and any signs of alteration. Approve the donor only when the document matches the submitted profile.</p>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         <div class="col-lg-5">
             <div class="section-heading"><h2 class="h5 fw-bold mb-1">Review decision</h2><p class="text-secondary mb-0">Approve or reject this donor profile.</p></div>
