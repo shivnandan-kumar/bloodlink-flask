@@ -47,6 +47,38 @@
         </div>
     </div>
 
+    {% if matched_request_summaries %}
+        <section class="dashboard-match-notice mb-5" aria-labelledby="dashboard-match-heading">
+            <div class="dashboard-match-heading">
+                <div class="dashboard-match-icon"><i data-lucide="users" aria-hidden="true"></i></div>
+                <div>
+                    <p class="section-kicker mb-1">Donor available</p>
+                    <h2 class="h5 fw-bold mb-1" id="dashboard-match-heading">Matching donors found for your request</h2>
+                    <p class="mb-0">Contact details are ready for your verified blood request.</p>
+                </div>
+            </div>
+            <div class="dashboard-match-results">
+                {% for summary in matched_request_summaries %}
+                    {% set first_donor = summary.donors[0] %}
+                    <div class="dashboard-match-result">
+                        <span class="request-blood-group">{{ summary.request.blood_group }}</span>
+                        <div class="dashboard-match-request">
+                            <strong>{{ summary.request.patient_name }}</strong>
+                            <span>{{ summary.request.hospital_name }} | {{ summary.request.city }}</span>
+                        </div>
+                        <div class="dashboard-match-contact">
+                            <span>Matched donor</span>
+                            <strong>{{ first_donor.user.name }}</strong>
+                            <a href="tel:{{ first_donor.phone }}">{{ first_donor.phone }}</a>
+                            {% if summary.donors|length > 1 %}<small>+{{ summary.donors|length - 1 }} more donor{{ "s" if summary.donors|length - 1 != 1 else "" }}</small>{% endif %}
+                        </div>
+                        <a class="btn btn-blood btn-sm" href="{{ url_for('blood_request.matches', request_id=summary.request.id) }}">View all matches</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
     <div class="row g-4">
         <div class="col-lg-7">
             <section id="account-details" aria-labelledby="account-heading">

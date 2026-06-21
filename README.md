@@ -157,6 +157,7 @@ This step adds donor matching:
 - Request owner excluded from matches
 - Matches available after request verification
 - Requester match list and admin match preview
+- Dashboard donor-available alert with contact details
 
 Matching route:
 

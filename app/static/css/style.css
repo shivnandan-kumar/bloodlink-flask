@@ -1224,6 +1224,81 @@ textarea.form-control {
     max-width: 760px;
 }
 
+.dashboard-match-notice {
+    background: #ffffff;
+    border: 1px solid #b8d9d2;
+    border-left: 4px solid var(--teal);
+}
+
+.dashboard-match-heading {
+    align-items: center;
+    background: #eef7f5;
+    display: flex;
+    gap: 14px;
+    padding: 18px 20px;
+}
+
+.dashboard-match-heading p:last-child {
+    color: #58706f;
+    font-size: 0.875rem;
+}
+
+.dashboard-match-icon {
+    align-items: center;
+    background: var(--teal);
+    border-radius: 50%;
+    color: #ffffff;
+    display: inline-flex;
+    flex: 0 0 38px;
+    height: 38px;
+    justify-content: center;
+    width: 38px;
+}
+
+.dashboard-match-icon svg {
+    height: 19px;
+    width: 19px;
+}
+
+.dashboard-match-result {
+    align-items: center;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 52px minmax(160px, 1fr) minmax(170px, 0.8fr) auto;
+    padding: 18px 20px;
+}
+
+.dashboard-match-request strong,
+.dashboard-match-request span,
+.dashboard-match-contact span,
+.dashboard-match-contact strong,
+.dashboard-match-contact a,
+.dashboard-match-contact small {
+    display: block;
+}
+
+.dashboard-match-request span,
+.dashboard-match-contact span,
+.dashboard-match-contact small {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 2px;
+}
+
+.dashboard-match-contact a {
+    color: var(--blood);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 2px;
+    text-decoration: none;
+}
+
+.dashboard-match-contact a:hover,
+.dashboard-match-contact a:focus {
+    color: var(--blood-dark);
+}
+
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding-bottom: 16px;
@@ -1255,6 +1330,14 @@ textarea.form-control {
     }
 
     .matched-donor-row .match-detail {
+        grid-column: 2;
+    }
+
+    .dashboard-match-result {
+        grid-template-columns: 52px minmax(0, 1fr) auto;
+    }
+
+    .dashboard-match-contact {
         grid-column: 2;
     }
 }
@@ -1321,6 +1404,16 @@ textarea.form-control {
     }
 
     .matched-donor-row > .verification-chip {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+    .dashboard-match-result {
+        align-items: start;
+        grid-template-columns: 44px minmax(0, 1fr);
+    }
+
+    .dashboard-match-result > .btn {
         grid-column: 2;
         justify-self: start;
     }
