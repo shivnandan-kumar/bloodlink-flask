@@ -7,7 +7,7 @@
 <section class="container py-5 text-center">
     <p class="section-kicker mb-2">Upload stopped</p>
     <h1 class="h2 fw-bold mb-3">The selected file is too large</h1>
-    <p class="text-secondary mb-4">Upload a PDF, JPG or PNG prescription smaller than 5 MB.</p>
+    <p class="text-secondary mb-4">Upload a PDF, JPG or PNG document smaller than 5 MB.</p>
     <a class="btn btn-blood" href="{{ request.referrer or url_for('blood_request.create') }}">Go back</a>
 </section>
 {% endblock %}

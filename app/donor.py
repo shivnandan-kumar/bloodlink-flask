@@ -1,12 +1,27 @@
 from datetime import date
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.constants import BLOOD_GROUPS
 from app.extensions import db
 from app.models import DonorProfile
+from app.uploads import (
+    UploadValidationError,
+    blood_group_proof_upload_directory,
+    delete_blood_group_proof,
+    save_blood_group_proof,
+)
 
 
 donor = Blueprint("donor", __name__, url_prefix="/donor")
@@ -86,6 +101,20 @@ def register():
     if request.method == "POST":
         data = validate_donor_form()
         if data:
+            try:
+                saved_name, original_name = save_blood_group_proof(
+                    request.files.get("blood_group_proof")
+                )
+            except UploadValidationError as error:
+                flash(str(error), "danger")
+                return render_template(
+                    "donor_form.html",
+                    blood_groups=BLOOD_GROUPS,
+                    genders=GENDERS,
+                    donor_profile=None,
+                    page_title="Become a donor",
+                    submit_label="Submit donor profile",
+                )
             profile = DonorProfile(
                 user=current_user,
                 age=data["age"],
@@ -95,6 +124,8 @@ def register():
                 last_donation_date=data["last_donation_date"],
                 is_available=data["is_available"],
                 medical_eligible=data["medical_eligible"],
+                blood_group_proof_filename=saved_name,
+                blood_group_proof_original_name=original_name,
             )
             current_user.city = data["city"]
             current_user.blood_group = data["blood_group"]
@@ -104,6 +135,7 @@ def register():
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()
+                delete_blood_group_proof(saved_name)
                 flash(
                     "Donor profile could not be saved. The phone number may already be in use.",
                     "danger",
@@ -132,6 +164,24 @@ def profile():
     return render_template("donor_profile.html", donor_profile=donor_profile)
 
 
+@donor.route("/<int:donor_id>/blood-group-proof")
+@login_required
+def blood_group_proof(donor_id):
+    donor_profile = db.session.get(DonorProfile, donor_id)
+    if not donor_profile:
+        abort(404)
+    if donor_profile.user_id != current_user.id and not current_user.is_admin:
+        abort(403)
+    if not donor_profile.blood_group_proof_filename:
+        abort(404)
+
+    return send_from_directory(
+        blood_group_proof_upload_directory(),
+        donor_profile.blood_group_proof_filename,
+        download_name=donor_profile.blood_group_proof_original_name,
+    )
+
+
 @donor.route("/edit", methods=["GET", "POST"])
 @login_required
 def edit():
@@ -142,6 +192,27 @@ def edit():
     if request.method == "POST":
         data = validate_donor_form()
         if data:
+            new_saved_name = None
+            uploaded_file = request.files.get("blood_group_proof")
+            blood_group_changed = data["blood_group"] != current_user.blood_group
+            if uploaded_file and uploaded_file.filename:
+                try:
+                    new_saved_name, new_original_name = save_blood_group_proof(
+                        uploaded_file
+                    )
+                except UploadValidationError as error:
+                    flash(str(error), "danger")
+                    return redirect(url_for("donor.edit"))
+            elif not donor_profile.blood_group_proof_filename or blood_group_changed:
+                message = (
+                    "Upload a new blood group proof when changing blood group."
+                    if blood_group_changed
+                    else "Blood group proof is required."
+                )
+                flash(message, "danger")
+                return redirect(url_for("donor.edit"))
+
+            old_saved_name = donor_profile.blood_group_proof_filename
             donor_profile.age = data["age"]
             donor_profile.gender = data["gender"]
             donor_profile.phone = data["phone"]
@@ -149,6 +220,9 @@ def edit():
             donor_profile.last_donation_date = data["last_donation_date"]
             donor_profile.is_available = data["is_available"]
             donor_profile.medical_eligible = data["medical_eligible"]
+            if new_saved_name:
+                donor_profile.blood_group_proof_filename = new_saved_name
+                donor_profile.blood_group_proof_original_name = new_original_name
             donor_profile.verification_status = "Pending"
             donor_profile.reviewed_by_id = None
             donor_profile.reviewed_at = None
@@ -160,11 +234,14 @@ def edit():
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()
+                delete_blood_group_proof(new_saved_name)
                 flash(
                     "Donor profile could not be updated. The phone number may already be in use.",
                     "danger",
                 )
             else:
+                if new_saved_name:
+                    delete_blood_group_proof(old_saved_name)
                 flash("Donor profile updated and sent for verification.", "success")
                 return redirect(url_for("donor.profile"))
 

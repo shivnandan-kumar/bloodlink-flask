@@ -65,6 +65,9 @@ This step adds the donor profile module:
 - Availability status
 - Pending verification status
 - Donor dashboard integration
+- Private blood group proof upload
+- New proof required when changing blood group
+- Blood group proof required before admin verification
 
 Donor routes:
 
@@ -72,6 +75,7 @@ Donor routes:
 /donor/register
 /donor/profile
 /donor/edit
+/donor/<id>/blood-group-proof
 ```
 
 ## Step 6

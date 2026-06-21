@@ -59,6 +59,8 @@ class DonorProfile(db.Model):
     last_donation_date = db.Column(db.Date, nullable=True)
     is_available = db.Column(db.Boolean, default=True, nullable=False)
     medical_eligible = db.Column(db.Boolean, default=False, nullable=False)
+    blood_group_proof_filename = db.Column(db.String(100), nullable=True)
+    blood_group_proof_original_name = db.Column(db.String(255), nullable=True)
     verification_status = db.Column(
         db.String(20),
         default="Pending",

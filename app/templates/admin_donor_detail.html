@@ -29,6 +29,7 @@
                 <div><dt>Address</dt><dd>{{ donor.address }}</dd></div>
                 <div><dt>Last donation</dt><dd>{{ donor.last_donation_date.strftime("%d %b %Y") if donor.last_donation_date else "Not recorded" }}</dd></div>
                 <div><dt>Available</dt><dd>{{ "Yes" if donor.is_available else "No" }}</dd></div>
+                <div><dt>Blood group proof</dt><dd>{% if donor.blood_group_proof_filename %}<a class="btn btn-sm btn-outline-blood" href="{{ url_for('donor.blood_group_proof', donor_id=donor.id) }}" target="_blank" rel="noopener"><i data-lucide="file-text" aria-hidden="true"></i>View proof</a>{% else %}<span class="text-danger fw-semibold">Not uploaded</span>{% endif %}</dd></div>
                 <div><dt>Submitted</dt><dd>{{ donor.created_at.strftime("%d %B %Y") }}</dd></div>
             </dl>
         </div>
@@ -37,7 +38,7 @@
             {% if donor.verification_status == "Pending" %}
                 <div class="review-actions">
                     <form method="post" action="{{ url_for('admin.verify_donor', donor_id=donor.id) }}">
-                        <button class="btn btn-verify w-100" type="submit"><i data-lucide="check" aria-hidden="true"></i>Verify donor</button>
+                        <button class="btn btn-verify w-100" type="submit" {% if not donor.blood_group_proof_filename %}disabled{% endif %}><i data-lucide="check" aria-hidden="true"></i>Verify donor</button>
                     </form>
                     <div class="review-divider"><span>or reject</span></div>
                     <form method="post" action="{{ url_for('admin.reject_donor', donor_id=donor.id) }}">
@@ -58,4 +59,3 @@
     </div>
 </section>
 {% endblock %}
-

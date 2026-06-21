@@ -121,6 +121,9 @@ def verify_donor(donor_id):
     if donor.verification_status != "Pending":
         flash("Only pending donor profiles can be reviewed.", "warning")
         return redirect(url_for("admin.donor_detail", donor_id=donor.id))
+    if not donor.blood_group_proof_filename:
+        flash("Blood group proof is required before donor verification.", "danger")
+        return redirect(url_for("admin.donor_detail", donor_id=donor.id))
 
     donor.verification_status = "Verified"
     donor.reviewed_by = current_user

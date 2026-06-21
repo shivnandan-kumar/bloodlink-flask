@@ -14,7 +14,7 @@
 </section>
 
 <section class="container py-4 py-md-5">
-    <form method="post" class="donor-form">
+    <form method="post" enctype="multipart/form-data" class="donor-form">
         <div class="form-section">
             <div class="form-section-heading">
                 <h2>Personal details</h2>
@@ -66,6 +66,22 @@
 
         <div class="form-section">
             <div class="form-section-heading">
+                <h2>Blood group proof</h2>
+                <p>Upload a lab report, hospital report or recognized blood-bank donor card showing your blood group.</p>
+            </div>
+            {% if donor_profile and donor_profile.blood_group_proof_filename %}
+                <p class="mb-3">
+                    Current document:
+                    <a href="{{ url_for('donor.blood_group_proof', donor_id=donor_profile.id) }}" target="_blank" rel="noopener">{{ donor_profile.blood_group_proof_original_name }}</a>
+                </p>
+            {% endif %}
+            <label class="form-label" for="blood_group_proof">{{ "Replace blood group proof" if donor_profile and donor_profile.blood_group_proof_filename else "Upload blood group proof" }}</label>
+            <input class="form-control" id="blood_group_proof" name="blood_group_proof" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" {% if not donor_profile or not donor_profile.blood_group_proof_filename %}required{% endif %}>
+            <div class="form-text">PDF, JPG or PNG only. Maximum size: 5 MB. Upload a new proof if you change your blood group.</div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-section-heading">
                 <h2>Availability and declaration</h2>
                 <p>Final donation eligibility is decided during blood-bank screening.</p>
             </div>
@@ -91,4 +107,3 @@
     </form>
 </section>
 {% endblock %}
-

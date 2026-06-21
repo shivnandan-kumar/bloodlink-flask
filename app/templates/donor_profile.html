@@ -72,6 +72,7 @@
             <div><dt>Gender</dt><dd>{{ donor_profile.gender }}</dd></div>
             <div><dt>Phone</dt><dd>{{ donor_profile.phone }}</dd></div>
             <div><dt>Address</dt><dd>{{ donor_profile.address }}</dd></div>
+            <div><dt>Blood group proof</dt><dd>{% if donor_profile.blood_group_proof_filename %}<a href="{{ url_for('donor.blood_group_proof', donor_id=donor_profile.id) }}" target="_blank" rel="noopener">View document</a>{% else %}Not uploaded{% endif %}</dd></div>
             <div><dt>Profile submitted</dt><dd>{{ donor_profile.created_at.strftime("%d %B %Y") }}</dd></div>
         </dl>
     </section>
