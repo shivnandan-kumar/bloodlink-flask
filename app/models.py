@@ -115,6 +115,11 @@ class DonorProfile(db.Model):
         foreign_keys=[user_id],
     )
     reviewed_by = db.relationship("User", foreign_keys=[reviewed_by_id])
+    donations = db.relationship(
+        "Donation",
+        back_populates="donor_profile",
+        lazy="select",
+    )
 
     def __repr__(self):
         return f"<DonorProfile user_id={self.user_id}>"
@@ -169,9 +174,61 @@ class BloodRequest(db.Model):
         foreign_keys=[requester_id],
     )
     reviewed_by = db.relationship("User", foreign_keys=[reviewed_by_id])
+    donations = db.relationship(
+        "Donation",
+        back_populates="blood_request",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
 
     def __repr__(self):
         return f"<BloodRequest id={self.id} status={self.status}>"
+
+
+class Donation(db.Model):
+    __table_args__ = (
+        db.UniqueConstraint(
+            "blood_request_id",
+            "donor_profile_id",
+            name="uq_donation_request_donor",
+        ),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    blood_request_id = db.Column(
+        db.Integer,
+        db.ForeignKey("blood_request.id"),
+        nullable=False,
+        index=True,
+    )
+    donor_profile_id = db.Column(
+        db.Integer,
+        db.ForeignKey("donor_profile.id"),
+        nullable=False,
+        index=True,
+    )
+    status = db.Column(db.String(30), default="Invited", nullable=False, index=True)
+    invited_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    responded_at = db.Column(db.DateTime, nullable=True)
+    donor_completed_at = db.Column(db.DateTime, nullable=True)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    cancelled_at = db.Column(db.DateTime, nullable=True)
+    updated_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    blood_request = db.relationship("BloodRequest", back_populates="donations")
+    donor_profile = db.relationship("DonorProfile", back_populates="donations")
+
+    def __repr__(self):
+        return f"<Donation id={self.id} status={self.status}>"
 
 
 class Notification(db.Model):

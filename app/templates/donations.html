@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Donation Activity | BloodLink{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-4 py-md-5">
+        <a class="back-link" href="{{ url_for('main.dashboard') }}">Back to dashboard</a>
+        <p class="section-kicker mt-4 mb-2">Donation workflow</p>
+        <h1 class="h2 fw-bold mb-2">Donation activity</h1>
+        <p class="text-secondary mb-0">Track invitations, donor responses and confirmed donations.</p>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    <div class="donation-overview mb-5">
+        <div><span class="donation-overview-icon"><i data-lucide="inbox" aria-hidden="true"></i></span><span><small>Received as donor</small><strong>{{ incoming|length }}</strong></span></div>
+        <div><span class="donation-overview-icon donation-overview-icon-sent"><i data-lucide="send" aria-hidden="true"></i></span><span><small>Sent as requester</small><strong>{{ outgoing|length }}</strong></span></div>
+    </div>
+
+    <section class="donation-activity-section" aria-labelledby="incoming-heading">
+        <div class="section-heading">
+            <h2 class="h5 fw-bold mb-1" id="incoming-heading">Received invitations</h2>
+            <p class="text-secondary mb-0">Requests sent to your verified donor profile.</p>
+        </div>
+        {% if incoming %}
+            <div class="donation-list">
+                {% for record in incoming %}
+                    <article class="donation-card">
+                        <div class="donation-card-header">
+                            <div class="donation-card-title"><span class="request-blood-group request-blood-group-small">{{ record.blood_request.blood_group }}</span><span><strong>{{ record.blood_request.patient_name }}</strong><small>Request #{{ record.blood_request.id }} | {{ record.blood_request.hospital_name }}</small></span></div>
+                            <span class="donation-status donation-status-{{ record.status|lower }}">{{ "Awaiting requester" if record.status == "DonorCompleted" else record.status }}</span>
+                        </div>
+                        <div class="donation-card-details">
+                            <div><span>Requester</span><strong>{{ record.blood_request.requester.name }}</strong></div>
+                            <div><span>Contact</span><a href="tel:{{ record.blood_request.contact_phone }}">{{ record.blood_request.contact_phone }}</a></div>
+                            <div><span>Required by</span><strong>{{ record.blood_request.needed_by.strftime("%d %b %Y") }}</strong></div>
+                        </div>
+                        <div class="donation-card-footer">
+                            <small>Invited {{ record.invited_at.strftime("%d %b %Y, %I:%M %p") }}</small>
+                            <div class="donation-actions">
+                                {% if record.status == "Invited" %}
+                                    <form method="post" action="{{ url_for('donation.decline', donation_id=record.id) }}"><button class="btn btn-light btn-sm" type="submit">Decline</button></form>
+                                    <form method="post" action="{{ url_for('donation.accept', donation_id=record.id) }}"><button class="btn btn-blood btn-sm" type="submit"><i data-lucide="check" aria-hidden="true"></i>Accept</button></form>
+                                {% elif record.status == "Accepted" %}
+                                    <form method="post" action="{{ url_for('donation.donor_complete', donation_id=record.id) }}"><button class="btn btn-blood btn-sm" type="submit"><i data-lucide="badge-check" aria-hidden="true"></i>I donated</button></form>
+                                {% elif record.status == "DonorCompleted" %}
+                                    <span class="donation-action-note"><i data-lucide="clock-3" aria-hidden="true"></i>Waiting for requester confirmation</span>
+                                {% elif record.status == "Completed" %}
+                                    <span class="donation-action-note donation-action-complete"><i data-lucide="circle-check" aria-hidden="true"></i>Donation confirmed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="module-empty-state donation-empty"><i data-lucide="inbox" aria-hidden="true"></i><h2>No donor invitations</h2><p>New invitations will appear here when a requester selects your donor profile.</p></div>
+        {% endif %}
+    </section>
+
+    <section class="donation-activity-section mt-5" aria-labelledby="outgoing-heading">
+        <div class="section-heading">
+            <h2 class="h5 fw-bold mb-1" id="outgoing-heading">Sent invitations</h2>
+            <p class="text-secondary mb-0">Donors invited for your verified blood requests.</p>
+        </div>
+        {% if outgoing %}
+            <div class="donation-list">
+                {% for record in outgoing %}
+                    <article class="donation-card">
+                        <div class="donation-card-header">
+                            <div class="donation-card-title"><span class="match-avatar">{{ record.donor_profile.user.name[0]|upper }}</span><span><strong>{{ record.donor_profile.user.name }}</strong><small>{{ record.donor_profile.user.blood_group }} donor | {{ record.donor_profile.user.city }}</small></span></div>
+                            <span class="donation-status donation-status-{{ record.status|lower }}">{{ "Confirm receipt" if record.status == "DonorCompleted" else record.status }}</span>
+                        </div>
+                        <div class="donation-card-details">
+                            <div><span>Patient</span><strong>{{ record.blood_request.patient_name }}</strong></div>
+                            <div><span>Donor phone</span><a href="tel:{{ record.donor_profile.phone }}">{{ record.donor_profile.phone }}</a></div>
+                            <div><span>Hospital</span><strong>{{ record.blood_request.hospital_name }}</strong></div>
+                        </div>
+                        <div class="donation-card-footer">
+                            <small>Invited {{ record.invited_at.strftime("%d %b %Y, %I:%M %p") }}</small>
+                            <div class="donation-actions">
+                                {% if record.status in ("Invited", "Accepted") %}
+                                    <form method="post" action="{{ url_for('donation.cancel', donation_id=record.id) }}"><button class="btn btn-light btn-sm" type="submit">Cancel invitation</button></form>
+                                {% elif record.status == "DonorCompleted" %}
+                                    <form method="post" action="{{ url_for('donation.confirm', donation_id=record.id) }}"><button class="btn btn-verify btn-sm" type="submit"><i data-lucide="check-check" aria-hidden="true"></i>Confirm receipt</button></form>
+                                {% elif record.status == "Completed" %}
+                                    <span class="donation-action-note donation-action-complete"><i data-lucide="circle-check" aria-hidden="true"></i>Completed unit confirmed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="module-empty-state donation-empty"><i data-lucide="send" aria-hidden="true"></i><h2>No sent invitations</h2><p>Select an available donor from a verified blood request to begin.</p></div>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}

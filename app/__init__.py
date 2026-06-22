@@ -21,6 +21,7 @@ def create_app(config_class=Config):
     from app.blood_requests import blood_request
     from app.admin import admin
     from app.notifications import notifications
+    from app.donations import donation
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -32,6 +33,7 @@ def create_app(config_class=Config):
     app.register_blueprint(blood_request)
     app.register_blueprint(admin)
     app.register_blueprint(notifications)
+    app.register_blueprint(donation)
 
     @app.context_processor
     def notification_context():

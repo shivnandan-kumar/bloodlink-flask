@@ -16,6 +16,7 @@
             <div class="dashboard-quick-actions">
                 <a class="btn btn-light" href="{{ url_for('blood_request.create') }}"><i data-lucide="plus" aria-hidden="true"></i>New request</a>
                 <a class="btn btn-header-outline" href="{{ url_for('donor.profile') if user.donor_profile else url_for('donor.register') }}"><i data-lucide="heart-handshake" aria-hidden="true"></i>{{ "Donor profile" if user.donor_profile else "Become a donor" }}</a>
+                <a class="btn btn-header-outline" href="{{ url_for('donation.index') }}"><i data-lucide="activity" aria-hidden="true"></i>Donation activity</a>
             </div>
         </div>
     </div>

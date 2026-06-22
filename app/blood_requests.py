@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 from flask import (
     Blueprint,
@@ -16,7 +16,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.constants import BLOOD_GROUPS, URGENCY_LEVELS
 from app.extensions import db
 from app.matching import find_matching_donors
-from app.models import BloodRequest
+from app.models import BloodRequest, Donation
+from app.notifications import create_notification
 from app.uploads import (
     UploadValidationError,
     delete_prescription,
@@ -175,9 +176,18 @@ def create():
 @login_required
 def detail(request_id):
     blood_request_record = get_owned_request_or_404(request_id)
+    completed_units = db.session.scalar(
+        db.select(db.func.count())
+        .select_from(Donation)
+        .where(
+            Donation.blood_request_id == request_id,
+            Donation.status == "Completed",
+        )
+    )
     return render_template(
         "blood_request_detail.html",
         blood_request_record=blood_request_record,
+        completed_units=completed_units,
     )
 
 
@@ -208,10 +218,16 @@ def matches(request_id):
         return redirect(url_for("blood_request.detail", request_id=request_id))
 
     donors = find_matching_donors(blood_request_record)
+    invitations = db.session.scalars(
+        db.select(Donation).where(Donation.blood_request_id == request_id)
+    ).all()
     return render_template(
         "blood_request_matches.html",
         blood_request_record=blood_request_record,
         donors=donors,
+        invitations_by_donor={
+            invitation.donor_profile_id: invitation for invitation in invitations
+        },
     )
 
 
@@ -282,6 +298,23 @@ def cancel(request_id):
 
     blood_request_record.status = "Cancelled"
     try:
+        open_donations = db.session.scalars(
+            db.select(Donation).where(
+                Donation.blood_request_id == request_id,
+                Donation.status.in_(("Invited", "Accepted")),
+            )
+        ).all()
+        for donation_record in open_donations:
+            donation_record.status = "Cancelled"
+            donation_record.cancelled_at = datetime.now(timezone.utc)
+            create_notification(
+                user_id=donation_record.donor_profile.user_id,
+                title="Donation invitation cancelled",
+                message=f"The blood request for {blood_request_record.patient_name} was cancelled.",
+                category="info",
+                link="/donations",
+                event_key=f"donation-{donation_record.id}-request-cancelled",
+            )
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()

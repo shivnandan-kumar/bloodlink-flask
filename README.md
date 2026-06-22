@@ -238,6 +238,34 @@ Email verification routes:
 /verify-email/resend
 ```
 
+## Step 11
+
+This step adds the donation completion workflow:
+
+- Requester invites a verified matched donor
+- Donor accepts or declines the invitation
+- Donor marks the donation completed
+- Requester confirms the received donation unit
+- One confirmed donation counts as one received unit
+- Request automatically becomes fulfilled after all required units are confirmed
+- Remaining open invitations close after fulfillment
+- Completed donor becomes unavailable until updating their profile
+- Donor last-donation date updates after requester confirmation
+- Status notifications for both requester and donor
+- Owner-only workflow actions and fixed status transitions
+
+Donation workflow routes:
+
+```text
+/donations
+/donations/requests/<request_id>/donors/<donor_id>/invite
+/donations/<id>/accept
+/donations/<id>/decline
+/donations/<id>/donor-complete
+/donations/<id>/confirm
+/donations/<id>/cancel
+```
+
 ## Run Locally
 
 ```powershell
