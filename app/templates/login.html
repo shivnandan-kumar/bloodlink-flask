@@ -46,7 +46,7 @@
                     <input class="form-check-input" id="remember" name="remember" type="checkbox">
                     <label class="form-check-label" for="remember">Remember me</label>
                 </div>
-                <span><i data-lucide="shield" aria-hidden="true"></i>Secure sign in</span>
+                <a class="forgot-link" href="{{ url_for('auth.forgot_password') }}">Forgot password?</a>
             </div>
             <button class="btn btn-blood auth-submit w-100" type="submit"><i data-lucide="arrow-right" aria-hidden="true"></i>Login to BloodLink</button>
         </form>

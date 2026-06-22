@@ -1,10 +1,22 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+import smtplib
+
+from flask import (
+    Blueprint,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.constants import BLOOD_GROUPS
 from app.extensions import db
+from app.mailer import send_password_reset_email
 from app.models import User
+from app.password_reset import generate_reset_token, verify_reset_token
 
 
 auth = Blueprint("auth", __name__)
@@ -80,6 +92,66 @@ def login():
         flash("Invalid email or password.", "danger")
 
     return render_template("login.html")
+
+
+@auth.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        user = db.session.scalar(db.select(User).where(User.email == email))
+        if user:
+            token = generate_reset_token(user)
+            reset_url = url_for(
+                "auth.reset_password",
+                token=token,
+                _external=True,
+            )
+            try:
+                send_password_reset_email(user, reset_url)
+            except (OSError, smtplib.SMTPException):
+                current_app.logger.exception("Password reset email could not be sent.")
+
+        flash(
+            "If that email is registered, a password reset link has been sent.",
+            "success",
+        )
+        return redirect(url_for("auth.forgot_password"))
+
+    return render_template("forgot_password.html")
+
+
+@auth.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+
+    user = verify_reset_token(token)
+    if not user:
+        flash("This password reset link is invalid or has expired.", "danger")
+        return redirect(url_for("auth.forgot_password"))
+
+    if request.method == "POST":
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        if len(password) < 8:
+            flash("Password must be at least 8 characters long.", "danger")
+        elif password != confirm_password:
+            flash("Password and confirm password do not match.", "danger")
+        else:
+            user.set_password(password)
+            try:
+                db.session.commit()
+            except SQLAlchemyError:
+                db.session.rollback()
+                flash("Password could not be updated. Please try again.", "danger")
+            else:
+                flash("Password updated successfully. You can now login.", "success")
+                return redirect(url_for("auth.login"))
+
+    return render_template("reset_password.html", token=token)
 
 
 @auth.route("/logout", methods=["POST"])

@@ -997,6 +997,19 @@ body {
     gap: 6px;
 }
 
+.forgot-link {
+    color: var(--blood);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.forgot-link:hover,
+.forgot-link:focus {
+    color: var(--blood-dark);
+    text-decoration: underline;
+}
+
 .auth-form-options svg,
 .auth-password-hint svg {
     height: 15px;

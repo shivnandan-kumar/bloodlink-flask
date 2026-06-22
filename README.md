@@ -196,6 +196,29 @@ Notification routes:
 /notifications/read-all
 ```
 
+## Password Recovery
+
+The authentication system also supports secure password recovery:
+
+- Forgot-password link on the login page
+- Same response for registered and unknown email addresses
+- Signed reset token that expires after 30 minutes
+- Reset token becomes invalid after the password changes
+- Password and confirmation validation
+- Optional SMTP email delivery using environment variables
+
+Password recovery routes:
+
+```text
+/forgot-password
+/reset-password/<token>
+```
+
+For local development without SMTP, the reset link is printed in the Flask
+terminal. For email delivery, copy the variable names from `.env.example` into
+your private `.env` file and enter your mail provider details. Never commit the
+real mail password.
+
 ## Run Locally
 
 ```powershell
