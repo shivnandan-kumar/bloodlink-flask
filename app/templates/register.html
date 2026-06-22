@@ -5,51 +5,67 @@
 
 {% block content %}
 <section class="auth-shell auth-shell-register">
-    <div class="auth-visual" aria-hidden="true"></div>
+    <aside class="auth-visual auth-visual-register">
+        <div class="auth-visual-content">
+            <span class="auth-visual-mark"><i data-lucide="heart-pulse" aria-hidden="true"></i>BloodLink Network</span>
+            <p class="auth-visual-label">One account, two ways to help</p>
+            <h2>Join a verified network built around local blood needs.</h2>
+            <p>Register once to become a donor, request blood for a patient, or do both whenever the need arises.</p>
+            <div class="auth-trust-list">
+                <span><i data-lucide="badge-check" aria-hidden="true"></i>Admin-reviewed profiles</span>
+                <span><i data-lucide="map-pin" aria-hidden="true"></i>City-based matching</span>
+            </div>
+        </div>
+    </aside>
     <div class="auth-content">
         <div class="auth-content-inner auth-content-wide">
-            <p class="section-kicker">Create account</p>
-            <h1>Join BloodLink</h1>
-            <p class="auth-intro">One account for donating blood and requesting help.</p>
+            <div class="auth-heading">
+                <span class="auth-heading-icon"><i data-lucide="user-plus" aria-hidden="true"></i></span>
+                <div><p class="section-kicker">Create your account</p><h1>Join BloodLink</h1></div>
+            </div>
+            <p class="auth-intro">Set up your identity and basic matching details.</p>
 
         <form method="post" class="auth-form mt-4">
+            <p class="auth-form-section-label"><span>01</span>Personal information</p>
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label" for="name">Full name</label>
-                    <input class="form-control" id="name" name="name" type="text" value="{{ request.form.get('name', '') }}" maxlength="100" required>
+                    <div class="auth-input-wrap"><i data-lucide="user" aria-hidden="true"></i><input class="form-control" id="name" name="name" type="text" value="{{ request.form.get('name', '') }}" maxlength="100" autocomplete="name" required></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="email">Email address</label>
-                    <input class="form-control" id="email" name="email" type="email" value="{{ request.form.get('email', '') }}" maxlength="120" required>
+                    <div class="auth-input-wrap"><i data-lucide="mail" aria-hidden="true"></i><input class="form-control" id="email" name="email" type="email" value="{{ request.form.get('email', '') }}" maxlength="120" autocomplete="email" required></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="city">City</label>
-                    <input class="form-control" id="city" name="city" type="text" value="{{ request.form.get('city', '') }}" maxlength="100" required>
+                    <div class="auth-input-wrap"><i data-lucide="map-pin" aria-hidden="true"></i><input class="form-control" id="city" name="city" type="text" value="{{ request.form.get('city', '') }}" maxlength="100" required></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="blood_group">Blood group</label>
-                    <select class="form-select" id="blood_group" name="blood_group" required>
+                    <div class="auth-input-wrap"><i data-lucide="droplet" aria-hidden="true"></i><select class="form-select" id="blood_group" name="blood_group" required>
                         <option value="">Select blood group</option>
                         {% for group in blood_groups %}
                             <option value="{{ group }}" {% if request.form.get('blood_group') == group %}selected{% endif %}>{{ group }}</option>
                         {% endfor %}
-                    </select>
+                    </select></div>
                 </div>
+            </div>
+            <p class="auth-form-section-label auth-password-label"><span>02</span>Account security</p>
+            <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label" for="password">Password</label>
-                    <input class="form-control" id="password" name="password" type="password" minlength="8" required>
+                    <div class="auth-input-wrap auth-password-wrap"><i data-lucide="key-round" aria-hidden="true"></i><input class="form-control" id="password" name="password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="confirm_password">Confirm password</label>
-                    <input class="form-control" id="confirm_password" name="confirm_password" type="password" minlength="8" required>
+                    <div class="auth-input-wrap auth-password-wrap"><i data-lucide="shield-check" aria-hidden="true"></i><input class="form-control" id="confirm_password" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-toggle="confirm_password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button></div>
                 </div>
             </div>
-            <button class="btn btn-blood w-100 mt-4" type="submit">Create account</button>
+            <p class="auth-password-hint"><i data-lucide="info" aria-hidden="true"></i>Use at least 8 characters for your password.</p>
+            <button class="btn btn-blood auth-submit w-100 mt-4" type="submit"><i data-lucide="arrow-right" aria-hidden="true"></i>Create my account</button>
         </form>
 
-        <p class="text-center text-secondary mt-3 mb-0">
-            Already registered? <a href="{{ url_for('auth.login') }}">Login</a>
-        </p>
+        <div class="auth-switch"><span>Already registered?</span><a href="{{ url_for('auth.login') }}">Login to your account<i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
         </div>
     </div>
 </section>

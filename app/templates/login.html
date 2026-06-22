@@ -5,32 +5,53 @@
 
 {% block content %}
 <section class="auth-shell">
-    <div class="auth-visual" aria-hidden="true"></div>
+    <aside class="auth-visual auth-visual-login">
+        <div class="auth-visual-content">
+            <span class="auth-visual-mark"><i data-lucide="heart-pulse" aria-hidden="true"></i>BloodLink Network</span>
+            <p class="auth-visual-label">Local help, verified</p>
+            <h2>Return to the network that keeps urgent needs connected.</h2>
+            <p>Manage donor readiness, follow blood requests and respond when a local match becomes available.</p>
+            <div class="auth-trust-list">
+                <span><i data-lucide="shield-check" aria-hidden="true"></i>Verified participation</span>
+                <span><i data-lucide="lock-keyhole" aria-hidden="true"></i>Private documents</span>
+            </div>
+        </div>
+    </aside>
     <div class="auth-content">
         <div class="auth-content-inner">
-            <p class="section-kicker">Welcome back</p>
-            <h1>Login to BloodLink</h1>
-            <p class="auth-intro">Continue to your account and activity.</p>
+            <div class="auth-heading">
+                <span class="auth-heading-icon"><i data-lucide="log-in" aria-hidden="true"></i></span>
+                <div><p class="section-kicker">Secure member access</p><h1>Welcome back</h1></div>
+            </div>
+            <p class="auth-intro">Sign in to continue to your BloodLink dashboard.</p>
 
-        <form method="post" class="auth-form mt-4">
-            <div class="mb-3">
+        <form method="post" class="auth-form mt-4 mt-md-5">
+            <div class="auth-field mb-3">
                 <label class="form-label" for="email">Email address</label>
-                <input class="form-control" id="email" name="email" type="email" value="{{ request.form.get('email', '') }}" maxlength="120" required autofocus>
+                <div class="auth-input-wrap">
+                    <i data-lucide="mail" aria-hidden="true"></i>
+                    <input class="form-control" id="email" name="email" type="email" value="{{ request.form.get('email', '') }}" maxlength="120" placeholder="you@example.com" autocomplete="email" required autofocus>
+                </div>
             </div>
-            <div class="mb-3">
+            <div class="auth-field mb-3">
                 <label class="form-label" for="password">Password</label>
-                <input class="form-control" id="password" name="password" type="password" required>
+                <div class="auth-input-wrap auth-password-wrap">
+                    <i data-lucide="key-round" aria-hidden="true"></i>
+                    <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required>
+                    <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button>
+                </div>
             </div>
-            <div class="form-check mb-4">
-                <input class="form-check-input" id="remember" name="remember" type="checkbox">
-                <label class="form-check-label" for="remember">Remember me</label>
+            <div class="auth-form-options mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" id="remember" name="remember" type="checkbox">
+                    <label class="form-check-label" for="remember">Remember me</label>
+                </div>
+                <span><i data-lucide="shield" aria-hidden="true"></i>Secure sign in</span>
             </div>
-            <button class="btn btn-blood w-100" type="submit">Login</button>
+            <button class="btn btn-blood auth-submit w-100" type="submit"><i data-lucide="arrow-right" aria-hidden="true"></i>Login to BloodLink</button>
         </form>
 
-        <p class="text-center text-secondary mt-3 mb-0">
-            New to BloodLink? <a href="{{ url_for('auth.register') }}">Create an account</a>
-        </p>
+        <div class="auth-switch"><span>New to BloodLink?</span><a href="{{ url_for('auth.register') }}">Create an account<i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
         </div>
     </div>
 </section>
