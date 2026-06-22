@@ -3,9 +3,9 @@
     --blood-dark: #9f1730;
     --charcoal: #182126;
     --muted: #667178;
-    --line: #dfe4e4;
-    --surface: #ffffff;
-    --canvas: #f4f6f5;
+    --line: #d2dfdc;
+    --surface: #f8fbfa;
+    --canvas: #e8f0ee;
     --teal: #167b73;
 }
 
@@ -1976,7 +1976,7 @@ textarea.form-control {
 }
 
 .dashboard-match-notice {
-    background: #ffffff;
+    background: var(--surface);
     border: 1px solid #b8d9d2;
     border-left: 4px solid var(--teal);
     border-radius: 8px;
