@@ -7,19 +7,34 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.constants import BLOOD_GROUPS
+from app.email_verification import (
+    create_email_otp,
+    mark_email_verified,
+    resend_wait_seconds,
+    verify_email_otp,
+)
 from app.extensions import db
-from app.mailer import send_password_reset_email
+from app.mailer import send_password_reset_email, send_verification_otp_email
 from app.models import User
 from app.password_reset import generate_reset_token, verify_reset_token
 
 
 auth = Blueprint("auth", __name__)
+
+
+def send_email_otp_safely(user, otp):
+    try:
+        return send_verification_otp_email(user, otp)
+    except (OSError, smtplib.SMTPException):
+        current_app.logger.exception("Email verification OTP could not be sent.")
+        return False
 
 
 @auth.route("/register", methods=["GET", "POST"])
@@ -34,6 +49,9 @@ def register():
         blood_group = request.form.get("blood_group", "").strip()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
+        existing_user = db.session.scalar(
+            db.select(User).where(User.email == email)
+        )
 
         if not all((name, email, city, blood_group, password, confirm_password)):
             flash("Please fill in all fields.", "danger")
@@ -45,16 +63,23 @@ def register():
             flash("Password must be at least 8 characters long.", "danger")
         elif password != confirm_password:
             flash("Password and confirm password do not match.", "danger")
-        elif db.session.scalar(db.select(User).where(User.email == email)):
-            flash("This email is already registered.", "danger")
+        elif existing_user:
+            message = (
+                "Registration is pending for this email. Login to continue verification."
+                if not existing_user.is_email_verified
+                else "This email is already registered."
+            )
+            flash(message, "warning")
         else:
             user = User(
                 name=name,
                 email=email,
                 city=city,
                 blood_group=blood_group,
+                is_email_verified=False,
             )
             user.set_password(password)
+            otp = create_email_otp(user)
             try:
                 db.session.add(user)
                 db.session.commit()
@@ -63,8 +88,12 @@ def register():
                 flash("Registration could not be completed. Please try again.", "danger")
                 return render_template("register.html", blood_groups=BLOOD_GROUPS)
 
-            flash("Registration successful. Please login.", "success")
-            return redirect(url_for("auth.login"))
+            session["pending_verification_user_id"] = user.id
+            if send_email_otp_safely(user, otp):
+                flash("A 6-digit verification OTP has been sent to your email.", "success")
+            else:
+                flash("OTP email could not be sent. Use Resend OTP to try again.", "warning")
+            return redirect(url_for("auth.verify_email"))
 
     return render_template("register.html", blood_groups=BLOOD_GROUPS)
 
@@ -81,6 +110,11 @@ def login():
         user = db.session.scalar(db.select(User).where(User.email == email))
 
         if user and user.check_password(password):
+            if not user.is_email_verified:
+                session["pending_verification_user_id"] = user.id
+                flash("Verify your email before logging in.", "warning")
+                return redirect(url_for("auth.verify_email"))
+
             login_user(user, remember=remember)
             flash(f"Welcome back, {user.name}!", "success")
 
@@ -92,6 +126,82 @@ def login():
         flash("Invalid email or password.", "danger")
 
     return render_template("login.html")
+
+
+@auth.route("/verify-email", methods=["GET", "POST"])
+def verify_email():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+
+    user_id = session.get("pending_verification_user_id")
+    user = db.session.get(User, user_id) if user_id else None
+    if not user:
+        flash("Start registration or login to verify your email.", "warning")
+        return redirect(url_for("auth.login"))
+    if user.is_email_verified:
+        session.pop("pending_verification_user_id", None)
+        return redirect(url_for("auth.login"))
+
+    if request.method == "POST":
+        otp = "".join(
+            character
+            for character in request.form.get("otp", "").strip()
+            if character.isdigit()
+        )
+        if len(otp) != 6:
+            flash("Enter the complete 6-digit OTP.", "danger")
+        else:
+            verified, error = verify_email_otp(user, otp)
+            if verified:
+                mark_email_verified(user)
+                try:
+                    db.session.commit()
+                except SQLAlchemyError:
+                    db.session.rollback()
+                    flash("Email verification could not be saved. Try again.", "danger")
+                else:
+                    session.pop("pending_verification_user_id", None)
+                    flash("Email verified successfully. You can now login.", "success")
+                    return redirect(url_for("auth.login"))
+            else:
+                db.session.commit()
+                flash(error, "danger")
+
+    return render_template(
+        "verify_email.html",
+        email=user.email,
+        resend_wait=resend_wait_seconds(user),
+    )
+
+
+@auth.route("/verify-email/resend", methods=["POST"])
+def resend_email_otp():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+
+    user_id = session.get("pending_verification_user_id")
+    user = db.session.get(User, user_id) if user_id else None
+    if not user or user.is_email_verified:
+        return redirect(url_for("auth.login"))
+
+    wait_seconds = resend_wait_seconds(user)
+    if wait_seconds:
+        flash(f"Please wait {wait_seconds} seconds before requesting another OTP.", "warning")
+        return redirect(url_for("auth.verify_email"))
+
+    otp = create_email_otp(user)
+    try:
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        flash("A new OTP could not be created. Try again.", "danger")
+        return redirect(url_for("auth.verify_email"))
+
+    if send_email_otp_safely(user, otp):
+        flash("A new verification OTP has been sent.", "success")
+    else:
+        flash("OTP email could not be sent. Please try again.", "danger")
+    return redirect(url_for("auth.verify_email"))
 
 
 @auth.route("/forgot-password", methods=["GET", "POST"])

@@ -14,6 +14,21 @@ class User(UserMixin, db.Model):
     city = db.Column(db.String(100), nullable=False)
     blood_group = db.Column(db.String(5), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    is_email_verified = db.Column(
+        db.Boolean,
+        default=False,
+        server_default=db.true(),
+        nullable=False,
+    )
+    email_otp_hash = db.Column(db.String(255), nullable=True)
+    email_otp_expires_at = db.Column(db.DateTime, nullable=True)
+    email_otp_sent_at = db.Column(db.DateTime, nullable=True)
+    email_otp_attempts = db.Column(
+        db.Integer,
+        default=0,
+        server_default="0",
+        nullable=False,
+    )
     created_at = db.Column(
         db.DateTime,
         default=lambda: datetime.now(timezone.utc),

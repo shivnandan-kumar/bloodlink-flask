@@ -1010,6 +1010,57 @@ body {
     text-decoration: underline;
 }
 
+.otp-input {
+    font-size: 1.55rem;
+    font-weight: 750;
+    letter-spacing: 0;
+    min-height: 58px;
+    text-align: center;
+}
+
+.otp-expiry-note {
+    align-items: center;
+    color: var(--muted);
+    display: flex;
+    font-size: 0.78rem;
+    gap: 7px;
+    margin: 0;
+}
+
+.otp-expiry-note svg {
+    height: 15px;
+    width: 15px;
+}
+
+.otp-resend-panel {
+    align-items: center;
+    background: #e8f0f2;
+    border: 1px solid #cedbdf;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+    padding: 13px 15px;
+}
+
+.otp-resend-panel > span {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.otp-resend-button {
+    background: transparent;
+    border: 0;
+    color: var(--blood);
+    font-size: 0.82rem;
+    font-weight: 750;
+    padding: 3px;
+}
+
+.otp-resend-button:disabled {
+    color: #7c898e;
+}
+
 .auth-form-options svg,
 .auth-password-hint svg {
     height: 15px;

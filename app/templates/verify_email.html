@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Email | BloodLink{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+    <aside class="auth-visual auth-visual-register">
+        <div class="auth-visual-content">
+            <span class="auth-visual-mark"><i data-lucide="heart-pulse" aria-hidden="true"></i>BloodLink Network</span>
+            <p class="auth-visual-label">One final check</p>
+            <h2>Verify your email before joining the network.</h2>
+            <p>Email verification keeps account ownership clear and protects donor and requester activity.</p>
+            <div class="auth-trust-list">
+                <span><i data-lucide="timer" aria-hidden="true"></i>10-minute OTP</span>
+                <span><i data-lucide="shield-check" aria-hidden="true"></i>5-attempt protection</span>
+            </div>
+        </div>
+    </aside>
+    <div class="auth-content">
+        <div class="auth-content-inner">
+            <div class="auth-heading">
+                <span class="auth-heading-icon"><i data-lucide="mail-check" aria-hidden="true"></i></span>
+                <div><p class="section-kicker">Email verification</p><h1>Enter your OTP</h1></div>
+            </div>
+            <p class="auth-intro">We sent a 6-digit code to <strong>{{ email }}</strong>.</p>
+
+            <form method="post" class="auth-form mt-4 mt-md-5">
+                <div class="auth-field mb-3">
+                    <label class="form-label" for="otp">Verification code</label>
+                    <input class="form-control otp-input" id="otp" name="otp" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="000000" required autofocus>
+                </div>
+                <p class="otp-expiry-note"><i data-lucide="clock-3" aria-hidden="true"></i>The code expires 10 minutes after it is sent.</p>
+                <button class="btn btn-blood auth-submit w-100 mt-4" type="submit"><i data-lucide="badge-check" aria-hidden="true"></i>Verify email</button>
+            </form>
+
+            <div class="otp-resend-panel">
+                <span>Didn't receive the code?</span>
+                <form method="post" action="{{ url_for('auth.resend_email_otp') }}">
+                    <button class="otp-resend-button" type="submit" data-resend-wait="{{ resend_wait }}" {% if resend_wait %}disabled{% endif %}>
+                        {{ "Resend in " ~ resend_wait ~ "s" if resend_wait else "Resend OTP" }}
+                    </button>
+                </form>
+            </div>
+            <div class="auth-switch"><span>Wrong account?</span><a href="{{ url_for('auth.login') }}">Back to login<i data-lucide="arrow-up-right" aria-hidden="true"></i></a></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

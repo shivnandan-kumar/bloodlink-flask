@@ -219,6 +219,25 @@ terminal. For email delivery, copy the variable names from `.env.example` into
 your private `.env` file and enter your mail provider details. Never commit the
 real mail password.
 
+## Registration Email Verification
+
+New accounts must verify their email before login:
+
+- Six-digit OTP sent after registration
+- OTP stored as a secure hash, not plain text
+- OTP expires after 10 minutes
+- Maximum five incorrect attempts
+- Resend OTP with a 60-second cooldown
+- Unverified accounts cannot login
+- Existing accounts remain verified after migration
+
+Email verification routes:
+
+```text
+/verify-email
+/verify-email/resend
+```
+
 ## Run Locally
 
 ```powershell
