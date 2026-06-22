@@ -3,9 +3,9 @@
     --blood-dark: #9f1730;
     --charcoal: #182126;
     --muted: #667178;
-    --line: #c4d5d0;
-    --surface: #eef5f3;
-    --canvas: #d9e7e3;
+    --line: #dfe4e4;
+    --surface: #ffffff;
+    --canvas: #f4f6f5;
     --teal: #167b73;
 }
 
@@ -807,6 +807,27 @@ body {
 
 .dashboard-page {
     background: var(--canvas);
+}
+
+.overview-dashboard-page {
+    background: #cedde3;
+}
+
+.overview-dashboard-page .dashboard-panel,
+.overview-dashboard-page .dashboard-metric,
+.overview-dashboard-page .dashboard-match-notice,
+.overview-dashboard-page .admin-tabs {
+    background: #e9f1f4;
+    border-color: #b9cbd2;
+}
+
+.overview-dashboard-page .section-heading,
+.overview-dashboard-page .account-details > div,
+.overview-dashboard-page .dashboard-request-list,
+.overview-dashboard-page .dashboard-request-list > a,
+.overview-dashboard-page .admin-compact-list,
+.overview-dashboard-page .admin-compact-list > div {
+    border-color: #c3d2d8;
 }
 
 .dashboard-header {
