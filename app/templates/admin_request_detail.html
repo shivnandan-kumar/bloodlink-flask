@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Review Request | BloodLink{% endblock %}
-{% block body_class %}dashboard-page admin-page{% endblock %}
+{% block body_class %}dashboard-page admin-page overview-dashboard-page{% endblock %}
 
 {% block content %}
 <section class="admin-header">
@@ -18,6 +18,7 @@
 <section class="container py-4 py-md-5">
     <div class="row g-5">
         <div class="col-lg-7">
+            <section class="dashboard-panel">
             <div class="section-heading"><h2 class="h5 fw-bold mb-1">Request information</h2><p class="text-secondary mb-0">Patient, hospital and contact details.</p></div>
             <dl class="account-details mb-0">
                 <div><dt>Submitted by</dt><dd>{{ blood_request_record.requester.name }} ({{ blood_request_record.requester.email }})</dd></div>
@@ -32,8 +33,10 @@
                 <div><dt>Prescription</dt><dd>{% if blood_request_record.prescription_filename %}<a class="btn btn-sm btn-outline-blood" href="{{ url_for('blood_request.prescription', request_id=blood_request_record.id) }}" target="_blank" rel="noopener"><i data-lucide="file-text" aria-hidden="true"></i>View prescription</a>{% else %}<span class="text-danger fw-semibold">Not uploaded</span>{% endif %}</dd></div>
                 <div><dt>Submitted</dt><dd>{{ blood_request_record.created_at.strftime("%d %B %Y") }}</dd></div>
             </dl>
+            </section>
         </div>
         <div class="col-lg-5">
+            <section class="dashboard-panel">
             <div class="section-heading"><h2 class="h5 fw-bold mb-1">Review decision</h2><p class="text-secondary mb-0">Approve or reject this blood request.</p></div>
             {% if blood_request_record.status == "Pending" %}
                 <div class="review-actions">
@@ -55,6 +58,7 @@
                     {% if blood_request_record.rejection_reason %}<div class="rejection-note"><strong>Reason</strong><p>{{ blood_request_record.rejection_reason }}</p></div>{% endif %}
                 </div>
             {% endif %}
+            </section>
         </div>
     </div>
 

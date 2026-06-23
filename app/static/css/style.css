@@ -6,6 +6,9 @@
     --line: #dfe4e4;
     --surface: #ffffff;
     --canvas: #f4f6f5;
+    --canvas-soft: #eaf2ef;
+    --surface-soft: #f8fbfa;
+    --shadow-soft: 0 18px 40px rgba(24, 33, 38, 0.08);
     --teal: #167b73;
 }
 
@@ -1143,19 +1146,26 @@ body {
 }
 
 .dashboard-page {
-    background: var(--canvas);
+    background:
+        linear-gradient(180deg, #edf5f2 0, #f4f7f5 360px, #eef4f1 100%);
+    min-height: 100vh;
 }
 
 .overview-dashboard-page {
-    background: #cedde3;
+    background:
+        linear-gradient(120deg, rgba(200, 29, 58, 0.06), transparent 32%),
+        linear-gradient(180deg, #e4efec 0, #f3f7f5 380px, #e9f1ee 100%);
 }
 
 .overview-dashboard-page .dashboard-panel,
 .overview-dashboard-page .dashboard-metric,
 .overview-dashboard-page .dashboard-match-notice,
-.overview-dashboard-page .admin-tabs {
-    background: #e9f1f4;
-    border-color: #b9cbd2;
+.overview-dashboard-page .admin-tabs,
+.overview-dashboard-page .admin-table-wrap,
+.overview-dashboard-page .donation-card,
+.overview-dashboard-page .donation-overview {
+    background: rgba(248, 251, 250, 0.94);
+    border-color: #c7d7d3;
 }
 
 .overview-dashboard-page .section-heading,
@@ -1163,12 +1173,17 @@ body {
 .overview-dashboard-page .dashboard-request-list,
 .overview-dashboard-page .dashboard-request-list > a,
 .overview-dashboard-page .admin-compact-list,
-.overview-dashboard-page .admin-compact-list > div {
+.overview-dashboard-page .admin-compact-list > div,
+.overview-dashboard-page .donation-card-details,
+.overview-dashboard-page .donation-card-details > div,
+.overview-dashboard-page .donation-card-header,
+.overview-dashboard-page .donation-card-footer {
     border-color: #c3d2d8;
 }
 
 .dashboard-header {
-    background: #17252b;
+    background:
+        linear-gradient(135deg, #17252b 0%, #1e3337 55%, #173732 100%);
     border-bottom: 4px solid var(--blood);
     color: #ffffff;
 }
@@ -1251,6 +1266,7 @@ body {
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 20px;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .dashboard-metrics {
@@ -1262,12 +1278,24 @@ body {
 .dashboard-metric {
     align-items: center;
     border-top: 4px solid #617178;
-    box-shadow: 0 10px 28px rgba(24, 33, 38, 0.08);
+    box-shadow: var(--shadow-soft);
     display: flex;
     gap: 16px;
     min-height: 128px;
     overflow: hidden;
     padding: 22px;
+}
+
+.dashboard-metric:hover,
+.admin-summary-card:hover,
+.dashboard-panel:hover,
+.donation-card:hover {
+    border-color: #aebfbb;
+    box-shadow: 0 20px 44px rgba(24, 33, 38, 0.1);
+}
+
+.admin-summary-card:hover {
+    transform: translateY(-2px);
 }
 
 .dashboard-metric > div {
@@ -1354,11 +1382,13 @@ body {
 }
 
 .dashboard-panel {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.92);
     border: 1px solid var(--line);
     border-radius: 8px;
+    box-shadow: 0 14px 36px rgba(24, 33, 38, 0.06);
     height: 100%;
     padding: 24px;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .dashboard-panel .section-heading {
@@ -1418,8 +1448,10 @@ body {
 }
 
 .module-header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--line);
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 247, 244, 0.96));
+    border-bottom: 1px solid #c9d8d4;
+    box-shadow: 0 10px 26px rgba(24, 33, 38, 0.04);
 }
 
 .back-link {
@@ -1435,7 +1467,12 @@ body {
 }
 
 .donor-form {
+    background: rgba(248, 251, 250, 0.94);
+    border: 1px solid #c7d7d3;
+    border-radius: 8px;
+    box-shadow: 0 16px 38px rgba(24, 33, 38, 0.06);
     max-width: 900px;
+    padding: 28px;
 }
 
 .form-section {
@@ -1543,7 +1580,12 @@ textarea.form-control {
 }
 
 .request-list {
+    background: rgba(248, 251, 250, 0.94);
+    border: 1px solid #c7d7d3;
+    border-radius: 8px;
     border-top: 1px solid var(--line);
+    box-shadow: 0 14px 34px rgba(24, 33, 38, 0.06);
+    overflow: hidden;
 }
 
 .request-list-item {
@@ -1553,15 +1595,16 @@ textarea.form-control {
     display: grid;
     gap: 18px;
     grid-template-columns: 56px minmax(0, 1fr) auto;
-    padding: 20px 8px;
+    padding: 20px;
     text-decoration: none;
-    transition: background-color 150ms ease;
+    transition: background-color 150ms ease, transform 150ms ease;
 }
 
 .request-list-item:hover,
 .request-list-item:focus {
     background: #ffffff;
     color: var(--charcoal);
+    transform: translateX(2px);
 }
 
 .request-blood-group {
@@ -1652,9 +1695,11 @@ textarea.form-control {
 }
 
 .module-empty-state {
+    background: rgba(248, 251, 250, 0.92);
+    border: 1px solid #c7d7d3;
+    border-radius: 8px;
     align-items: center;
-    border-bottom: 1px solid var(--line);
-    border-top: 1px solid var(--line);
+    box-shadow: 0 14px 34px rgba(24, 33, 38, 0.05);
     display: flex;
     flex-direction: column;
     padding: 56px 20px;
@@ -1734,7 +1779,8 @@ textarea.form-control {
 }
 
 .admin-header {
-    background: #1b292f;
+    background:
+        linear-gradient(135deg, #1b292f 0%, #20383c 56%, #163b36 100%);
     border-bottom: 4px solid var(--teal);
     color: #ffffff;
 }
@@ -1904,9 +1950,13 @@ textarea.form-control {
 
 .admin-table-header {
     align-items: end;
+    background: rgba(248, 251, 250, 0.8);
+    border: 1px solid #c7d7d3;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+    padding: 18px 20px;
 }
 
 .admin-table-header h2 {
@@ -1924,6 +1974,9 @@ textarea.form-control {
 .admin-table-wrap {
     background: var(--surface);
     border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 16px 38px rgba(24, 33, 38, 0.06);
+    overflow: hidden;
 }
 
 .admin-table {
@@ -1931,7 +1984,7 @@ textarea.form-control {
 }
 
 .admin-table thead th {
-    background: #f1f3f3;
+    background: #e7f0ed;
     border-bottom: 1px solid var(--line);
     color: #59656a;
     font-size: 0.72rem;
@@ -1944,6 +1997,15 @@ textarea.form-control {
     border-color: #edf0f0;
     font-size: 0.875rem;
     padding: 14px 16px;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr {
+    transition: background-color 150ms ease;
+}
+
+.admin-table tbody tr:hover {
+    background: #f7fbfa;
 }
 
 .table-person {
@@ -2000,14 +2062,20 @@ textarea.form-control {
 }
 
 .table-action {
+    align-items: center;
+    background: #fde9ed;
+    border-radius: 999px;
     color: var(--blood);
+    display: inline-flex;
     font-size: 0.82rem;
     font-weight: 750;
+    padding: 7px 10px;
     text-decoration: none;
 }
 
 .table-action:hover,
 .table-action:focus {
+    background: #f9d6dd;
     color: var(--blood-dark);
 }
 
@@ -2048,11 +2116,18 @@ textarea.form-control {
 }
 
 .notification-header {
-    border-bottom: 1px solid var(--line);
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 247, 244, 0.96));
+    border-bottom: 1px solid #c9d8d4;
 }
 
 .notification-list {
-    border-top: 1px solid var(--line);
+    background: rgba(248, 251, 250, 0.94);
+    border: 1px solid #c7d7d3;
+    border-radius: 8px;
+    border-top: 0;
+    box-shadow: 0 16px 38px rgba(24, 33, 38, 0.06);
+    overflow: hidden;
 }
 
 .notification-row {
@@ -2658,6 +2733,11 @@ textarea.form-control {
 
 @media (max-width: 991.98px) {
     .navbar-collapse {
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 16px 34px rgba(24, 33, 38, 0.1);
+        margin-top: 10px;
         padding-bottom: 16px;
         padding-top: 12px;
     }
@@ -2666,8 +2746,18 @@ textarea.form-control {
         background: rgba(10, 19, 23, 0.94);
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 8px;
+        box-shadow: none;
         margin-top: 8px;
         padding: 14px;
+    }
+
+    .navbar-nav {
+        align-items: stretch !important;
+    }
+
+    .nav-icon-link {
+        justify-content: flex-start;
+        width: auto;
     }
 
     .auth-shell {
@@ -2730,6 +2820,11 @@ textarea.form-control {
     .dashboard-header-side {
         flex: 0 0 auto;
     }
+
+    .admin-table-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -2789,6 +2884,10 @@ textarea.form-control {
 
     .dashboard-panel {
         padding: 20px;
+    }
+
+    .donor-form {
+        padding: 22px;
     }
 
     .home-hero {
@@ -2879,6 +2978,7 @@ textarea.form-control {
     .request-list-item {
         align-items: start;
         grid-template-columns: 48px minmax(0, 1fr);
+        padding: 18px;
     }
 
     .request-list-meta {
@@ -2910,6 +3010,14 @@ textarea.form-control {
     .dashboard-match-result > .btn {
         grid-column: 2;
         justify-self: start;
+    }
+
+    .admin-table-wrap {
+        border-radius: 8px;
+    }
+
+    .admin-table {
+        min-width: 700px;
     }
 }
 
@@ -2953,6 +3061,10 @@ textarea.form-control {
 
     .auth-content {
         padding: 20px 12px 32px;
+    }
+
+    .donor-form {
+        padding: 18px;
     }
 
     .auth-content-inner {
@@ -3083,5 +3195,22 @@ textarea.form-control {
     .dashboard-request-list .request-status {
         grid-column: 2;
         justify-self: start;
+    }
+
+    .admin-table-header {
+        padding: 16px;
+    }
+
+    .request-list {
+        border-radius: 8px;
+    }
+
+    .request-list-item {
+        transform: none;
+    }
+
+    .request-list-item:hover,
+    .request-list-item:focus {
+        transform: none;
     }
 }

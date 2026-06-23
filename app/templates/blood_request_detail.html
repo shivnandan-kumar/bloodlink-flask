@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Request #{{ blood_request_record.id }} | BloodLink{% endblock %}
-{% block body_class %}dashboard-page{% endblock %}
+{% block body_class %}dashboard-page overview-dashboard-page{% endblock %}
 
 {% block content %}
 <section class="module-header">
@@ -54,7 +54,7 @@
 
     <div class="row g-4">
         <div class="col-lg-7">
-            <section aria-labelledby="request-details-heading">
+            <section class="dashboard-panel" aria-labelledby="request-details-heading">
                 <div class="section-heading"><h2 class="h5 fw-bold mb-1" id="request-details-heading">Request details</h2><p class="text-secondary mb-0">Patient and hospital information.</p></div>
                 <dl class="account-details mb-0">
                     <div><dt>Hospital</dt><dd>{{ blood_request_record.hospital_name }}</dd></div>
@@ -68,7 +68,7 @@
             </section>
         </div>
         <div class="col-lg-5">
-            <section aria-labelledby="request-status-heading">
+            <section class="dashboard-panel" aria-labelledby="request-status-heading">
                 <div class="section-heading"><h2 class="h5 fw-bold mb-1" id="request-status-heading">Request status</h2><p class="text-secondary mb-0">Verification and request controls.</p></div>
                 <div class="request-status-panel">
                     <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
