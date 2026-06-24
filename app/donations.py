@@ -225,6 +225,7 @@ def confirm(donation_id):
     donation_record.completed_at = now
     donation_record.donor_profile.last_donation_date = date.today()
     donation_record.donor_profile.is_available = False
+    donation_record.donor_profile.donation_count += 1
     try:
         db.session.flush()
         completed_units = db.session.scalar(

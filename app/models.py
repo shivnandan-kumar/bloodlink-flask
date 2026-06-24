@@ -80,6 +80,12 @@ class DonorProfile(db.Model):
     last_donation_date = db.Column(db.Date, nullable=True)
     is_available = db.Column(db.Boolean, default=True, nullable=False)
     medical_eligible = db.Column(db.Boolean, default=False, nullable=False)
+    donation_count = db.Column(
+        db.Integer,
+        default=0,
+        server_default="0",
+        nullable=False,
+    )
     blood_group_proof_filename = db.Column(db.String(100), nullable=True)
     blood_group_proof_original_name = db.Column(db.String(255), nullable=True)
     verification_status = db.Column(
@@ -123,6 +129,24 @@ class DonorProfile(db.Model):
 
     def __repr__(self):
         return f"<DonorProfile user_id={self.user_id}>"
+
+    def reward_badge_title(self):
+        if self.donation_count >= 5:
+            return "Gold LifeSaver"
+        if self.donation_count >= 3:
+            return "Silver Savior"
+        if self.donation_count >= 1:
+            return "Bronze Hero"
+        return "New Donor"
+
+    def reward_badge_class(self):
+        if self.donation_count >= 5:
+            return "gold"
+        if self.donation_count >= 3:
+            return "silver"
+        if self.donation_count >= 1:
+            return "bronze"
+        return "starter"
 
 
 class BloodRequest(db.Model):

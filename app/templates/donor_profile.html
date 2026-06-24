@@ -49,6 +49,17 @@
         </div>
     </div>
 
+    <section class="reward-panel mb-4" aria-labelledby="reward-heading">
+        <div class="reward-badge reward-badge-{{ donor_profile.reward_badge_class() }}">
+            <i data-lucide="award" aria-hidden="true"></i>
+            <span>
+                <strong id="reward-heading">{{ donor_profile.reward_badge_title() }}</strong>
+                <small>{{ donor_profile.donation_count }} confirmed donation{{ "s" if donor_profile.donation_count != 1 else "" }}</small>
+            </span>
+        </div>
+        <p class="mb-0">Badges grow automatically when a requester confirms your completed donation.</p>
+    </section>
+
     {% if donor_profile.verification_status == "Rejected" and donor_profile.rejection_reason %}
         <div class="review-outcome review-outcome-rejected mb-4">
             <strong>Profile rejected</strong>
