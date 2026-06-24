@@ -11,6 +11,7 @@
             <div>
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                     <p class="section-kicker mb-0">Blood request #{{ blood_request_record.id }}</p>
+                    {% if blood_request_record.is_emergency %}<span class="emergency-chip"><i data-lucide="siren" aria-hidden="true"></i>Emergency</span>{% endif %}
                     <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
                 </div>
                 <h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1>
@@ -42,6 +43,16 @@
         </div>
     </div>
 
+    {% if blood_request_record.is_emergency %}
+        <div class="emergency-note mb-4">
+            <i data-lucide="siren" aria-hidden="true"></i>
+            <div>
+                <strong>Emergency request marked for priority review</strong>
+                <p>Verified available donors in {{ blood_request_record.city }} were alerted. Matching contact details become available after admin verification.</p>
+            </div>
+        </div>
+    {% endif %}
+
     {% if blood_request_record.status in ("Verified", "Fulfilled") %}
         <div class="donation-progress mb-4">
             <div>
@@ -61,6 +72,7 @@
                     <div><dt>City</dt><dd>{{ blood_request_record.city }}</dd></div>
                     <div><dt>Address</dt><dd>{{ blood_request_record.hospital_address }}</dd></div>
                     <div><dt>Contact phone</dt><dd>{{ blood_request_record.contact_phone }}</dd></div>
+                    <div><dt>Emergency</dt><dd>{{ "Yes" if blood_request_record.is_emergency else "No" }}</dd></div>
                     <div><dt>Reason</dt><dd>{{ blood_request_record.reason or "Not provided" }}</dd></div>
                     <div><dt>Prescription</dt><dd>{% if blood_request_record.prescription_filename %}<a href="{{ url_for('blood_request.prescription', request_id=blood_request_record.id) }}" target="_blank" rel="noopener">View document</a>{% else %}Not uploaded{% endif %}</dd></div>
                     <div><dt>Created</dt><dd>{{ blood_request_record.created_at.strftime("%d %B %Y") }}</dd></div>

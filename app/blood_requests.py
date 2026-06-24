@@ -16,7 +16,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.constants import BLOOD_GROUPS, URGENCY_LEVELS
 from app.extensions import db
 from app.matching import find_matching_donors
-from app.models import BloodRequest, Donation
+from app.models import BloodRequest, Donation, DonorProfile, User
 from app.notifications import create_notification
 from app.uploads import (
     UploadValidationError,
@@ -40,6 +40,7 @@ def validate_request_form():
     contact_phone = request.form.get("contact_phone", "").strip()
     needed_by_text = request.form.get("needed_by", "").strip()
     urgency = request.form.get("urgency", "").strip()
+    is_emergency = request.form.get("is_emergency") == "on"
     reason = request.form.get("reason", "").strip()
 
     if not patient_name:
@@ -99,8 +100,39 @@ def validate_request_form():
         "contact_phone": normalized_phone,
         "needed_by": needed_by,
         "urgency": urgency,
+        "is_emergency": is_emergency,
         "reason": reason or None,
     }
+
+
+def notify_emergency_donors(blood_request_record):
+    donors = db.session.scalars(
+        db.select(DonorProfile)
+        .join(DonorProfile.user)
+        .where(
+            db.func.lower(User.city) == blood_request_record.city.lower(),
+            DonorProfile.user_id != blood_request_record.requester_id,
+            DonorProfile.verification_status == "Verified",
+            DonorProfile.is_available.is_(True),
+            DonorProfile.medical_eligible.is_(True),
+        )
+    ).all()
+    for donor_profile in donors:
+        create_notification(
+            user_id=donor_profile.user_id,
+            title="Emergency blood request in your city",
+            message=(
+                f"An emergency {blood_request_record.blood_group} blood request "
+                f"was submitted at {blood_request_record.hospital_name}, "
+                f"{blood_request_record.city}. Admin verification is in progress."
+            ),
+            category="warning",
+            link="/donations",
+            event_key=(
+                f"emergency-request-{blood_request_record.id}-"
+                f"donor-{donor_profile.id}"
+            ),
+        )
 
 
 def get_owned_request_or_404(request_id):
@@ -151,13 +183,23 @@ def create():
             )
             try:
                 db.session.add(blood_request_record)
+                db.session.flush()
+                if blood_request_record.is_emergency:
+                    notify_emergency_donors(blood_request_record)
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()
                 delete_prescription(saved_name)
                 flash("Blood request could not be created. Please try again.", "danger")
             else:
-                flash("Blood request submitted for verification.", "success")
+                flash(
+                    (
+                        "Emergency request submitted for priority verification."
+                        if blood_request_record.is_emergency
+                        else "Blood request submitted for verification."
+                    ),
+                    "success",
+                )
                 return redirect(
                     url_for("blood_request.detail", request_id=blood_request_record.id)
                 )
@@ -242,6 +284,7 @@ def edit(request_id):
     if request.method == "POST":
         data = validate_request_form()
         if data:
+            was_emergency = blood_request_record.is_emergency
             new_saved_name = None
             uploaded_file = request.files.get("prescription")
             if uploaded_file and uploaded_file.filename:
@@ -267,6 +310,8 @@ def edit(request_id):
             blood_request_record.reviewed_at = None
             blood_request_record.rejection_reason = None
             try:
+                if blood_request_record.is_emergency and not was_emergency:
+                    notify_emergency_donors(blood_request_record)
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()

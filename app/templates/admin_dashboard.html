@@ -52,7 +52,7 @@
             </div>
             <div class="admin-compact-list">
                 {% for blood_request_record in recent_requests %}
-                    <div><span class="request-blood-group request-blood-group-small">{{ blood_request_record.blood_group }}</span><span><strong>{{ blood_request_record.patient_name }}</strong><small>{{ blood_request_record.city }} | {{ blood_request_record.hospital_name }}</small></span><span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span></div>
+                    <div><span class="request-blood-group request-blood-group-small">{{ blood_request_record.blood_group }}</span><span><strong>{{ blood_request_record.patient_name }}</strong><small>{{ blood_request_record.city }} | {{ blood_request_record.hospital_name }}</small>{% if blood_request_record.is_emergency %}<span class="emergency-chip mt-1"><i data-lucide="siren" aria-hidden="true"></i>Emergency</span>{% endif %}</span><span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span></div>
                 {% else %}
                     <p class="text-secondary py-4 mb-0">No blood requests found.</p>
                 {% endfor %}

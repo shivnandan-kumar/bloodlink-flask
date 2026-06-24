@@ -56,7 +56,9 @@ def dashboard():
         db.select(User).order_by(User.created_at.desc()).limit(5)
     ).all()
     recent_requests = db.session.scalars(
-        db.select(BloodRequest).order_by(BloodRequest.created_at.desc()).limit(5)
+        db.select(BloodRequest)
+        .order_by(BloodRequest.is_emergency.desc(), BloodRequest.created_at.desc())
+        .limit(5)
     ).all()
     return render_template(
         "admin_dashboard.html",
@@ -91,7 +93,10 @@ def donors():
 @admin_required
 def requests():
     requests = db.session.scalars(
-        db.select(BloodRequest).order_by(BloodRequest.created_at.desc())
+        db.select(BloodRequest).order_by(
+            BloodRequest.is_emergency.desc(),
+            BloodRequest.created_at.desc(),
+        )
     ).all()
     return render_template("admin_requests.html", requests=requests)
 

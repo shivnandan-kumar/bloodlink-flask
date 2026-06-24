@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
 
+from app.extensions import db
 from app.matching import find_matching_donors
+from app.models import BloodRequest
 
 
 main = Blueprint("main", __name__)
@@ -9,7 +11,16 @@ main = Blueprint("main", __name__)
 
 @main.route("/")
 def home():
-    return render_template("index.html")
+    emergency_requests = db.session.scalars(
+        db.select(BloodRequest)
+        .where(
+            BloodRequest.is_emergency.is_(True),
+            BloodRequest.status.in_(("Pending", "Verified")),
+        )
+        .order_by(BloodRequest.created_at.desc())
+        .limit(3)
+    ).all()
+    return render_template("index.html", emergency_requests=emergency_requests)
 
 
 @main.route("/dashboard")

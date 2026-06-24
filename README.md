@@ -35,6 +35,7 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 - Admin dashboard
 - Admin donor verification and rejection
 - Admin blood request verification and rejection
+- Emergency blood request broadcast and donor alerts
 - Donor matching using blood group and city
 - In-app notifications
 - Donation invitation, acceptance and completion flow

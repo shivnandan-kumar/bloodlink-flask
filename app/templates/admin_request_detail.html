@@ -8,7 +8,7 @@
     <div class="container py-4 py-md-5">
         <a class="admin-back-link" href="{{ url_for('admin.requests') }}">Back to requests</a>
         <div class="d-md-flex align-items-end justify-content-between gap-3 mt-4">
-            <div><p class="section-kicker mb-2">Request review #{{ blood_request_record.id }}</p><h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1><p class="mb-0">{{ blood_request_record.hospital_name }}, {{ blood_request_record.city }}</p></div>
+            <div><p class="section-kicker mb-2">Request review #{{ blood_request_record.id }}</p><h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1><p class="mb-0">{{ blood_request_record.hospital_name }}, {{ blood_request_record.city }}</p>{% if blood_request_record.is_emergency %}<span class="emergency-chip emergency-chip-light mt-3"><i data-lucide="siren" aria-hidden="true"></i>Emergency priority</span>{% endif %}</div>
             <span class="request-status request-status-{{ blood_request_record.status|lower }} mt-3 mt-md-0">{{ blood_request_record.status }}</span>
         </div>
     </div>
@@ -22,6 +22,7 @@
             <div class="section-heading"><h2 class="h5 fw-bold mb-1">Request information</h2><p class="text-secondary mb-0">Patient, hospital and contact details.</p></div>
             <dl class="account-details mb-0">
                 <div><dt>Submitted by</dt><dd>{{ blood_request_record.requester.name }} ({{ blood_request_record.requester.email }})</dd></div>
+                <div><dt>Emergency</dt><dd>{% if blood_request_record.is_emergency %}<span class="emergency-chip"><i data-lucide="siren" aria-hidden="true"></i>Emergency</span>{% else %}No{% endif %}</dd></div>
                 <div><dt>Blood group</dt><dd class="blood-value fw-bold">{{ blood_request_record.blood_group }}</dd></div>
                 <div><dt>Units</dt><dd>{{ blood_request_record.units_required }}</dd></div>
                 <div><dt>Required by</dt><dd>{{ blood_request_record.needed_by.strftime("%d %b %Y") }}</dd></div>

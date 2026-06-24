@@ -29,6 +29,7 @@
                     <div class="request-list-main">
                         <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
                             <h2>{{ blood_request_record.patient_name }}</h2>
+                            {% if blood_request_record.is_emergency %}<span class="emergency-chip"><i data-lucide="siren" aria-hidden="true"></i>Emergency</span>{% endif %}
                             <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
                             <span class="urgency-label urgency-{{ blood_request_record.urgency|lower }}">{{ blood_request_record.urgency }}</span>
                         </div>

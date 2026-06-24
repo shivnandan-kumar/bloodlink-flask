@@ -166,6 +166,12 @@ class BloodRequest(db.Model):
     contact_phone = db.Column(db.String(20), nullable=False)
     needed_by = db.Column(db.Date, nullable=False)
     urgency = db.Column(db.String(20), default="Normal", nullable=False)
+    is_emergency = db.Column(
+        db.Boolean,
+        default=False,
+        server_default=db.false(),
+        nullable=False,
+    )
     reason = db.Column(db.String(500), nullable=True)
     prescription_filename = db.Column(db.String(100), nullable=True)
     prescription_original_name = db.Column(db.String(255), nullable=True)

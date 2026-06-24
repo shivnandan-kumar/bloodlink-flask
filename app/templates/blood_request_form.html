@@ -53,6 +53,16 @@
                     </select>
                 </div>
                 <div class="col-12">
+                    {% set emergency_checked = request.form.get('is_emergency') == 'on' if request.method == 'POST' else (blood_request_record.is_emergency if blood_request_record else false) %}
+                    <div class="emergency-check">
+                        <div class="form-check">
+                            <input class="form-check-input" id="is_emergency" name="is_emergency" type="checkbox" {% if emergency_checked %}checked{% endif %}>
+                            <label class="form-check-label" for="is_emergency">Mark as emergency request</label>
+                        </div>
+                        <p class="mb-0">Emergency requests are highlighted for admin priority review and notify verified available donors in the same city.</p>
+                    </div>
+                </div>
+                <div class="col-12">
                     <label class="form-label" for="reason">Reason or notes</label>
                     <textarea class="form-control" id="reason" name="reason" rows="3" maxlength="500">{{ request.form.get('reason', blood_request_record.reason if blood_request_record and blood_request_record.reason else '') }}</textarea>
                 </div>

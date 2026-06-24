@@ -28,6 +28,36 @@
     </div>
 </section>
 
+{% if emergency_requests %}
+<section class="emergency-broadcast" aria-labelledby="emergency-broadcast-heading">
+    <div class="container">
+        <div class="emergency-broadcast-inner">
+            <div class="emergency-broadcast-heading">
+                <span><i data-lucide="siren" aria-hidden="true"></i></span>
+                <div>
+                    <p class="section-kicker mb-1">Critical alert</p>
+                    <h2 class="h5 fw-bold mb-0" id="emergency-broadcast-heading">Emergency blood requests need priority attention</h2>
+                </div>
+            </div>
+            <div class="emergency-broadcast-list">
+                {% for emergency_request in emergency_requests %}
+                    <article>
+                        <strong>{{ emergency_request.blood_group }}</strong>
+                        <span>{{ emergency_request.city }} | {{ emergency_request.hospital_name }}</span>
+                        <small>{{ emergency_request.status }} review</small>
+                    </article>
+                {% endfor %}
+            </div>
+            {% if current_user.is_authenticated %}
+                <a class="btn btn-light btn-sm" href="{{ url_for('blood_request.create') }}">Create request</a>
+            {% else %}
+                <a class="btn btn-light btn-sm" href="{{ url_for('auth.register') }}">Join to help</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="network-strip" aria-label="BloodLink network overview">
     <div class="container">
         <div class="row g-0">
