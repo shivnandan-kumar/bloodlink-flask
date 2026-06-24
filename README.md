@@ -147,6 +147,22 @@ First register normally from the website. Then promote that user:
 flask promote-admin user@example.com
 ```
 
+You can also create or restore a default local admin from `.env` values:
+
+```powershell
+flask create-default-admin
+```
+
+Required `.env` values:
+
+```env
+DEFAULT_ADMIN_NAME=BloodLink Admin
+DEFAULT_ADMIN_EMAIL=admin@example.com
+DEFAULT_ADMIN_PASSWORD=change-this-admin-password
+DEFAULT_ADMIN_CITY=Ranchi
+DEFAULT_ADMIN_BLOOD_GROUP=O+
+```
+
 Admin panel:
 
 ```text

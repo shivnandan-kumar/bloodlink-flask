@@ -29,3 +29,8 @@ class Config:
         "MAIL_DEFAULT_SENDER",
         "BloodLink <no-reply@bloodlink.local>",
     )
+    DEFAULT_ADMIN_NAME = os.environ.get("DEFAULT_ADMIN_NAME", "BloodLink Admin")
+    DEFAULT_ADMIN_EMAIL = os.environ.get("DEFAULT_ADMIN_EMAIL")
+    DEFAULT_ADMIN_PASSWORD = os.environ.get("DEFAULT_ADMIN_PASSWORD")
+    DEFAULT_ADMIN_CITY = os.environ.get("DEFAULT_ADMIN_CITY", "Ranchi")
+    DEFAULT_ADMIN_BLOOD_GROUP = os.environ.get("DEFAULT_ADMIN_BLOOD_GROUP", "O+")

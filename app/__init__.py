@@ -66,6 +66,55 @@ def create_app(config_class=Config):
         db.session.commit()
         click.echo(f"Admin access granted to {user.email}.")
 
+    @app.cli.command("create-default-admin")
+    def create_default_admin():
+        """Create or restore the default admin account from environment values."""
+        admin_email = (app.config.get("DEFAULT_ADMIN_EMAIL") or "").strip().lower()
+        admin_password = app.config.get("DEFAULT_ADMIN_PASSWORD") or ""
+        admin_name = (app.config.get("DEFAULT_ADMIN_NAME") or "BloodLink Admin").strip()
+        admin_city = (app.config.get("DEFAULT_ADMIN_CITY") or "Ranchi").strip()
+        admin_blood_group = (
+            app.config.get("DEFAULT_ADMIN_BLOOD_GROUP") or "O+"
+        ).strip().upper()
+
+        if not admin_email:
+            raise click.ClickException("DEFAULT_ADMIN_EMAIL is missing in .env.")
+        if not admin_password:
+            raise click.ClickException("DEFAULT_ADMIN_PASSWORD is missing in .env.")
+        if len(admin_password) < 8:
+            raise click.ClickException(
+                "DEFAULT_ADMIN_PASSWORD must be at least 8 characters."
+            )
+
+        user = db.session.scalar(db.select(User).where(User.email == admin_email))
+        if user:
+            changed = False
+            if not user.is_admin:
+                user.is_admin = True
+                changed = True
+            if not user.is_email_verified:
+                user.is_email_verified = True
+                changed = True
+            if changed:
+                db.session.commit()
+                click.echo(f"Default admin restored for {user.email}.")
+            else:
+                click.echo(f"Default admin already exists: {user.email}.")
+            return
+
+        user = User(
+            name=admin_name,
+            email=admin_email,
+            city=admin_city,
+            blood_group=admin_blood_group,
+            is_admin=True,
+            is_email_verified=True,
+        )
+        user.set_password(admin_password)
+        db.session.add(user)
+        db.session.commit()
+        click.echo(f"Default admin created: {user.email}.")
+
     @app.errorhandler(403)
     def forbidden(error):
         return render_template("403.html"), 403
