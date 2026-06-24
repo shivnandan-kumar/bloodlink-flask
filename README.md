@@ -2,6 +2,186 @@
 
 BloodLink is a full-stack Flask application for blood donor matching, request verification, and emergency blood requests.
 
+## Project Status
+
+This project is complete from Step 1 to Step 12 and is ready for local demo, GitHub submission and interview explanation.
+
+## Technology Stack
+
+- Python
+- Flask
+- SQLite
+- Flask-SQLAlchemy
+- Flask-Migrate
+- Flask-Login
+- Jinja Templates
+- HTML
+- CSS
+- Bootstrap 5
+- JavaScript
+- Gmail SMTP
+- Git and GitHub
+
+## Complete Feature List
+
+- User registration, login and logout
+- Email OTP verification during registration
+- Forgot password with secure reset link
+- User dashboard
+- Donor profile creation and editing
+- Blood group proof upload for donors
+- Blood request creation and tracking
+- Doctor prescription upload for blood requests
+- Admin dashboard
+- Admin donor verification and rejection
+- Admin blood request verification and rejection
+- Donor matching using blood group and city
+- In-app notifications
+- Donation invitation, acceptance and completion flow
+- Request fulfillment after required units are completed
+- Modern responsive UI
+
+## Project Structure
+
+```text
+bloodlink-flask/
+├── app/
+│   ├── static/
+│   ├── templates/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── auth.py
+│   ├── blood_requests.py
+│   ├── donor.py
+│   ├── donations.py
+│   ├── email_verification.py
+│   ├── extensions.py
+│   ├── mailer.py
+│   ├── matching.py
+│   ├── models.py
+│   ├── notifications.py
+│   ├── password_reset.py
+│   ├── routes.py
+│   └── uploads.py
+├── migrations/
+├── config.py
+├── run.py
+├── requirements.txt
+├── .env.example
+├── .flaskenv
+└── README.md
+```
+
+## How The App Works
+
+1. User registers with name, email, city, blood group and password.
+2. System sends an email OTP.
+3. User verifies OTP and logs in.
+4. User can become a donor by submitting donor details and blood group proof.
+5. User can create a blood request with patient, hospital and prescription details.
+6. Admin verifies donor profiles and blood requests.
+7. System matches verified donors by blood group and city.
+8. Requester invites a matched donor.
+9. Donor accepts or declines the invitation.
+10. Donor marks donation as completed.
+11. Requester confirms the received donation.
+12. Request becomes fulfilled when required units are completed.
+
+## Main Database Models
+
+- `User`: account, login, city, blood group and admin role
+- `DonorProfile`: donor details, proof document, availability and verification status
+- `BloodRequest`: patient, hospital, prescription and request status
+- `Notification`: user notifications and read/unread status
+- `Donation`: invitation and donation completion workflow
+
+## Status Flow
+
+Donor profile:
+
+```text
+Pending -> Verified
+Pending -> Rejected
+```
+
+Blood request:
+
+```text
+Pending -> Verified
+Pending -> Rejected
+Verified -> Fulfilled
+Pending/Verified -> Cancelled
+```
+
+Donation:
+
+```text
+Invited -> Accepted -> DonorCompleted -> Completed
+Invited -> Declined
+Invited/Accepted -> Cancelled
+```
+
+## Quick Local Setup
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+flask db upgrade
+python run.py
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Admin Setup
+
+First register normally from the website. Then promote that user:
+
+```powershell
+flask promote-admin user@example.com
+```
+
+Admin panel:
+
+```text
+http://127.0.0.1:8000/admin
+```
+
+## Email Setup
+
+For Gmail OTP and password reset emails:
+
+1. Enable 2-Step Verification in Gmail.
+2. Create a Gmail App Password.
+3. Copy `.env.example` to `.env`.
+4. Add your Gmail address and App Password in `.env`.
+
+Never commit the real `.env` file.
+
+## Security Notes
+
+- Passwords are stored as hashes.
+- OTP values are stored as hashes.
+- Password reset links expire after 30 minutes.
+- Uploaded documents are private.
+- Admin routes are protected.
+- `.env` is ignored by Git.
+
+## Interview Explanation
+
+BloodLink is a full-stack Flask project. Users can register, verify their email, login, become donors and create blood requests. Donor profiles and blood requests are verified by an admin. After verification, the system matches donors using blood group and city. The requester can invite donors and track the donation until it is completed.
+
+The backend is built with Flask. SQLite is used as the database. Flask-SQLAlchemy is used to write database models in Python. Flask-Migrate is used to manage database changes. Flask-Login is used for login sessions. Jinja templates, Bootstrap and CSS are used for the frontend.
+
+---
+
+## Step-by-Step Build Notes
+
 ## Step 1
 
 This step creates the basic Flask project structure:
