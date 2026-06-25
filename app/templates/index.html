@@ -6,24 +6,45 @@
 {% block content %}
 <section class="home-hero">
     <div class="container hero-content">
-        <div class="hero-copy">
-            <p class="hero-eyebrow">Verified local blood donor network</p>
-            <h1>BloodLink</h1>
-            <p class="hero-lead">When blood is needed, every hour matters. Find verified donors in your city or become the person someone is hoping to find.</p>
-            <div class="hero-actions">
-                {% if current_user.is_authenticated %}
-                    <a class="btn btn-light btn-lg" href="{{ url_for('main.dashboard') }}">Open dashboard</a>
-                    <a class="btn btn-hero-outline btn-lg" href="#how-it-works">How it works</a>
-                {% else %}
-                    <a class="btn btn-light btn-lg" href="{{ url_for('auth.register') }}">Join BloodLink</a>
-                    <a class="btn btn-hero-outline btn-lg" href="{{ url_for('auth.login') }}">Login</a>
-                {% endif %}
+        <div class="hero-grid">
+            <div class="hero-copy">
+                <p class="hero-eyebrow">Verified local blood donor network</p>
+                <h1>BloodLink</h1>
+                <p class="hero-lead">When blood is needed, every hour matters. Find verified donors in your city or become the person someone is hoping to find.</p>
+                <div class="hero-actions">
+                    {% if current_user.is_authenticated %}
+                        <a class="btn btn-light btn-lg" href="{{ url_for('main.dashboard') }}">Open dashboard</a>
+                        <a class="btn btn-hero-outline btn-lg" href="#how-it-works">How it works</a>
+                    {% else %}
+                        <a class="btn btn-light btn-lg" href="{{ url_for('auth.register') }}">Join BloodLink</a>
+                        <a class="btn btn-hero-outline btn-lg" href="{{ url_for('auth.login') }}">Login</a>
+                    {% endif %}
+                </div>
+                <div class="hero-trust" aria-label="BloodLink verification features">
+                    <span><i data-lucide="shield-check" aria-hidden="true"></i>Verified profiles</span>
+                    <span><i data-lucide="map-pin" aria-hidden="true"></i>City-based matching</span>
+                    <span><i data-lucide="lock-keyhole" aria-hidden="true"></i>Private documents</span>
+                </div>
             </div>
-            <div class="hero-trust" aria-label="BloodLink verification features">
-                <span><i data-lucide="shield-check" aria-hidden="true"></i>Verified profiles</span>
-                <span><i data-lucide="map-pin" aria-hidden="true"></i>City-based matching</span>
-                <span><i data-lucide="lock-keyhole" aria-hidden="true"></i>Private documents</span>
-            </div>
+            <aside class="hero-glass-card" aria-label="BloodLink trust summary">
+                <div class="hero-card-heading">
+                    <span><i data-lucide="target" aria-hidden="true"></i></span>
+                    <div><strong>Verified network</strong><small>Admin-reviewed donors and requests</small></div>
+                </div>
+                <div class="hero-progress">
+                    <div><span>Safety checks</span><strong>100%</strong></div>
+                    <div class="hero-progress-track"><span></span></div>
+                </div>
+                <div class="hero-card-stats">
+                    <div><strong>8</strong><span>Blood groups</span></div>
+                    <div><strong>2</strong><span>Ways to help</span></div>
+                    <div><strong>24/7</strong><span>Emergency alerts</span></div>
+                </div>
+                <div class="hero-card-tags">
+                    <span><i data-lucide="circle-check" aria-hidden="true"></i>Active</span>
+                    <span><i data-lucide="award" aria-hidden="true"></i>Trusted</span>
+                </div>
+            </aside>
         </div>
     </div>
 </section>
