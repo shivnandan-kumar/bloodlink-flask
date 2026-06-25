@@ -4,6 +4,7 @@ from flask_login import current_user
 
 from config import Config
 from app.extensions import db, login_manager, migrate
+from app.security import password_strength_errors
 
 
 def create_app(config_class=Config):
@@ -81,10 +82,9 @@ def create_app(config_class=Config):
             raise click.ClickException("DEFAULT_ADMIN_EMAIL is missing in .env.")
         if not admin_password:
             raise click.ClickException("DEFAULT_ADMIN_PASSWORD is missing in .env.")
-        if len(admin_password) < 8:
-            raise click.ClickException(
-                "DEFAULT_ADMIN_PASSWORD must be at least 8 characters."
-            )
+        password_errors = password_strength_errors(admin_password)
+        if password_errors:
+            raise click.ClickException(" ".join(password_errors))
 
         user = db.session.scalar(db.select(User).where(User.email == admin_email))
         if user:

@@ -25,6 +25,7 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 ## Complete Feature List
 
 - User registration, login and logout
+- Strong password policy for registration, reset and default admin recovery
 - Email OTP verification during registration
 - Forgot password with secure reset link
 - User dashboard
@@ -158,7 +159,7 @@ Required `.env` values:
 ```env
 DEFAULT_ADMIN_NAME=BloodLink Admin
 DEFAULT_ADMIN_EMAIL=admin@example.com
-DEFAULT_ADMIN_PASSWORD=change-this-admin-password
+DEFAULT_ADMIN_PASSWORD=ChangeThisAdminPassword1!
 DEFAULT_ADMIN_CITY=Ranchi
 DEFAULT_ADMIN_BLOOD_GROUP=O+
 ```
@@ -183,6 +184,7 @@ Never commit the real `.env` file.
 ## Security Notes
 
 - Passwords are stored as hashes.
+- Passwords require 8+ characters, one uppercase letter, one number and one special character.
 - OTP values are stored as hashes.
 - Password reset links expire after 30 minutes.
 - Uploaded documents are private.

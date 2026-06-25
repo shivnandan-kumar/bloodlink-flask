@@ -24,6 +24,7 @@ from app.extensions import db
 from app.mailer import send_password_reset_email, send_verification_otp_email
 from app.models import User
 from app.password_reset import generate_reset_token, verify_reset_token
+from app.security import password_strength_errors
 
 
 auth = Blueprint("auth", __name__)
@@ -49,6 +50,7 @@ def register():
         blood_group = request.form.get("blood_group", "").strip()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
+        password_errors = password_strength_errors(password)
         existing_user = db.session.scalar(
             db.select(User).where(User.email == email)
         )
@@ -59,8 +61,9 @@ def register():
             flash("Please enter a valid email address.", "danger")
         elif blood_group not in BLOOD_GROUPS:
             flash("Please select a valid blood group.", "danger")
-        elif len(password) < 8:
-            flash("Password must be at least 8 characters long.", "danger")
+        elif password_errors:
+            for error in password_errors:
+                flash(error, "danger")
         elif password != confirm_password:
             flash("Password and confirm password do not match.", "danger")
         elif existing_user:
@@ -246,8 +249,10 @@ def reset_password(token):
     if request.method == "POST":
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
-        if len(password) < 8:
-            flash("Password must be at least 8 characters long.", "danger")
+        password_errors = password_strength_errors(password)
+        if password_errors:
+            for error in password_errors:
+                flash(error, "danger")
         elif password != confirm_password:
             flash("Password and confirm password do not match.", "danger")
         else:

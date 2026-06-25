@@ -54,14 +54,14 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label" for="password">Password</label>
-                    <div class="auth-input-wrap auth-password-wrap"><i data-lucide="key-round" aria-hidden="true"></i><input class="form-control" id="password" name="password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button></div>
+                    <div class="auth-input-wrap auth-password-wrap"><i data-lucide="key-round" aria-hidden="true"></i><input class="form-control" id="password" name="password" type="password" minlength="8" pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}" title="Use at least 8 characters with one uppercase letter, one number and one special character." autocomplete="new-password" required><button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="confirm_password">Confirm password</label>
-                    <div class="auth-input-wrap auth-password-wrap"><i data-lucide="shield-check" aria-hidden="true"></i><input class="form-control" id="confirm_password" name="confirm_password" type="password" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" data-password-toggle="confirm_password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button></div>
+                    <div class="auth-input-wrap auth-password-wrap"><i data-lucide="shield-check" aria-hidden="true"></i><input class="form-control" id="confirm_password" name="confirm_password" type="password" minlength="8" pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}" title="Use at least 8 characters with one uppercase letter, one number and one special character." autocomplete="new-password" required><button class="password-toggle" type="button" data-password-toggle="confirm_password" aria-label="Show password" title="Show password"><i class="password-eye-open" data-lucide="eye" aria-hidden="true"></i><i class="password-eye-off" data-lucide="eye-off" aria-hidden="true"></i></button></div>
                 </div>
             </div>
-            <p class="auth-password-hint"><i data-lucide="info" aria-hidden="true"></i>Use at least 8 characters for your password.</p>
+            <p class="auth-password-hint"><i data-lucide="info" aria-hidden="true"></i>Use 8+ characters with one uppercase letter, one number and one special character.</p>
             <button class="btn btn-blood auth-submit w-100 mt-4" type="submit"><i data-lucide="arrow-right" aria-hidden="true"></i>Create my account</button>
         </form>
 
