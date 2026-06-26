@@ -13,7 +13,7 @@
             <p>Register once to become a donor, request blood for a patient, or do both whenever the need arises.</p>
             <div class="auth-trust-list">
                 <span><i data-lucide="badge-check" aria-hidden="true"></i>Admin-reviewed profiles</span>
-                <span><i data-lucide="map-pin" aria-hidden="true"></i>City-based matching</span>
+                <span><i data-lucide="map-pin" aria-hidden="true"></i>Pincode-first matching</span>
             </div>
         </div>
     </aside>
@@ -39,6 +39,10 @@
                 <div class="col-md-6">
                     <label class="form-label" for="city">City</label>
                     <div class="auth-input-wrap"><i data-lucide="map-pin" aria-hidden="true"></i><input class="form-control" id="city" name="city" type="text" value="{{ request.form.get('city', '') }}" maxlength="100" required></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="pincode">Pincode</label>
+                    <div class="auth-input-wrap"><i data-lucide="map-pinned" aria-hidden="true"></i><input class="form-control" id="pincode" name="pincode" type="text" value="{{ request.form.get('pincode', '') }}" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" title="Enter a valid 6-digit pincode." required></div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="blood_group">Blood group</label>

@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     city = db.Column(db.String(100), nullable=False)
+    pincode = db.Column(db.String(6), nullable=True, index=True)
     blood_group = db.Column(db.String(5), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     is_email_verified = db.Column(
@@ -162,6 +163,7 @@ class BloodRequest(db.Model):
     units_required = db.Column(db.Integer, nullable=False)
     hospital_name = db.Column(db.String(150), nullable=False)
     city = db.Column(db.String(100), nullable=False)
+    pincode = db.Column(db.String(6), nullable=True, index=True)
     hospital_address = db.Column(db.String(255), nullable=False)
     contact_phone = db.Column(db.String(20), nullable=False)
     needed_by = db.Column(db.Date, nullable=False)

@@ -1638,6 +1638,14 @@ body {
     margin-top: 5px;
 }
 
+.summary-help {
+    color: #6b7b7d;
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 650;
+    margin-top: 4px;
+}
+
 .dashboard-panel {
     background: rgba(255, 255, 255, 0.92);
     border: 1px solid var(--line);
@@ -1821,6 +1829,28 @@ textarea.form-control {
 
 .verification-chip.donor-status-rejected {
     background: #fde9ed;
+}
+
+.location-chip {
+    align-items: center;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 0.68rem;
+    font-weight: 800;
+    margin-top: 7px;
+    padding: 5px 8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.location-chip-pincode {
+    background: #dff4ef;
+    color: #0f625c;
+}
+
+.location-chip-city {
+    background: #eef1f2;
+    color: #5a666b;
 }
 
 .emergency-chip {

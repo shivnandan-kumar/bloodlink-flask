@@ -7,7 +7,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.extensions import db
-from app.matching import find_matching_donors
+from app.matching import donor_match_level, find_matching_donors
 from app.models import BloodRequest, DonorProfile, User
 from app.notifications import (
     create_notification,
@@ -211,6 +211,7 @@ def request_detail(request_id):
         "admin_request_detail.html",
         blood_request_record=blood_request_record,
         matched_donors=matched_donors,
+        donor_match_level=donor_match_level,
     )
 
 

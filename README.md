@@ -37,7 +37,7 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 - Admin donor verification and rejection
 - Admin blood request verification and rejection
 - Emergency blood request broadcast and donor alerts
-- Donor matching using blood group and city
+- Donor matching using blood group, pincode and city fallback
 - In-app notifications
 - Donation invitation, acceptance and completion flow
 - Request fulfillment after required units are completed
@@ -76,13 +76,13 @@ bloodlink-flask/
 
 ## How The App Works
 
-1. User registers with name, email, city, blood group and password.
+1. User registers with name, email, city, pincode, blood group and password.
 2. System sends an email OTP.
 3. User verifies OTP and logs in.
 4. User can become a donor by submitting donor details and blood group proof.
 5. User can create a blood request with patient, hospital and prescription details.
 6. Admin verifies donor profiles and blood requests.
-7. System matches verified donors by blood group and city.
+7. System matches verified donors by blood group and pincode first, then city.
 8. Requester invites a matched donor.
 9. Donor accepts or declines the invitation.
 10. Donor marks donation as completed.
@@ -91,7 +91,7 @@ bloodlink-flask/
 
 ## Main Database Models
 
-- `User`: account, login, city, blood group and admin role
+- `User`: account, login, city, pincode, blood group and admin role
 - `DonorProfile`: donor details, proof document, availability and verification status
 - `BloodRequest`: patient, hospital, prescription and request status
 - `Notification`: user notifications and read/unread status
@@ -161,6 +161,7 @@ DEFAULT_ADMIN_NAME=BloodLink Admin
 DEFAULT_ADMIN_EMAIL=admin@example.com
 DEFAULT_ADMIN_PASSWORD=ChangeThisAdminPassword1!
 DEFAULT_ADMIN_CITY=Ranchi
+DEFAULT_ADMIN_PINCODE=834001
 DEFAULT_ADMIN_BLOOD_GROUP=O+
 ```
 
@@ -193,7 +194,7 @@ Never commit the real `.env` file.
 
 ## Interview Explanation
 
-BloodLink is a full-stack Flask project. Users can register, verify their email, login, become donors and create blood requests. Donor profiles and blood requests are verified by an admin. After verification, the system matches donors using blood group and city. The requester can invite donors and track the donation until it is completed.
+BloodLink is a full-stack Flask project. Users can register, verify their email, login, become donors and create blood requests. Donor profiles and blood requests are verified by an admin. After verification, the system matches donors using blood group and pincode first, then falls back to the same city. The requester can invite donors and track the donation until it is completed.
 
 The backend is built with Flask. SQLite is used as the database. Flask-SQLAlchemy is used to write database models in Python. Flask-Migrate is used to manage database changes. Flask-Login is used for login sessions. Jinja templates, Bootstrap and CSS are used for the frontend.
 
@@ -359,7 +360,8 @@ Verification routes:
 This step adds donor matching:
 
 - Exact blood-group matching
-- Case-insensitive city matching
+- Pincode-first local matching
+- Case-insensitive city fallback matching
 - Verified donors only
 - Available and medically declared donors only
 - Request owner excluded from matches

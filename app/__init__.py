@@ -74,6 +74,11 @@ def create_app(config_class=Config):
         admin_password = app.config.get("DEFAULT_ADMIN_PASSWORD") or ""
         admin_name = (app.config.get("DEFAULT_ADMIN_NAME") or "BloodLink Admin").strip()
         admin_city = (app.config.get("DEFAULT_ADMIN_CITY") or "Ranchi").strip()
+        admin_pincode = "".join(
+            character
+            for character in (app.config.get("DEFAULT_ADMIN_PINCODE") or "").strip()
+            if character.isdigit()
+        )
         admin_blood_group = (
             app.config.get("DEFAULT_ADMIN_BLOOD_GROUP") or "O+"
         ).strip().upper()
@@ -95,6 +100,9 @@ def create_app(config_class=Config):
             if not user.is_email_verified:
                 user.is_email_verified = True
                 changed = True
+            if admin_pincode and not user.pincode:
+                user.pincode = admin_pincode
+                changed = True
             if changed:
                 db.session.commit()
                 click.echo(f"Default admin restored for {user.email}.")
@@ -106,6 +114,7 @@ def create_app(config_class=Config):
             name=admin_name,
             email=admin_email,
             city=admin_city,
+            pincode=admin_pincode or None,
             blood_group=admin_blood_group,
             is_admin=True,
             is_email_verified=True,

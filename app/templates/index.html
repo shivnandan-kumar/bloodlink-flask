@@ -10,7 +10,7 @@
             <div class="hero-copy">
                 <p class="hero-eyebrow">Verified local blood donor network</p>
                 <h1>BloodLink</h1>
-                <p class="hero-lead">When blood is needed, every hour matters. Find verified donors in your city or become the person someone is hoping to find.</p>
+                <p class="hero-lead">When blood is needed, every hour matters. Find verified donors near your pincode or become the person someone is hoping to find.</p>
                 <div class="hero-actions">
                     {% if current_user.is_authenticated %}
                         <a class="btn btn-light btn-lg" href="{{ url_for('main.dashboard') }}">Open dashboard</a>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="hero-trust" aria-label="BloodLink verification features">
                     <span><i data-lucide="shield-check" aria-hidden="true"></i>Verified profiles</span>
-                    <span><i data-lucide="map-pin" aria-hidden="true"></i>City-based matching</span>
+                    <span><i data-lucide="map-pin" aria-hidden="true"></i>Pincode-first matching</span>
                     <span><i data-lucide="lock-keyhole" aria-hidden="true"></i>Private documents</span>
                 </div>
             </div>
@@ -125,7 +125,7 @@
         <div class="steps-list">
             <div class="home-step"><span>01</span><i data-lucide="file-plus-2" aria-hidden="true"></i><div><h3>Submit details</h3><p>Create a donor profile or blood request and attach the required supporting document.</p></div></div>
             <div class="home-step"><span>02</span><i data-lucide="badge-check" aria-hidden="true"></i><div><h3>Admin verifies</h3><p>The submitted information and document are reviewed before approval.</p></div></div>
-            <div class="home-step"><span>03</span><i data-lucide="map-pinned" aria-hidden="true"></i><div><h3>Local matches appear</h3><p>Verified requests can find available donors with the required blood group in the same city.</p></div></div>
+            <div class="home-step"><span>03</span><i data-lucide="map-pinned" aria-hidden="true"></i><div><h3>Local matches appear</h3><p>Verified requests first check the same pincode, then expand to available donors in the same city.</p></div></div>
         </div>
     </div>
 </section>

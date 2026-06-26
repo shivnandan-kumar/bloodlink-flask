@@ -14,7 +14,7 @@
             <thead><tr><th>Donor</th><th>Blood group</th><th>Phone</th><th>Availability</th><th>Verification</th><th></th></tr></thead>
             <tbody>
                 {% for donor in donors %}
-                    <tr><td><div class="table-person"><span class="admin-avatar">{{ donor.user.name[0]|upper }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.user.city }}</small></span></div></td><td><strong class="blood-value">{{ donor.user.blood_group }}</strong></td><td>{{ donor.phone }}</td><td>{{ "Available" if donor.is_available else "Unavailable" }}</td><td><span class="verification-chip donor-status-{{ donor.verification_status|lower }}">{{ donor.verification_status }}</span></td><td><a class="table-action" href="{{ url_for('admin.donor_detail', donor_id=donor.id) }}">Review</a></td></tr>
+                    <tr><td><div class="table-person"><span class="admin-avatar">{{ donor.user.name[0]|upper }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.user.city }}{% if donor.user.pincode %} - {{ donor.user.pincode }}{% endif %}</small></span></div></td><td><strong class="blood-value">{{ donor.user.blood_group }}</strong></td><td>{{ donor.phone }}</td><td>{{ "Available" if donor.is_available else "Unavailable" }}</td><td><span class="verification-chip donor-status-{{ donor.verification_status|lower }}">{{ donor.verification_status }}</span></td><td><a class="table-action" href="{{ url_for('admin.donor_detail', donor_id=donor.id) }}">Review</a></td></tr>
                 {% else %}
                     <tr><td colspan="6" class="text-center text-secondary py-5">No donor profiles found.</td></tr>
                 {% endfor %}

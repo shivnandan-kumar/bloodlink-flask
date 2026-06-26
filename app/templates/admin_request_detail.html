@@ -8,7 +8,7 @@
     <div class="container py-4 py-md-5">
         <a class="admin-back-link" href="{{ url_for('admin.requests') }}">Back to requests</a>
         <div class="d-md-flex align-items-end justify-content-between gap-3 mt-4">
-            <div><p class="section-kicker mb-2">Request review #{{ blood_request_record.id }}</p><h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1><p class="mb-0">{{ blood_request_record.hospital_name }}, {{ blood_request_record.city }}</p>{% if blood_request_record.is_emergency %}<span class="emergency-chip emergency-chip-light mt-3"><i data-lucide="siren" aria-hidden="true"></i>Emergency priority</span>{% endif %}</div>
+            <div><p class="section-kicker mb-2">Request review #{{ blood_request_record.id }}</p><h1 class="h2 fw-bold mb-2">{{ blood_request_record.patient_name }}</h1><p class="mb-0">{{ blood_request_record.hospital_name }}, {{ blood_request_record.city }}{% if blood_request_record.pincode %} - {{ blood_request_record.pincode }}{% endif %}</p>{% if blood_request_record.is_emergency %}<span class="emergency-chip emergency-chip-light mt-3"><i data-lucide="siren" aria-hidden="true"></i>Emergency priority</span>{% endif %}</div>
             <span class="request-status request-status-{{ blood_request_record.status|lower }} mt-3 mt-md-0">{{ blood_request_record.status }}</span>
         </div>
     </div>
@@ -28,6 +28,7 @@
                 <div><dt>Required by</dt><dd>{{ blood_request_record.needed_by.strftime("%d %b %Y") }}</dd></div>
                 <div><dt>Urgency</dt><dd class="urgency-text-{{ blood_request_record.urgency|lower }} fw-bold">{{ blood_request_record.urgency }}</dd></div>
                 <div><dt>Hospital</dt><dd>{{ blood_request_record.hospital_name }}</dd></div>
+                <div><dt>Pincode</dt><dd>{{ blood_request_record.pincode or "Not added" }}</dd></div>
                 <div><dt>Address</dt><dd>{{ blood_request_record.hospital_address }}</dd></div>
                 <div><dt>Contact</dt><dd>{{ blood_request_record.contact_phone }}</dd></div>
                 <div><dt>Reason</dt><dd>{{ blood_request_record.reason or "Not provided" }}</dd></div>
@@ -67,12 +68,13 @@
         <section class="admin-match-section mt-5" aria-labelledby="admin-matches-heading">
             <div class="section-heading">
                 <h2 class="h5 fw-bold mb-1" id="admin-matches-heading">Matching donors</h2>
-                <p class="text-secondary mb-0">{{ matched_donors|length }} verified and available donor{{ "s" if matched_donors|length != 1 else "" }} in {{ blood_request_record.city }}.</p>
+                <p class="text-secondary mb-0">{{ matched_donors|length }} verified and available donor{{ "s" if matched_donors|length != 1 else "" }} near {{ blood_request_record.city }}{% if blood_request_record.pincode %} - {{ blood_request_record.pincode }}{% endif %}.</p>
             </div>
             {% if matched_donors %}
                 <div class="admin-compact-list">
                     {% for donor in matched_donors %}
-                        <div><span class="request-blood-group request-blood-group-small">{{ donor.user.blood_group }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.phone }}</small></span><span class="verification-chip donor-status-verified">Verified</span></div>
+                        {% set match_level = donor_match_level(donor, blood_request_record) %}
+                        <div><span class="request-blood-group request-blood-group-small">{{ donor.user.blood_group }}</span><span><strong>{{ donor.user.name }}</strong><small>{{ donor.user.city }}{% if donor.user.pincode %} - {{ donor.user.pincode }}{% endif %} | {{ donor.phone }}</small></span><span class="location-chip {% if match_level == 'Pincode match' %}location-chip-pincode{% else %}location-chip-city{% endif %}">{{ match_level }}</span></div>
                     {% endfor %}
                 </div>
             {% else %}

@@ -14,7 +14,7 @@
             <thead><tr><th>User</th><th>Blood group</th><th>City</th><th>Role</th><th>Joined</th></tr></thead>
             <tbody>
                 {% for user in users %}
-                    <tr><td><div class="table-person"><span class="admin-avatar">{{ user.name[0]|upper }}</span><span><strong>{{ user.name }}</strong><small>{{ user.email }}</small></span></div></td><td><strong class="blood-value">{{ user.blood_group }}</strong></td><td>{{ user.city }}</td><td><span class="role-chip {% if user.is_admin %}role-admin{% endif %}">{{ "Admin" if user.is_admin else "Member" }}</span></td><td>{{ user.created_at.strftime("%d %b %Y") }}</td></tr>
+                    <tr><td><div class="table-person"><span class="admin-avatar">{{ user.name[0]|upper }}</span><span><strong>{{ user.name }}</strong><small>{{ user.email }}</small></span></div></td><td><strong class="blood-value">{{ user.blood_group }}</strong></td><td>{{ user.city }}{% if user.pincode %}<small class="d-block text-secondary">{{ user.pincode }}</small>{% endif %}</td><td><span class="role-chip {% if user.is_admin %}role-admin{% endif %}">{{ "Admin" if user.is_admin else "Member" }}</span></td><td>{{ user.created_at.strftime("%d %b %Y") }}</td></tr>
                 {% else %}
                     <tr><td colspan="5" class="text-center text-secondary py-5">No users found.</td></tr>
                 {% endfor %}

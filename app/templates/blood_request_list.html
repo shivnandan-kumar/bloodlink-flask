@@ -33,7 +33,7 @@
                             <span class="request-status request-status-{{ blood_request_record.status|lower }}">{{ blood_request_record.status }}</span>
                             <span class="urgency-label urgency-{{ blood_request_record.urgency|lower }}">{{ blood_request_record.urgency }}</span>
                         </div>
-                        <p>{{ blood_request_record.hospital_name }} | {{ blood_request_record.city }}</p>
+                        <p>{{ blood_request_record.hospital_name }} | {{ blood_request_record.city }}{% if blood_request_record.pincode %} - {{ blood_request_record.pincode }}{% endif %}</p>
                     </div>
                     <div class="request-list-meta">
                         <strong>{{ blood_request_record.units_required }} unit{{ "s" if blood_request_record.units_required != 1 else "" }}</strong>

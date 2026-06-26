@@ -34,6 +34,11 @@ def validate_donor_form():
     gender = request.form.get("gender", "").strip()
     phone = request.form.get("phone", "").strip()
     city = request.form.get("city", "").strip()
+    pincode = "".join(
+        character
+        for character in request.form.get("pincode", "").strip()
+        if character.isdigit()
+    )
     blood_group = request.form.get("blood_group", "").strip()
     address = request.form.get("address", "").strip()
     last_donation_text = request.form.get("last_donation_date", "").strip()
@@ -56,6 +61,8 @@ def validate_donor_form():
     normalized_phone = f"+{phone_digits}" if phone.startswith("+") else phone_digits
     if not city:
         errors.append("City is required.")
+    if len(pincode) != 6:
+        errors.append("Please enter a valid 6-digit pincode.")
     if blood_group not in BLOOD_GROUPS:
         errors.append("Please select a valid blood group.")
     if not address:
@@ -83,6 +90,7 @@ def validate_donor_form():
         "gender": gender,
         "phone": normalized_phone,
         "city": city,
+        "pincode": pincode,
         "blood_group": blood_group,
         "address": address,
         "last_donation_date": last_donation_date,
@@ -128,6 +136,7 @@ def register():
                 blood_group_proof_original_name=original_name,
             )
             current_user.city = data["city"]
+            current_user.pincode = data["pincode"]
             current_user.blood_group = data["blood_group"]
 
             try:
@@ -228,6 +237,7 @@ def edit():
             donor_profile.reviewed_at = None
             donor_profile.rejection_reason = None
             current_user.city = data["city"]
+            current_user.pincode = data["pincode"]
             current_user.blood_group = data["blood_group"]
 
             try:

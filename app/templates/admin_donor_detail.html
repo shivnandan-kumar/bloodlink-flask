@@ -8,7 +8,7 @@
     <div class="container py-4 py-md-5">
         <a class="admin-back-link" href="{{ url_for('admin.donors') }}">Back to donors</a>
         <div class="d-md-flex align-items-end justify-content-between gap-3 mt-4">
-            <div><p class="section-kicker mb-2">Donor review #{{ donor.id }}</p><h1 class="h2 fw-bold mb-2">{{ donor.user.name }}</h1><p class="mb-0">{{ donor.user.blood_group }} donor in {{ donor.user.city }}</p></div>
+            <div><p class="section-kicker mb-2">Donor review #{{ donor.id }}</p><h1 class="h2 fw-bold mb-2">{{ donor.user.name }}</h1><p class="mb-0">{{ donor.user.blood_group }} donor in {{ donor.user.city }}{% if donor.user.pincode %} - {{ donor.user.pincode }}{% endif %}</p></div>
             <span class="verification-chip donor-status-{{ donor.verification_status|lower }} mt-3 mt-md-0">{{ donor.verification_status }}</span>
         </div>
     </div>
@@ -27,6 +27,7 @@
                 <div><dt>Gender</dt><dd>{{ donor.gender }}</dd></div>
                 <div><dt>Blood group</dt><dd class="blood-value fw-bold">{{ donor.user.blood_group }}</dd></div>
                 <div><dt>City</dt><dd>{{ donor.user.city }}</dd></div>
+                <div><dt>Pincode</dt><dd>{{ donor.user.pincode or "Not added" }}</dd></div>
                 <div><dt>Address</dt><dd>{{ donor.address }}</dd></div>
                 <div><dt>Last donation</dt><dd>{{ donor.last_donation_date.strftime("%d %b %Y") if donor.last_donation_date else "Not recorded" }}</dd></div>
                 <div><dt>Available</dt><dd>{{ "Yes" if donor.is_available else "No" }}</dd></div>

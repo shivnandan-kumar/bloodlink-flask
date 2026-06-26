@@ -47,6 +47,11 @@ def register():
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip().lower()
         city = request.form.get("city", "").strip()
+        pincode = "".join(
+            character
+            for character in request.form.get("pincode", "").strip()
+            if character.isdigit()
+        )
         blood_group = request.form.get("blood_group", "").strip()
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
@@ -55,10 +60,12 @@ def register():
             db.select(User).where(User.email == email)
         )
 
-        if not all((name, email, city, blood_group, password, confirm_password)):
+        if not all((name, email, city, pincode, blood_group, password, confirm_password)):
             flash("Please fill in all fields.", "danger")
         elif "@" not in email or "." not in email.split("@")[-1]:
             flash("Please enter a valid email address.", "danger")
+        elif len(pincode) != 6:
+            flash("Please enter a valid 6-digit pincode.", "danger")
         elif blood_group not in BLOOD_GROUPS:
             flash("Please select a valid blood group.", "danger")
         elif password_errors:
@@ -78,6 +85,7 @@ def register():
                 name=name,
                 email=email,
                 city=city,
+                pincode=pincode,
                 blood_group=blood_group,
                 is_email_verified=False,
             )

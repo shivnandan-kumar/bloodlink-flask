@@ -44,6 +44,11 @@
                     <input class="form-control" id="city" name="city" type="text" maxlength="100" value="{{ request.form.get('city', current_user.city) }}" required>
                 </div>
                 <div class="col-md-6">
+                    <label class="form-label" for="pincode">Pincode</label>
+                    <input class="form-control" id="pincode" name="pincode" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" title="Enter a valid 6-digit pincode." value="{{ request.form.get('pincode', current_user.pincode or '') }}" required>
+                    <div class="form-text">Used to show nearby requests and donors first.</div>
+                </div>
+                <div class="col-md-6">
                     <label class="form-label" for="blood_group">Blood group</label>
                     {% set selected_blood_group = request.form.get('blood_group', current_user.blood_group) %}
                     <select class="form-select" id="blood_group" name="blood_group" required>

@@ -15,7 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.constants import BLOOD_GROUPS, URGENCY_LEVELS
 from app.extensions import db
-from app.matching import find_matching_donors
+from app.matching import donor_match_level, find_matching_donors
 from app.models import BloodRequest, Donation, DonorProfile, User
 from app.notifications import create_notification
 from app.uploads import (
@@ -36,6 +36,11 @@ def validate_request_form():
     units_text = request.form.get("units_required", "").strip()
     hospital_name = request.form.get("hospital_name", "").strip()
     city = request.form.get("city", "").strip()
+    pincode = "".join(
+        character
+        for character in request.form.get("pincode", "").strip()
+        if character.isdigit()
+    )
     hospital_address = request.form.get("hospital_address", "").strip()
     contact_phone = request.form.get("contact_phone", "").strip()
     needed_by_text = request.form.get("needed_by", "").strip()
@@ -59,6 +64,8 @@ def validate_request_form():
         errors.append("Hospital name is required.")
     if not city:
         errors.append("City is required.")
+    if len(pincode) != 6:
+        errors.append("Please enter a valid 6-digit pincode.")
     if not hospital_address:
         errors.append("Hospital address is required.")
 
@@ -96,6 +103,7 @@ def validate_request_form():
         "units_required": units_required,
         "hospital_name": hospital_name,
         "city": city,
+        "pincode": pincode,
         "hospital_address": hospital_address,
         "contact_phone": normalized_phone,
         "needed_by": needed_by,
@@ -270,6 +278,7 @@ def matches(request_id):
         invitations_by_donor={
             invitation.donor_profile_id: invitation for invitation in invitations
         },
+        donor_match_level=donor_match_level,
     )
 
 

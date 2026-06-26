@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from sqlalchemy import func
 
 from app.extensions import db
+from app.matching import find_matching_donors
 from app.models import BloodRequest, Notification
 
 
@@ -72,7 +73,8 @@ def notify_matching_requests_for_donor(donor):
         )
     ).all()
     for blood_request_record in matching_requests:
-        notify_request_matches(blood_request_record, [donor])
+        if donor in find_matching_donors(blood_request_record):
+            notify_request_matches(blood_request_record, [donor])
 
 
 def get_owned_notification_or_404(notification_id):

@@ -84,6 +84,11 @@
                     <input class="form-control" id="city" name="city" type="text" maxlength="100" value="{{ request.form.get('city', blood_request_record.city if blood_request_record else current_user.city) }}" required>
                 </div>
                 <div class="col-md-6">
+                    <label class="form-label" for="pincode">Hospital pincode</label>
+                    <input class="form-control" id="pincode" name="pincode" type="text" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" title="Enter a valid 6-digit pincode." value="{{ request.form.get('pincode', blood_request_record.pincode if blood_request_record else current_user.pincode or '') }}" required>
+                    <div class="form-text">BloodLink checks this pincode first, then expands to the city.</div>
+                </div>
+                <div class="col-md-6">
                     <label class="form-label" for="contact_phone">Contact phone</label>
                     <input class="form-control" id="contact_phone" name="contact_phone" type="tel" maxlength="20" value="{{ request.form.get('contact_phone', blood_request_record.contact_phone if blood_request_record else '') }}" required>
                 </div>

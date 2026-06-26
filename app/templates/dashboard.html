@@ -33,7 +33,7 @@
         <div class="col-sm-6 col-lg-3">
             <div class="summary-card dashboard-metric metric-city h-100">
                 <span class="metric-icon"><i data-lucide="map-pin" aria-hidden="true"></i></span>
-                <div><p class="summary-label">City</p><p class="summary-value">{{ user.city }}</p></div>
+                <div><p class="summary-label">City</p><p class="summary-value">{{ user.city }}</p>{% if user.pincode %}<small class="summary-help">Pincode {{ user.pincode }}</small>{% endif %}</div>
             </div>
         </div>
         <div class="col-sm-6 col-lg-3">
@@ -67,7 +67,7 @@
                         <span class="request-blood-group">{{ summary.request.blood_group }}</span>
                         <div class="dashboard-match-request">
                             <strong>{{ summary.request.patient_name }}</strong>
-                            <span>{{ summary.request.hospital_name }} | {{ summary.request.city }}</span>
+                            <span>{{ summary.request.hospital_name }} | {{ summary.request.city }}{% if summary.request.pincode %} - {{ summary.request.pincode }}{% endif %}</span>
                         </div>
                         <div class="dashboard-match-contact">
                             <span>Matched donor</span>
@@ -121,7 +121,7 @@
                         <div>
                             <span class="verification-chip donor-status-{{ user.donor_profile.verification_status|lower }}">{{ user.donor_profile.verification_status }}</span>
                             <p class="fw-semibold mt-3 mb-1">{{ user.blood_group }} donor</p>
-                            <p class="text-secondary mb-0">{{ user.city }} | {{ "Available" if user.donor_profile.is_available else "Not available" }}</p>
+                            <p class="text-secondary mb-0">{{ user.city }}{% if user.pincode %} - {{ user.pincode }}{% endif %} | {{ "Available" if user.donor_profile.is_available else "Not available" }}</p>
                             <div class="reward-badge reward-badge-{{ user.donor_profile.reward_badge_class() }} mt-3">
                                 <i data-lucide="award" aria-hidden="true"></i>
                                 <span>

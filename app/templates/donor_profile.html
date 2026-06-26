@@ -11,7 +11,7 @@
             <div>
                 <p class="section-kicker mb-2">Donor profile</p>
                 <h1 class="h2 fw-bold mb-2">{{ current_user.name }}</h1>
-                <p class="text-secondary mb-0">{{ current_user.blood_group }} donor in {{ current_user.city }}</p>
+                <p class="text-secondary mb-0">{{ current_user.blood_group }} donor in {{ current_user.city }}{% if current_user.pincode %} - {{ current_user.pincode }}{% endif %}</p>
             </div>
             <a class="btn btn-blood mt-3 mt-md-0" href="{{ url_for('donor.edit') }}">
                 <i data-lucide="pencil" aria-hidden="true"></i>
@@ -82,6 +82,8 @@
             <div><dt>Age</dt><dd>{{ donor_profile.age }} years</dd></div>
             <div><dt>Gender</dt><dd>{{ donor_profile.gender }}</dd></div>
             <div><dt>Phone</dt><dd>{{ donor_profile.phone }}</dd></div>
+            <div><dt>City</dt><dd>{{ current_user.city }}</dd></div>
+            <div><dt>Pincode</dt><dd>{{ current_user.pincode or "Not added" }}</dd></div>
             <div><dt>Address</dt><dd>{{ donor_profile.address }}</dd></div>
             <div><dt>Blood group proof</dt><dd>{% if donor_profile.blood_group_proof_filename %}<a href="{{ url_for('donor.blood_group_proof', donor_id=donor_profile.id) }}" target="_blank" rel="noopener">View document</a>{% else %}Not uploaded{% endif %}</dd></div>
             <div><dt>Profile submitted</dt><dd>{{ donor_profile.created_at.strftime("%d %B %Y") }}</dd></div>

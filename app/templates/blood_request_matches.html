@@ -9,7 +9,7 @@
         <a class="back-link" href="{{ url_for('blood_request.detail', request_id=blood_request_record.id) }}">Back to request</a>
         <p class="section-kicker mt-4 mb-2">Donor matching</p>
         <h1 class="h2 fw-bold mb-2">Matched donors</h1>
-        <p class="text-secondary mb-0">Verified {{ blood_request_record.blood_group }} donors available in {{ blood_request_record.city }}.</p>
+        <p class="text-secondary mb-0">Verified {{ blood_request_record.blood_group }} donors near {{ blood_request_record.city }}{% if blood_request_record.pincode %} - {{ blood_request_record.pincode }}{% endif %}.</p>
     </div>
 </section>
 
@@ -23,9 +23,14 @@
         <div class="matched-donor-list">
             {% for donor in donors %}
                 {% set invitation = invitations_by_donor.get(donor.id) %}
+                {% set match_level = donor_match_level(donor, blood_request_record) %}
                 <article class="matched-donor-row">
                     <span class="match-avatar">{{ donor.user.name[0]|upper }}</span>
-                    <div class="match-person"><h2>{{ donor.user.name }}</h2><p>{{ donor.user.city }} | {{ donor.user.blood_group }} donor</p></div>
+                    <div class="match-person">
+                        <h2>{{ donor.user.name }}</h2>
+                        <p>{{ donor.user.city }}{% if donor.user.pincode %} - {{ donor.user.pincode }}{% endif %} | {{ donor.user.blood_group }} donor</p>
+                        <span class="location-chip {% if match_level == 'Pincode match' %}location-chip-pincode{% else %}location-chip-city{% endif %}">{{ match_level }}</span>
+                    </div>
                     <div class="match-detail"><span>Phone</span><strong>{{ donor.phone }}</strong></div>
                     <div class="match-detail"><span>Last donation</span><strong>{{ donor.last_donation_date.strftime("%d %b %Y") if donor.last_donation_date else "Not recorded" }}</strong></div>
                     <div class="match-actions">
