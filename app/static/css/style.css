@@ -1564,17 +1564,23 @@ body {
     min-height: 128px;
     overflow: hidden;
     padding: 22px;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 .dashboard-metric:hover,
+.dashboard-metric:focus-within,
 .admin-summary-card:hover,
+.admin-summary-card:focus-within,
 .dashboard-panel:hover,
+.dashboard-panel:focus-within,
 .donation-card:hover {
     border-color: #aebfbb;
     box-shadow: 0 20px 44px rgba(24, 33, 38, 0.1);
+    transform: translateY(-2px);
 }
 
-.admin-summary-card:hover {
+.admin-summary-card:hover,
+.admin-summary-card:focus-within {
     transform: translateY(-2px);
 }
 
@@ -2596,6 +2602,15 @@ textarea.form-control {
 
 .admin-activity-panel {
     border-top: 3px solid #cad4d1;
+    overflow: hidden;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.admin-activity-panel:hover,
+.admin-activity-panel:focus-within {
+    border-color: #bdd1cd;
+    box-shadow: 0 20px 46px rgba(24, 33, 38, 0.1);
+    transform: translateY(-3px);
 }
 
 .admin-activity-grid .col-lg-6:first-child .admin-activity-panel {
@@ -2617,6 +2632,16 @@ textarea.form-control {
     gap: 12px;
     grid-template-columns: 38px minmax(0, 1fr) auto;
     padding: 13px 0;
+    transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.admin-activity-panel:hover .admin-compact-list > div,
+.admin-activity-panel:focus-within .admin-compact-list > div {
+    transform: translateX(3px);
+}
+
+.admin-compact-list > div:hover {
+    background: rgba(232, 242, 240, 0.45);
 }
 
 .admin-compact-list strong,
@@ -4009,7 +4034,10 @@ textarea.form-control {
     .admin-signal-grid > div,
     .admin-signal-grid span,
     .admin-top-donor-list > div,
+    .dashboard-metric,
     .dashboard-metric .metric-icon,
+    .admin-activity-panel,
+    .admin-compact-list > div,
     .donation-progress,
     .donation-progress-icon,
     .donation-overview,
@@ -4034,8 +4062,14 @@ textarea.form-control {
     .admin-insight-panel:focus-within .admin-signal-grid > div,
     .admin-insight-panel:hover .admin-signal-grid span,
     .admin-insight-panel:focus-within .admin-signal-grid span,
+    .dashboard-metric:hover,
+    .dashboard-metric:focus-within,
     .dashboard-metric:hover .metric-icon,
     .dashboard-metric:focus-within .metric-icon,
+    .admin-activity-panel:hover,
+    .admin-activity-panel:focus-within,
+    .admin-activity-panel:hover .admin-compact-list > div,
+    .admin-activity-panel:focus-within .admin-compact-list > div,
     .donation-progress:hover,
     .donation-progress:focus-within,
     .donation-progress:hover .donation-progress-icon,
