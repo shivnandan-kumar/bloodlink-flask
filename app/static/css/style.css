@@ -2332,14 +2332,16 @@ textarea.form-control {
 .analytics-bar-row {
     align-items: center;
     display: grid;
-    gap: 10px;
-    grid-template-columns: 44px minmax(0, 1fr) 34px;
+    gap: 12px;
+    grid-template-columns: minmax(72px, 0.42fr) minmax(120px, 1fr) 34px;
 }
 
 .analytics-bar-row > span {
     color: var(--charcoal);
     font-size: 0.82rem;
     font-weight: 800;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .analytics-bar-row > strong {
@@ -2351,6 +2353,7 @@ textarea.form-control {
     background: #edf2f1;
     border-radius: 999px;
     height: 10px;
+    min-width: 0;
     overflow: hidden;
 }
 
@@ -3642,6 +3645,10 @@ textarea.form-control {
 
     .admin-signal-grid {
         grid-template-columns: 1fr;
+    }
+
+    .analytics-bar-row {
+        grid-template-columns: minmax(76px, 0.55fr) minmax(90px, 1fr) 28px;
     }
 }
 
