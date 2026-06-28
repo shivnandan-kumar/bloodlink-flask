@@ -6,9 +6,10 @@ from flask_login import current_user, login_required
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.constants import BLOOD_GROUPS
 from app.extensions import db
 from app.matching import donor_match_level, find_matching_donors
-from app.models import BloodRequest, DonorProfile, User
+from app.models import BloodRequest, Donation, DonorProfile, User
 from app.notifications import (
     create_notification,
     notify_matching_requests_for_donor,
@@ -17,6 +18,8 @@ from app.notifications import (
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
+DONOR_STATUSES = ("Pending", "Verified", "Rejected")
+REQUEST_STATUSES = ("Pending", "Verified", "Rejected", "Fulfilled", "Cancelled")
 
 
 def admin_required(view_function):
@@ -29,28 +32,132 @@ def admin_required(view_function):
     return wrapped_view
 
 
+def percentage(count, total):
+    if not total:
+        return 0
+    return round((count / total) * 100)
+
+
+def build_count_rows(labels, count_map, total):
+    rows = []
+    for label in labels:
+        count = count_map.get(label, 0)
+        rows.append(
+            {
+                "label": label,
+                "count": count,
+                "percent": percentage(count, total),
+            }
+        )
+    return rows
+
+
 @admin.route("")
 @login_required
 @admin_required
 def dashboard():
-    stats = {
-        "users": db.session.scalar(db.select(func.count()).select_from(User)),
-        "donors": db.session.scalar(
-            db.select(func.count()).select_from(DonorProfile)
-        ),
-        "requests": db.session.scalar(
-            db.select(func.count()).select_from(BloodRequest)
-        ),
-        "pending": db.session.scalar(
+    total_users = db.session.scalar(db.select(func.count()).select_from(User)) or 0
+    total_donors = (
+        db.session.scalar(db.select(func.count()).select_from(DonorProfile)) or 0
+    )
+    total_requests = (
+        db.session.scalar(db.select(func.count()).select_from(BloodRequest)) or 0
+    )
+    pending_donors = (
+        db.session.scalar(
             db.select(func.count())
             .select_from(DonorProfile)
             .where(DonorProfile.verification_status == "Pending")
         )
-        + db.session.scalar(
+        or 0
+    )
+    pending_requests = (
+        db.session.scalar(
             db.select(func.count())
             .select_from(BloodRequest)
             .where(BloodRequest.status == "Pending")
+        )
+        or 0
+    )
+    stats = {
+        "users": total_users,
+        "donors": total_donors,
+        "requests": total_requests,
+        "pending": pending_donors + pending_requests,
+    }
+    blood_group_counts = dict(
+        db.session.execute(
+            db.select(User.blood_group, func.count(User.id))
+            .group_by(User.blood_group)
+        ).all()
+    )
+    donor_status_counts = dict(
+        db.session.execute(
+            db.select(DonorProfile.verification_status, func.count(DonorProfile.id))
+            .group_by(DonorProfile.verification_status)
+        ).all()
+    )
+    request_status_counts = dict(
+        db.session.execute(
+            db.select(BloodRequest.status, func.count(BloodRequest.id))
+            .group_by(BloodRequest.status)
+        ).all()
+    )
+    completed_donation_count = (
+        db.session.scalar(
+            db.select(func.count())
+            .select_from(Donation)
+            .where(Donation.status == "Completed")
+        )
+        or 0
+    )
+    emergency_request_count = (
+        db.session.scalar(
+            db.select(func.count())
+            .select_from(BloodRequest)
+            .where(BloodRequest.is_emergency.is_(True))
+        )
+        or 0
+    )
+    available_verified_donors = (
+        db.session.scalar(
+            db.select(func.count())
+            .select_from(DonorProfile)
+            .where(
+                DonorProfile.verification_status == "Verified",
+                DonorProfile.is_available.is_(True),
+                DonorProfile.medical_eligible.is_(True),
+            )
+        )
+        or 0
+    )
+    top_donors = db.session.scalars(
+        db.select(DonorProfile)
+        .join(DonorProfile.user)
+        .where(DonorProfile.donation_count > 0)
+        .order_by(DonorProfile.donation_count.desc(), User.name.asc())
+        .limit(5)
+    ).all()
+    analytics = {
+        "blood_groups": build_count_rows(
+            BLOOD_GROUPS,
+            blood_group_counts,
+            max(blood_group_counts.values(), default=0),
         ),
+        "donor_statuses": build_count_rows(
+            DONOR_STATUSES,
+            donor_status_counts,
+            total_donors,
+        ),
+        "request_statuses": build_count_rows(
+            REQUEST_STATUSES,
+            request_status_counts,
+            total_requests,
+        ),
+        "completed_donations": completed_donation_count,
+        "emergency_requests": emergency_request_count,
+        "available_verified_donors": available_verified_donors,
+        "top_donors": top_donors,
     }
     recent_users = db.session.scalars(
         db.select(User).order_by(User.created_at.desc()).limit(5)
@@ -63,6 +170,7 @@ def dashboard():
     return render_template(
         "admin_dashboard.html",
         stats=stats,
+        analytics=analytics,
         recent_users=recent_users,
         recent_requests=recent_requests,
     )

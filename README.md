@@ -35,6 +35,7 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 - Blood request creation and tracking
 - Doctor prescription upload for blood requests
 - Admin dashboard
+- Admin analytics with blood-group, request-status and donor-status insights
 - Admin donor verification and rejection
 - Admin blood request verification and rejection
 - Emergency blood request broadcast and donor alerts

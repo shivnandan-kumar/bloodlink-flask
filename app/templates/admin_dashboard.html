@@ -28,6 +28,96 @@
         <div class="col-sm-6 col-lg-3"><div class="summary-card dashboard-metric metric-pending h-100"><span class="metric-icon"><i data-lucide="clock-3" aria-hidden="true"></i></span><div><p class="summary-label">Pending review</p><p class="summary-value pending-value">{{ stats.pending }}</p><small>Needs admin action</small></div></div></div>
     </div>
 
+    <div class="row g-4 admin-analytics-grid mb-4">
+        <div class="col-xl-4 col-lg-6">
+            <section class="dashboard-panel admin-chart-panel h-100">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1">Blood group spread</h2>
+                    <p class="text-secondary mb-0">Registered users by blood group.</p>
+                </div>
+                <div class="analytics-bars">
+                    {% for row in analytics.blood_groups %}
+                        <div class="analytics-bar-row">
+                            <span>{{ row.label }}</span>
+                            <div class="analytics-bar-track"><span style="width: {{ row.percent }}%"></span></div>
+                            <strong>{{ row.count }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <div class="col-xl-4 col-lg-6">
+            <section class="dashboard-panel admin-chart-panel h-100">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1">Request status</h2>
+                    <p class="text-secondary mb-0">Current blood request pipeline.</p>
+                </div>
+                <div class="analytics-bars analytics-bars-status">
+                    {% for row in analytics.request_statuses %}
+                        <div class="analytics-bar-row">
+                            <span>{{ row.label }}</span>
+                            <div class="analytics-bar-track"><span style="width: {{ row.percent }}%"></span></div>
+                            <strong>{{ row.count }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <div class="col-xl-4">
+            <section class="dashboard-panel admin-insight-panel h-100">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1">Platform signals</h2>
+                    <p class="text-secondary mb-0">Important operational numbers.</p>
+                </div>
+                <div class="admin-signal-grid">
+                    <div><span><i data-lucide="badge-check" aria-hidden="true"></i></span><small>Available verified donors</small><strong>{{ analytics.available_verified_donors }}</strong></div>
+                    <div><span><i data-lucide="siren" aria-hidden="true"></i></span><small>Emergency requests</small><strong>{{ analytics.emergency_requests }}</strong></div>
+                    <div><span><i data-lucide="award" aria-hidden="true"></i></span><small>Completed donations</small><strong>{{ analytics.completed_donations }}</strong></div>
+                    <div><span><i data-lucide="clipboard-check" aria-hidden="true"></i></span><small>Pending reviews</small><strong>{{ stats.pending }}</strong></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row g-4 admin-analytics-grid mb-4">
+        <div class="col-lg-6">
+            <section class="dashboard-panel admin-chart-panel h-100">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1">Donor verification</h2>
+                    <p class="text-secondary mb-0">Review status of donor profiles.</p>
+                </div>
+                <div class="analytics-status-stack">
+                    {% for row in analytics.donor_statuses %}
+                        <div class="analytics-status-card">
+                            <span class="verification-chip donor-status-{{ row.label|lower }}">{{ row.label }}</span>
+                            <strong>{{ row.count }}</strong>
+                            <small>{{ row.percent }}% of donors</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-6">
+            <section class="dashboard-panel admin-chart-panel h-100">
+                <div class="section-heading">
+                    <h2 class="h5 fw-bold mb-1">Top donor heroes</h2>
+                    <p class="text-secondary mb-0">Highest confirmed donation counts.</p>
+                </div>
+                <div class="admin-top-donor-list">
+                    {% for donor in analytics.top_donors %}
+                        <div>
+                            <span class="admin-avatar">{{ donor.user.name[0]|upper }}</span>
+                            <span><strong>{{ donor.user.name }}</strong><small>{{ donor.user.blood_group }} | {{ donor.user.city }}</small></span>
+                            <span class="reward-badge reward-badge-{{ donor.reward_badge_class() }}"><i data-lucide="award" aria-hidden="true"></i><strong>{{ donor.donation_count }}</strong></span>
+                        </div>
+                    {% else %}
+                        <p class="text-secondary py-4 mb-0">No completed donor activity yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+
     <div class="row g-4 admin-activity-grid">
         <div class="col-lg-6">
             <section class="dashboard-panel admin-activity-panel">
