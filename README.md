@@ -1,12 +1,25 @@
 # BloodLink - Blood Donor Network
 
-BloodLink is a full-stack Flask application for blood donor matching, request verification, and emergency blood requests.
+BloodLink is a full-stack Flask web application for managing blood donors, blood requests, admin verification, donor matching, donation tracking, notifications and PDF donation certificates.
 
-## Project Status
+The project is built as a practical resume-level application, not only a basic CRUD project. It includes authentication, secure document uploads, admin workflows, pincode-based matching, analytics and a complete donation completion flow.
 
-This project is complete from Step 1 to Step 12 and is ready for local demo, GitHub submission and interview explanation.
+## Project Highlights
 
-## Technology Stack
+- User can register, verify email with OTP, login and logout.
+- User can act as both donor and requester from the same account.
+- Donor can upload blood-group proof and submit profile for admin verification.
+- Requester can create blood requests with doctor prescription upload.
+- Admin can verify or reject donors and blood requests.
+- Matching first checks blood group and pincode, then falls back to city.
+- Emergency blood requests are highlighted and notify available donors.
+- In-app notifications track verification and donation updates.
+- Requester can invite donors and confirm completed donations.
+- Donor rewards grow after confirmed donations.
+- Completed donations generate a stylish PDF certificate.
+- Admin dashboard includes analytics for blood groups, request status, donor status, emergency requests and top donors.
+
+## Tech Stack
 
 - Python
 - Flask
@@ -23,83 +36,141 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 - ReportLab
 - Git and GitHub
 
-## Complete Feature List
+## Screenshots
 
-- User registration, login and logout
-- Strong password policy for registration, reset and default admin recovery
-- Email OTP verification during registration
-- Forgot password with secure reset link
+Add screenshots here before posting on LinkedIn or sharing the GitHub repo:
+
+```text
+docs/screenshots/homepage.png
+docs/screenshots/dashboard.png
+docs/screenshots/admin-analytics.png
+docs/screenshots/donor-matching.png
+docs/screenshots/donation-certificate.png
+```
+
+Recommended screenshots:
+
+- Homepage with modern BloodLink hero section
 - User dashboard
+- Admin analytics dashboard
+- Blood request matching page
+- Donation activity page
+- PDF certificate preview
+
+## Main Features
+
+### Authentication
+
+- Register, login and logout
+- Strong password policy
+- Email OTP verification
+- Forgot-password flow with secure reset link
+- Remember-me login support
+
+### Donor Module
+
 - Donor profile creation and editing
-- Blood group proof upload for donors
-- Blood request creation and tracking
-- Doctor prescription upload for blood requests
-- Admin dashboard
-- Admin analytics with blood-group, request-status and donor-status insights
-- Admin donor verification and rejection
-- Admin blood request verification and rejection
-- Emergency blood request broadcast and donor alerts
-- Donor matching using blood group, pincode and city fallback
-- In-app notifications
-- Donation invitation, acceptance and completion flow
-- Stylish PDF donation certificate download
-- Request fulfillment after required units are completed
-- Modern responsive UI
+- Blood-group proof upload
+- Availability status
+- Medical declaration
+- Admin verification or rejection
+- Donor reward badge based on confirmed donations
+
+### Blood Request Module
+
+- Create, edit, cancel and track requests
+- Doctor prescription upload
+- Emergency request flag
+- Request status tracking
+- Owner-only request access
+
+### Admin Module
+
+- Protected admin dashboard
+- Admin-only route access
+- Donor verification
+- Blood request verification
+- Rejection reason tracking
+- Analytics dashboard
+- Default admin recovery command
+
+### Matching System
+
+- Exact blood group matching
+- Pincode-first local matching
+- City fallback matching
+- Verified donors only
+- Available and medically eligible donors only
+- Request owner excluded from matching
+
+### Donation Workflow
+
+- Requester invites matched donor
+- Donor accepts or declines invitation
+- Donor marks donation as completed
+- Requester confirms received donation
+- Request becomes fulfilled after required units are confirmed
+- Donor receives a PDF certificate after completion
 
 ## Project Structure
 
 ```text
 bloodlink-flask/
-├── app/
-│   ├── static/
-│   ├── templates/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── auth.py
-│   ├── blood_requests.py
-│   ├── donor.py
-│   ├── donations.py
-│   ├── email_verification.py
-│   ├── extensions.py
-│   ├── mailer.py
-│   ├── matching.py
-│   ├── models.py
-│   ├── notifications.py
-│   ├── password_reset.py
-│   ├── routes.py
-│   └── uploads.py
-├── migrations/
-├── config.py
-├── run.py
-├── requirements.txt
-├── .env.example
-├── .flaskenv
-└── README.md
+|-- app/
+|   |-- static/
+|   |   |-- css/
+|   |   |-- images/
+|   |-- templates/
+|   |-- __init__.py
+|   |-- admin.py
+|   |-- auth.py
+|   |-- blood_requests.py
+|   |-- certificates.py
+|   |-- donor.py
+|   |-- donations.py
+|   |-- email_verification.py
+|   |-- extensions.py
+|   |-- mailer.py
+|   |-- matching.py
+|   |-- models.py
+|   |-- notifications.py
+|   |-- password_reset.py
+|   |-- routes.py
+|   |-- security.py
+|   |-- uploads.py
+|-- migrations/
+|-- config.py
+|-- run.py
+|-- requirements.txt
+|-- .env.example
+|-- .flaskenv
+|-- README.md
 ```
 
 ## How The App Works
 
 1. User registers with name, email, city, pincode, blood group and password.
-2. System sends an email OTP.
+2. System sends a 6-digit email OTP.
 3. User verifies OTP and logs in.
-4. User can become a donor by submitting donor details and blood group proof.
+4. User can become a donor by submitting donor details and blood-group proof.
 5. User can create a blood request with patient, hospital and prescription details.
 6. Admin verifies donor profiles and blood requests.
-7. System matches verified donors by blood group and pincode first, then city.
+7. System matches donors by blood group and pincode first, then city.
 8. Requester invites a matched donor.
 9. Donor accepts or declines the invitation.
-10. Donor marks donation as completed.
+10. Donor marks the donation completed.
 11. Requester confirms the received donation.
-12. Donor can download a verified PDF donation certificate.
-13. Request becomes fulfilled when required units are completed.
+12. Donation count increases and reward badge updates.
+13. Donor can download a verified PDF certificate.
+14. Request becomes fulfilled when required units are completed.
 
-## Main Database Models
+## Database Models
 
-- `User`: account, login, city, pincode, blood group and admin role
-- `DonorProfile`: donor details, proof document, availability and verification status
-- `BloodRequest`: patient, hospital, prescription and request status
-- `Notification`: user notifications and read/unread status
-- `Donation`: invitation and donation completion workflow
+- `User`: account, login, city, pincode, blood group, email verification and admin role
+- `DonorProfile`: donor details, proof document, availability, eligibility, rewards and verification status
+- `BloodRequest`: patient, hospital, prescription, emergency flag and request status
+- `Donation`: invitation, donor response and donation completion workflow
+- `Notification`: in-app user notifications and read status
 
 ## Status Flow
 
@@ -127,14 +198,36 @@ Invited -> Declined
 Invited/Accepted -> Cancelled
 ```
 
-## Quick Local Setup
+## Local Setup
+
+Create and activate virtual environment:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```powershell
 pip install -r requirements.txt
+```
+
+Create environment file:
+
+```powershell
 copy .env.example .env
+```
+
+Apply migrations:
+
+```powershell
 flask db upgrade
+```
+
+Run the application:
+
+```powershell
 python run.py
 ```
 
@@ -146,13 +239,13 @@ http://127.0.0.1:8000
 
 ## Admin Setup
 
-First register normally from the website. Then promote that user:
+Promote an existing user:
 
 ```powershell
 flask promote-admin user@example.com
 ```
 
-You can also create or restore a default local admin from `.env` values:
+Create or restore default admin from `.env`:
 
 ```powershell
 flask create-default-admin
@@ -182,144 +275,52 @@ For Gmail OTP and password reset emails:
 1. Enable 2-Step Verification in Gmail.
 2. Create a Gmail App Password.
 3. Copy `.env.example` to `.env`.
-4. Add your Gmail address and App Password in `.env`.
+4. Add Gmail SMTP values in `.env`.
 
 Never commit the real `.env` file.
 
-## Security Notes
+## Security Features
 
 - Passwords are stored as hashes.
-- Passwords require 8+ characters, one uppercase letter, one number and one special character.
+- Passwords require minimum 8 characters, one uppercase letter, one number and one special character.
 - OTP values are stored as hashes.
 - Password reset links expire after 30 minutes.
 - Uploaded documents are private.
 - Admin routes are protected.
 - `.env` is ignored by Git.
 
-## Interview Explanation
+## Important Routes
 
-BloodLink is a full-stack Flask project. Users can register, verify their email, login, become donors and create blood requests. Donor profiles and blood requests are verified by an admin. After verification, the system matches donors using blood group and pincode first, then falls back to the same city. The requester can invite donors and track the donation until it is completed.
-
-The backend is built with Flask. SQLite is used as the database. Flask-SQLAlchemy is used to write database models in Python. Flask-Migrate is used to manage database changes. Flask-Login is used for login sessions. Jinja templates, Bootstrap and CSS are used for the frontend.
-
----
-
-## Step-by-Step Build Notes
-
-## Step 1
-
-This step creates the basic Flask project structure:
-
-- Flask app package
-- Config file
-- Templates folder
-- Static folder
-- Basic home page
-
-## Step 2
-
-This step adds the database foundation:
-
-- SQLite database configuration
-- Flask-SQLAlchemy setup
-- Flask-Migrate setup
-- User model
-- First database migration
-
-## Step 3
-
-This step adds user authentication:
-
-- User registration with validation
-- Secure password hashing
-- Login and remember-me session
-- Logout
-- Authentication-aware navbar
-
-Authentication routes:
+Authentication:
 
 ```text
 /register
 /login
 /logout
+/verify-email
+/forgot-password
+/reset-password/<token>
 ```
 
-## Step 4
-
-This step adds the protected user dashboard:
-
-- Account summary
-- Registered user details
-- Account status
-- Empty activity state
-
-Dashboard route:
+User and donor:
 
 ```text
 /dashboard
-```
-
-## Step 5
-
-This step adds the donor profile module:
-
-- Donor registration and validation
-- One donor profile per user
-- Donor profile view and edit
-- Availability status
-- Pending verification status
-- Donor dashboard integration
-- Private blood group proof upload
-- New proof required when changing blood group
-- Blood group proof required before admin verification
-
-Donor routes:
-
-```text
 /donor/register
 /donor/profile
 /donor/edit
-/donor/<id>/blood-group-proof
 ```
 
-## Step 6
-
-This step adds the blood request module:
-
-- Create and validate blood requests
-- List and track personal requests
-- Request detail and edit pages
-- Pending verification status
-- Cancel request flow
-- Owner-only request access
-- Dashboard request activity
-- Private doctor prescription upload
-- PDF, JPG and PNG file validation (maximum 5 MB)
-- Prescription access limited to the request owner and admin
-
-Blood request routes:
+Blood requests:
 
 ```text
 /requests
 /requests/new
 /requests/<id>
-/requests/<id>/edit
-/requests/<id>/prescription
+/requests/<id>/matches
 ```
 
-## Step 7
-
-This step adds the admin panel:
-
-- Admin-only route protection
-- Platform overview and counts
-- Registered users list
-- Donor profiles list
-- Blood requests list
-- Pending review count
-- CLI command to promote an existing user
-
-Admin routes:
+Admin:
 
 ```text
 /admin
@@ -328,139 +329,7 @@ Admin routes:
 /admin/requests
 ```
 
-Promote a registered user:
-
-```powershell
-flask promote-admin user@example.com
-```
-
-## Step 8
-
-This step adds donor and blood request verification:
-
-- Admin donor review page
-- Admin blood request review page
-- Verify and reject POST actions
-- Required rejection reason
-- Reviewing admin and review timestamp
-- User-visible verification outcomes
-- Edit and resubmit rejected records
-- Invalid second-review protection
-- Prescription required before request verification
-
-Verification routes:
-
-```text
-/admin/donors/<id>
-/admin/donors/<id>/verify
-/admin/donors/<id>/reject
-/admin/requests/<id>
-/admin/requests/<id>/verify
-/admin/requests/<id>/reject
-```
-
-## Step 9
-
-This step adds donor matching:
-
-- Exact blood-group matching
-- Pincode-first local matching
-- Case-insensitive city fallback matching
-- Verified donors only
-- Available and medically declared donors only
-- Request owner excluded from matches
-- Matches available after request verification
-- Requester match list and admin match preview
-- Dashboard donor-available alert with contact details
-
-Matching route:
-
-```text
-/requests/<id>/matches
-```
-
-## Step 10
-
-This step adds persistent in-app notifications:
-
-- Navbar bell with unread notification count
-- Donor profile verified or rejected updates
-- Blood request verified or rejected updates
-- Matching donor available alerts
-- Notification inbox ordered by newest first
-- Open a notification and mark it as read
-- Mark all notifications as read
-- Owner-only notification access
-- Duplicate matching notification protection
-
-Notification routes:
-
-```text
-/notifications
-/notifications/<id>/open
-/notifications/read-all
-```
-
-## Password Recovery
-
-The authentication system also supports secure password recovery:
-
-- Forgot-password link on the login page
-- Same response for registered and unknown email addresses
-- Signed reset token that expires after 30 minutes
-- Reset token becomes invalid after the password changes
-- Password and confirmation validation
-- Optional SMTP email delivery using environment variables
-
-Password recovery routes:
-
-```text
-/forgot-password
-/reset-password/<token>
-```
-
-For local development without SMTP, the reset link is printed in the Flask
-terminal. For email delivery, copy the variable names from `.env.example` into
-your private `.env` file and enter your mail provider details. Never commit the
-real mail password.
-
-## Registration Email Verification
-
-New accounts must verify their email before login:
-
-- Six-digit OTP sent after registration
-- OTP stored as a secure hash, not plain text
-- OTP expires after 10 minutes
-- Maximum five incorrect attempts
-- Resend OTP with a 60-second cooldown
-- Unverified accounts cannot login
-- Existing accounts remain verified after migration
-
-Email verification routes:
-
-```text
-/verify-email
-/verify-email/resend
-```
-
-## Step 11
-
-This step adds the donation completion workflow:
-
-- Requester invites a verified matched donor
-- Donor accepts or declines the invitation
-- Donor marks the donation completed
-- Requester confirms the received donation unit
-- Donor and requester can download a verified PDF donation certificate
-- One confirmed donation counts as one received unit
-- Request automatically becomes fulfilled after all required units are confirmed
-- Remaining open invitations close after fulfillment
-- Completed donor becomes unavailable until updating their profile
-- Donor last-donation date updates after requester confirmation
-- Status notifications for both requester and donor
-- Owner-only workflow actions and fixed status transitions
-
-Donation workflow routes:
+Donation workflow:
 
 ```text
 /donations
@@ -473,24 +342,27 @@ Donation workflow routes:
 /donations/<id>/certificate
 ```
 
-## Run Locally
+## Interview Explanation
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python run.py
-```
+BloodLink is a full-stack Flask application for connecting blood requesters with verified donors. A user can register, verify email, login, become a donor and also create blood requests. Donor profiles and blood requests are reviewed by an admin. After verification, the system matches donors using blood group and pincode first, then city fallback. The requester can invite donors and track the donation workflow until completion. After confirmation, the donor reward count increases and a PDF certificate can be downloaded.
 
-Open this URL in your browser:
+The backend is built with Flask. SQLite stores the data. Flask-SQLAlchemy is used for models and queries. Flask-Migrate manages database migrations. Flask-Login handles sessions. Jinja templates, Bootstrap and custom CSS build the frontend. ReportLab is used to generate PDF certificates. Gmail SMTP is used for OTP and password reset emails.
 
-```text
-http://127.0.0.1:8000
-```
+## Resume Bullet Points
 
-## Database Commands
+- Built a full-stack blood donor network using Flask, SQLite, SQLAlchemy, Jinja and Bootstrap.
+- Implemented secure authentication with OTP email verification, password hashing and password reset.
+- Designed admin verification workflows for donor profiles and blood requests.
+- Added pincode-first donor matching with city fallback using SQLAlchemy queries.
+- Built donation invitation and completion workflow with in-app notifications.
+- Generated professional PDF donation certificates using ReportLab.
+- Created an admin analytics dashboard using aggregate database queries and CSS charts.
 
-```powershell
-flask db migrate -m "Create user model"
-flask db upgrade
-```
+## Future Improvements
+
+- Deploy on Render or Railway.
+- Add Google OAuth login.
+- Add private chat between requester and donor.
+- Add SMS alerts for emergency requests.
+- Add map-based distance matching.
+- Add automated tests with pytest.
