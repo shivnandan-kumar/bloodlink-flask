@@ -2312,6 +2312,18 @@ textarea.form-control {
     border-top: 3px solid #b9d5d0;
 }
 
+.admin-chart-panel {
+    overflow: hidden;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.admin-chart-panel:hover,
+.admin-chart-panel:focus-within {
+    border-color: #bdd1cd;
+    box-shadow: 0 20px 46px rgba(24, 33, 38, 0.1);
+    transform: translateY(-3px);
+}
+
 .admin-analytics-grid .col-xl-4:first-child .admin-chart-panel {
     border-top-color: var(--blood);
 }
@@ -2334,6 +2346,12 @@ textarea.form-control {
     display: grid;
     gap: 12px;
     grid-template-columns: minmax(72px, 0.42fr) minmax(120px, 1fr) 34px;
+    transition: transform 160ms ease;
+}
+
+.admin-chart-panel:hover .analytics-bar-row,
+.admin-chart-panel:focus-within .analytics-bar-row {
+    transform: translateX(2px);
 }
 
 .analytics-bar-row > span {
@@ -2342,6 +2360,12 @@ textarea.form-control {
     font-weight: 800;
     min-width: 0;
     overflow-wrap: anywhere;
+    transition: color 160ms ease;
+}
+
+.admin-chart-panel:hover .analytics-bar-row > span,
+.admin-chart-panel:focus-within .analytics-bar-row > span {
+    color: var(--blood-dark);
 }
 
 .analytics-bar-row > strong {
@@ -2355,6 +2379,7 @@ textarea.form-control {
     height: 10px;
     min-width: 0;
     overflow: hidden;
+    position: relative;
 }
 
 .analytics-bar-track span {
@@ -2362,10 +2387,65 @@ textarea.form-control {
     border-radius: inherit;
     display: block;
     height: 100%;
+    overflow: hidden;
+    position: relative;
+    transition: filter 180ms ease, transform 180ms ease;
+    transform-origin: left center;
+}
+
+.analytics-bar-track span::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    content: "";
+    inset: 0;
+    position: absolute;
+    transform: translateX(-120%);
+}
+
+.admin-chart-panel:hover .analytics-bar-track span,
+.admin-chart-panel:focus-within .analytics-bar-track span {
+    filter: saturate(1.14);
+    transform: scaleX(1.015);
+}
+
+.admin-chart-panel:hover .analytics-bar-track span::after,
+.admin-chart-panel:focus-within .analytics-bar-track span::after {
+    animation: analytics-bar-shine 900ms ease;
 }
 
 .analytics-bars-status .analytics-bar-track span {
     background: linear-gradient(90deg, var(--teal), #61b8ae);
+}
+
+@keyframes analytics-bar-shine {
+    from {
+        transform: translateX(-120%);
+    }
+
+    to {
+        transform: translateX(120%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-chart-panel,
+    .analytics-bar-row,
+    .analytics-bar-track span {
+        transition: none;
+    }
+
+    .admin-chart-panel:hover,
+    .admin-chart-panel:focus-within,
+    .admin-chart-panel:hover .analytics-bar-row,
+    .admin-chart-panel:focus-within .analytics-bar-row,
+    .admin-chart-panel:hover .analytics-bar-track span,
+    .admin-chart-panel:focus-within .analytics-bar-track span {
+        transform: none;
+    }
+
+    .admin-chart-panel:hover .analytics-bar-track span::after,
+    .admin-chart-panel:focus-within .analytics-bar-track span::after {
+        animation: none;
+    }
 }
 
 .admin-signal-grid {
