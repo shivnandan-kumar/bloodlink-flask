@@ -1,9 +1,10 @@
 from datetime import date, datetime, timezone
 
-from flask import Blueprint, abort, flash, redirect, render_template, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, send_file, url_for
 from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.certificates import generate_donation_certificate
 from app.extensions import db
 from app.matching import find_matching_donors
 from app.models import BloodRequest, Donation, DonorProfile
@@ -35,6 +36,18 @@ def get_requester_donation_or_403(donation_id):
     return donation_record
 
 
+def can_view_donation_certificate(donation_record):
+    donor_profile = current_user.donor_profile
+    return (
+        current_user.is_admin
+        or donation_record.blood_request.requester_id == current_user.id
+        or (
+            donor_profile
+            and donation_record.donor_profile_id == donor_profile.id
+        )
+    )
+
+
 @donation.route("")
 @login_required
 def index():
@@ -55,6 +68,26 @@ def index():
         "donations.html",
         incoming=incoming,
         outgoing=outgoing,
+    )
+
+
+@donation.route("/<int:donation_id>/certificate")
+@login_required
+def certificate(donation_id):
+    donation_record = get_donation_or_404(donation_id)
+    if not can_view_donation_certificate(donation_record):
+        abort(403)
+    if donation_record.status != "Completed" or not donation_record.completed_at:
+        flash("Certificate is available after donation confirmation.", "warning")
+        return redirect(url_for("donation.index"))
+
+    certificate_pdf = generate_donation_certificate(donation_record)
+    filename = f"bloodlink-donation-certificate-{donation_record.id}.pdf"
+    return send_file(
+        certificate_pdf,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name=filename,
     )
 
 

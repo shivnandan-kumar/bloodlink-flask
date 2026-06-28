@@ -20,6 +20,7 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 - Bootstrap 5
 - JavaScript
 - Gmail SMTP
+- ReportLab
 - Git and GitHub
 
 ## Complete Feature List
@@ -40,6 +41,7 @@ This project is complete from Step 1 to Step 12 and is ready for local demo, Git
 - Donor matching using blood group, pincode and city fallback
 - In-app notifications
 - Donation invitation, acceptance and completion flow
+- Stylish PDF donation certificate download
 - Request fulfillment after required units are completed
 - Modern responsive UI
 
@@ -87,7 +89,8 @@ bloodlink-flask/
 9. Donor accepts or declines the invitation.
 10. Donor marks donation as completed.
 11. Requester confirms the received donation.
-12. Request becomes fulfilled when required units are completed.
+12. Donor can download a verified PDF donation certificate.
+13. Request becomes fulfilled when required units are completed.
 
 ## Main Database Models
 
@@ -447,6 +450,7 @@ This step adds the donation completion workflow:
 - Donor accepts or declines the invitation
 - Donor marks the donation completed
 - Requester confirms the received donation unit
+- Donor and requester can download a verified PDF donation certificate
 - One confirmed donation counts as one received unit
 - Request automatically becomes fulfilled after all required units are confirmed
 - Remaining open invitations close after fulfillment
@@ -465,6 +469,7 @@ Donation workflow routes:
 /donations/<id>/donor-complete
 /donations/<id>/confirm
 /donations/<id>/cancel
+/donations/<id>/certificate
 ```
 
 ## Run Locally

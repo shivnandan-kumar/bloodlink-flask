@@ -49,6 +49,7 @@
                                     <span class="donation-action-note"><i data-lucide="clock-3" aria-hidden="true"></i>Waiting for requester confirmation</span>
                                 {% elif record.status == "Completed" %}
                                     <span class="donation-action-note donation-action-complete"><i data-lucide="circle-check" aria-hidden="true"></i>Donation confirmed</span>
+                                    <a class="btn btn-outline-blood btn-sm" href="{{ url_for('donation.certificate', donation_id=record.id) }}"><i data-lucide="download" aria-hidden="true"></i>Certificate</a>
                                 {% endif %}
                             </div>
                         </div>
@@ -87,6 +88,7 @@
                                     <form method="post" action="{{ url_for('donation.confirm', donation_id=record.id) }}"><button class="btn btn-verify btn-sm" type="submit"><i data-lucide="check-check" aria-hidden="true"></i>Confirm receipt</button></form>
                                 {% elif record.status == "Completed" %}
                                     <span class="donation-action-note donation-action-complete"><i data-lucide="circle-check" aria-hidden="true"></i>Completed unit confirmed</span>
+                                    <a class="btn btn-outline-blood btn-sm" href="{{ url_for('donation.certificate', donation_id=record.id) }}"><i data-lucide="download" aria-hidden="true"></i>Certificate</a>
                                 {% endif %}
                             </div>
                         </div>
