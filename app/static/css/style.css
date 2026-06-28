@@ -501,7 +501,30 @@ body {
     border-radius: inherit;
     display: block;
     height: 100%;
+    overflow: hidden;
+    position: relative;
+    transform-origin: left center;
+    transition: filter 180ms ease, transform 180ms ease;
     width: 100%;
+}
+
+.hero-progress-track span::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+    content: "";
+    inset: 0;
+    position: absolute;
+    transform: translateX(-120%);
+}
+
+.hero-glass-card:hover .hero-progress-track span,
+.hero-glass-card:focus-within .hero-progress-track span {
+    filter: saturate(1.14);
+    transform: scaleX(1.015);
+}
+
+.hero-glass-card:hover .hero-progress-track span::after,
+.hero-glass-card:focus-within .hero-progress-track span::after {
+    animation: analytics-bar-shine 900ms ease;
 }
 
 .hero-card-stats {
@@ -1568,7 +1591,13 @@ body {
     flex: 0 0 46px;
     height: 46px;
     justify-content: center;
+    transition: transform 160ms ease;
     width: 46px;
+}
+
+.dashboard-metric:hover .metric-icon,
+.dashboard-metric:focus-within .metric-icon {
+    transform: scale(1.06) rotate(-2deg);
 }
 
 .metric-icon svg {
@@ -2318,7 +2347,9 @@ textarea.form-control {
 }
 
 .admin-chart-panel:hover,
-.admin-chart-panel:focus-within {
+.admin-chart-panel:focus-within,
+.admin-insight-panel:hover,
+.admin-insight-panel:focus-within {
     border-color: #bdd1cd;
     box-shadow: 0 20px 46px rgba(24, 33, 38, 0.1);
     transform: translateY(-3px);
@@ -2426,28 +2457,6 @@ textarea.form-control {
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .admin-chart-panel,
-    .analytics-bar-row,
-    .analytics-bar-track span {
-        transition: none;
-    }
-
-    .admin-chart-panel:hover,
-    .admin-chart-panel:focus-within,
-    .admin-chart-panel:hover .analytics-bar-row,
-    .admin-chart-panel:focus-within .analytics-bar-row,
-    .admin-chart-panel:hover .analytics-bar-track span,
-    .admin-chart-panel:focus-within .analytics-bar-track span {
-        transform: none;
-    }
-
-    .admin-chart-panel:hover .analytics-bar-track span::after,
-    .admin-chart-panel:focus-within .analytics-bar-track span::after {
-        animation: none;
-    }
-}
-
 .admin-signal-grid {
     display: grid;
     gap: 12px;
@@ -2462,6 +2471,14 @@ textarea.form-control {
     gap: 7px;
     min-height: 132px;
     padding: 16px;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.admin-insight-panel:hover .admin-signal-grid > div,
+.admin-insight-panel:focus-within .admin-signal-grid > div {
+    border-color: #bfd7d2;
+    box-shadow: 0 12px 26px rgba(22, 123, 115, 0.08);
+    transform: translateY(-2px);
 }
 
 .admin-signal-grid span {
@@ -2472,7 +2489,13 @@ textarea.form-control {
     display: inline-flex;
     height: 34px;
     justify-content: center;
+    transition: transform 160ms ease;
     width: 34px;
+}
+
+.admin-insight-panel:hover .admin-signal-grid span,
+.admin-insight-panel:focus-within .admin-signal-grid span {
+    transform: scale(1.06) rotate(-2deg);
 }
 
 .admin-signal-grid svg {
@@ -2504,6 +2527,14 @@ textarea.form-control {
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 16px;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.admin-chart-panel:hover .analytics-status-card,
+.admin-chart-panel:focus-within .analytics-status-card {
+    border-color: #bfd7d2;
+    box-shadow: 0 12px 26px rgba(22, 123, 115, 0.08);
+    transform: translateY(-2px);
 }
 
 .analytics-status-card strong,
@@ -2532,6 +2563,12 @@ textarea.form-control {
     gap: 12px;
     grid-template-columns: 38px minmax(0, 1fr) auto;
     padding: 13px 0;
+    transition: transform 160ms ease;
+}
+
+.admin-chart-panel:hover .admin-top-donor-list > div,
+.admin-chart-panel:focus-within .admin-top-donor-list > div {
+    transform: translateX(3px);
 }
 
 .admin-top-donor-list strong,
@@ -3126,6 +3163,14 @@ textarea.form-control {
     display: flex;
     justify-content: space-between;
     padding: 16px 18px;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.donation-progress:hover,
+.donation-progress:focus-within {
+    border-color: #9cc8c0;
+    box-shadow: 0 16px 34px rgba(22, 123, 115, 0.1);
+    transform: translateY(-2px);
 }
 
 .donation-progress > div {
@@ -3143,7 +3188,15 @@ textarea.form-control {
     display: inline-flex;
     height: 40px;
     justify-content: center;
+    transition: transform 160ms ease;
     width: 40px;
+}
+
+.donation-progress:hover .donation-progress-icon,
+.donation-progress:focus-within .donation-progress-icon,
+.donation-overview:hover .donation-overview-icon,
+.donation-overview:focus-within .donation-overview-icon {
+    transform: scale(1.06) rotate(-2deg);
 }
 
 .donation-progress-icon svg,
@@ -3169,6 +3222,14 @@ textarea.form-control {
     border-radius: 8px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.donation-overview:hover,
+.donation-overview:focus-within {
+    border-color: #bdd1cd;
+    box-shadow: 0 18px 40px rgba(24, 33, 38, 0.09);
+    transform: translateY(-2px);
 }
 
 .donation-overview > div {
@@ -3936,5 +3997,62 @@ textarea.form-control {
     .request-list-item:hover,
     .request-list-item:focus {
         transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-chart-panel,
+    .admin-insight-panel,
+    .analytics-bar-row,
+    .analytics-bar-track span,
+    .analytics-status-card,
+    .admin-signal-grid > div,
+    .admin-signal-grid span,
+    .admin-top-donor-list > div,
+    .dashboard-metric .metric-icon,
+    .donation-progress,
+    .donation-progress-icon,
+    .donation-overview,
+    .donation-overview-icon,
+    .hero-progress-track span {
+        transition: none;
+    }
+
+    .admin-chart-panel:hover,
+    .admin-chart-panel:focus-within,
+    .admin-insight-panel:hover,
+    .admin-insight-panel:focus-within,
+    .admin-chart-panel:hover .analytics-bar-row,
+    .admin-chart-panel:focus-within .analytics-bar-row,
+    .admin-chart-panel:hover .analytics-bar-track span,
+    .admin-chart-panel:focus-within .analytics-bar-track span,
+    .admin-chart-panel:hover .analytics-status-card,
+    .admin-chart-panel:focus-within .analytics-status-card,
+    .admin-chart-panel:hover .admin-top-donor-list > div,
+    .admin-chart-panel:focus-within .admin-top-donor-list > div,
+    .admin-insight-panel:hover .admin-signal-grid > div,
+    .admin-insight-panel:focus-within .admin-signal-grid > div,
+    .admin-insight-panel:hover .admin-signal-grid span,
+    .admin-insight-panel:focus-within .admin-signal-grid span,
+    .dashboard-metric:hover .metric-icon,
+    .dashboard-metric:focus-within .metric-icon,
+    .donation-progress:hover,
+    .donation-progress:focus-within,
+    .donation-progress:hover .donation-progress-icon,
+    .donation-progress:focus-within .donation-progress-icon,
+    .donation-overview:hover,
+    .donation-overview:focus-within,
+    .donation-overview:hover .donation-overview-icon,
+    .donation-overview:focus-within .donation-overview-icon,
+    .hero-glass-card:hover .hero-progress-track span,
+    .hero-glass-card:focus-within .hero-progress-track span {
+        transform: none;
+    }
+
+    .admin-chart-panel:hover .analytics-bar-track span::after,
+    .admin-chart-panel:focus-within .analytics-bar-track span::after,
+    .hero-glass-card:hover .hero-progress-track span::after,
+    .hero-glass-card:focus-within .hero-progress-track span::after {
+        animation: none;
     }
 }
