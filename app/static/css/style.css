@@ -1464,7 +1464,7 @@ body {
 .dashboard-header {
     background:
         linear-gradient(135deg, #17252b 0%, #1e3337 55%, #173732 100%);
-    border-bottom: 4px solid var(--blood);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
     color: #ffffff;
 }
 
