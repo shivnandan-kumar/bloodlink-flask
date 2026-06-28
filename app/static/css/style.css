@@ -1555,6 +1555,10 @@ body {
     z-index: 3;
 }
 
+.dashboard-page:not(.admin-page) .dashboard-metrics {
+    margin-top: 0;
+}
+
 .dashboard-metric {
     align-items: center;
     border-top: 4px solid #617178;
