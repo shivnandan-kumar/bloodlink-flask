@@ -24,7 +24,13 @@ from app.extensions import db
 from app.mailer import send_password_reset_email, send_verification_otp_email
 from app.models import User
 from app.password_reset import generate_reset_token, verify_reset_token
-from app.security import password_strength_errors
+from app.security import (
+    clear_failed_logins,
+    is_login_rate_limited,
+    login_rate_limit_key,
+    password_strength_errors,
+    record_failed_login,
+)
 
 
 auth = Blueprint("auth", __name__)
@@ -118,6 +124,14 @@ def login():
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
         remember = request.form.get("remember") == "on"
+        limit_key = login_rate_limit_key(request.remote_addr, email)
+        max_attempts = current_app.config["LOGIN_RATE_LIMIT_ATTEMPTS"]
+        window_seconds = current_app.config["LOGIN_RATE_LIMIT_WINDOW"]
+
+        if is_login_rate_limited(limit_key, max_attempts, window_seconds):
+            flash("Too many login attempts. Please try again later.", "danger")
+            return render_template("login.html"), 429
+
         user = db.session.scalar(db.select(User).where(User.email == email))
 
         if user and user.check_password(password):
@@ -126,6 +140,7 @@ def login():
                 flash("Verify your email before logging in.", "warning")
                 return redirect(url_for("auth.verify_email"))
 
+            clear_failed_logins(limit_key)
             login_user(user, remember=remember)
             flash(f"Welcome back, {user.name}!", "success")
 
@@ -134,6 +149,7 @@ def login():
                 return redirect(next_page)
             return redirect(url_for("main.home"))
 
+        record_failed_login(limit_key, window_seconds)
         flash("Invalid email or password.", "danger")
 
     return render_template("login.html")

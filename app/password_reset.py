@@ -8,9 +8,6 @@ from app.extensions import db
 from app.models import User
 
 
-TOKEN_SALT = "bloodlink-password-reset"
-
-
 def password_fingerprint(user):
     return hashlib.sha256(user.password_hash.encode("utf-8")).hexdigest()[:20]
 
@@ -22,7 +19,7 @@ def generate_reset_token(user):
             "user_id": user.id,
             "password": password_fingerprint(user),
         },
-        salt=TOKEN_SALT,
+        salt=current_app.config["RESET_TOKEN_SALT"],
     )
 
 
@@ -31,7 +28,7 @@ def verify_reset_token(token):
     try:
         data = serializer.loads(
             token,
-            salt=TOKEN_SALT,
+            salt=current_app.config["RESET_TOKEN_SALT"],
             max_age=current_app.config["RESET_TOKEN_MAX_AGE"],
         )
     except (BadSignature, SignatureExpired):

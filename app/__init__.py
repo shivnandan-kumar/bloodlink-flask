@@ -10,10 +10,15 @@ from app.security import password_strength_errors
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    if hasattr(config_class, "validate_for_startup"):
+        config_class.validate_for_startup()
 
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    login_manager.login_view = "auth.login"
+    login_manager.login_message_category = "warning"
+    login_manager.session_protection = "strong"
 
     from app.routes import main
     from app.auth import auth
@@ -131,5 +136,25 @@ def create_app(config_class=Config):
     @app.errorhandler(413)
     def file_too_large(error):
         return render_template("413.html"), 413
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return render_template("500.html"), 500
+
+    @app.after_request
+    def add_security_headers(response):
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault(
+            "Permissions-Policy",
+            "camera=(), microphone=(), geolocation=()",
+        )
+        if app.config.get("ENVIRONMENT") == "production":
+            response.headers.setdefault(
+                "Strict-Transport-Security",
+                "max-age=31536000; includeSubDomains",
+            )
+        return response
 
     return app

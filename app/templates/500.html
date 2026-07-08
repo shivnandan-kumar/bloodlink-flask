@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error | BloodLink{% endblock %}
+{% block body_class %}dashboard-page overview-dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-5">
+        <p class="section-kicker mb-2">Server error</p>
+        <h1 class="h2 fw-bold mb-2">Something went wrong</h1>
+        <p class="text-secondary mb-0">Please try again in a few moments.</p>
+    </div>
+</section>
+
+<section class="container py-5">
+    <a class="btn btn-blood" href="{{ url_for('main.home') }}">Back to home</a>
+</section>
+{% endblock %}
