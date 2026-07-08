@@ -17,7 +17,7 @@ from app.constants import BLOOD_GROUPS, URGENCY_LEVELS
 from app.extensions import db
 from app.matching import donor_match_level, find_matching_donors
 from app.models import BloodRequest, Donation, DonorProfile, User
-from app.notifications import create_notification
+from app.notifications import create_notification, notify_admins
 from app.uploads import (
     UploadValidationError,
     delete_prescription,
@@ -192,6 +192,17 @@ def create():
             try:
                 db.session.add(blood_request_record)
                 db.session.flush()
+                notify_admins(
+                    title="New blood request needs review",
+                    message=(
+                        f"{current_user.name} submitted a "
+                        f"{blood_request_record.blood_group} request at "
+                        f"{blood_request_record.hospital_name}."
+                    ),
+                    category="warning" if blood_request_record.is_emergency else "review",
+                    link=f"/admin/requests/{blood_request_record.id}",
+                    event_key=f"blood-request-{blood_request_record.id}-submitted",
+                )
                 if blood_request_record.is_emergency:
                     notify_emergency_donors(blood_request_record)
                 db.session.commit()

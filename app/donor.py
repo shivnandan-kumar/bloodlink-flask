@@ -16,6 +16,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.constants import BLOOD_GROUPS
 from app.extensions import db
 from app.models import DonorProfile
+from app.notifications import notify_admins
 from app.uploads import (
     UploadValidationError,
     blood_group_proof_upload_directory,
@@ -141,6 +142,17 @@ def register():
 
             try:
                 db.session.add(profile)
+                db.session.flush()
+                notify_admins(
+                    title="New donor verification request",
+                    message=(
+                        f"{current_user.name} submitted a donor profile for "
+                        "admin verification."
+                    ),
+                    category="review",
+                    link=f"/admin/donors/{profile.id}",
+                    event_key=f"donor-profile-{profile.id}-submitted",
+                )
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()
@@ -241,6 +253,17 @@ def edit():
             current_user.blood_group = data["blood_group"]
 
             try:
+                db.session.flush()
+                notify_admins(
+                    title="Donor profile needs review",
+                    message=(
+                        f"{current_user.name} updated donor details and needs "
+                        "verification again."
+                    ),
+                    category="review",
+                    link=f"/admin/donors/{donor_profile.id}",
+                    event_key=f"donor-profile-{donor_profile.id}-resubmitted",
+                )
                 db.session.commit()
             except SQLAlchemyError:
                 db.session.rollback()

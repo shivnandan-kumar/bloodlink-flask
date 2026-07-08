@@ -6,7 +6,7 @@ from sqlalchemy import func
 
 from app.extensions import db
 from app.matching import find_matching_donors
-from app.models import BloodRequest, Notification
+from app.models import BloodRequest, Notification, User
 
 
 notifications = Blueprint("notifications", __name__, url_prefix="/notifications")
@@ -40,6 +40,23 @@ def create_notification(
     )
     db.session.add(notification)
     return notification
+
+
+def notify_admins(title, message, category="info", link=None, event_key=None):
+    admins = db.session.scalars(db.select(User).where(User.is_admin.is_(True))).all()
+    notifications = []
+    for admin in admins:
+        notifications.append(
+            create_notification(
+                user_id=admin.id,
+                title=title,
+                message=message,
+                category=category,
+                link=link,
+                event_key=event_key,
+            )
+        )
+    return notifications
 
 
 def notify_request_matches(blood_request_record, donors):
