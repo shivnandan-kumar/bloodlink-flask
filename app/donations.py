@@ -84,12 +84,8 @@ def serialize_chat_message(message_record):
 def can_view_donation_certificate(donation_record):
     donor_profile = current_user.donor_profile
     return (
-        current_user.is_admin
-        or donation_record.blood_request.requester_id == current_user.id
-        or (
-            donor_profile
-            and donation_record.donor_profile_id == donor_profile.id
-        )
+        donor_profile
+        and donation_record.donor_profile_id == donor_profile.id
     )
 
 
