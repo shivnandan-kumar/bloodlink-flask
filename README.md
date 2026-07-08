@@ -340,13 +340,15 @@ Donation workflow:
 /donations/<id>/confirm
 /donations/<id>/cancel
 /donations/<id>/certificate
+/donations/<id>/chat
+/donations/<id>/chat/messages
 ```
 
 ## Interview Explanation
 
-BloodLink is a full-stack Flask application for connecting blood requesters with verified donors. A user can register, verify email, login, become a donor and also create blood requests. Donor profiles and blood requests are reviewed by an admin. After verification, the system matches donors using blood group and pincode first, then city fallback. The requester can invite donors and track the donation workflow until completion. After confirmation, the donor reward count increases and a PDF certificate can be downloaded.
+BloodLink is a full-stack Flask application for connecting blood requesters with verified donors. A user can register, verify email, login, become a donor and also create blood requests. Donor profiles and blood requests are reviewed by an admin. After verification, the system matches donors using blood group and pincode first, then city fallback. The requester can invite donors, coordinate through private chat and track the donation workflow until completion. After confirmation, the donor reward count increases and a PDF certificate can be downloaded.
 
-The backend is built with Flask. SQLite stores the data. Flask-SQLAlchemy is used for models and queries. Flask-Migrate manages database migrations. Flask-Login handles sessions. Jinja templates, Bootstrap and custom CSS build the frontend. ReportLab is used to generate PDF certificates. Gmail SMTP is used for OTP and password reset emails.
+The backend is built with Flask. SQLite stores the data. Flask-SQLAlchemy is used for models and queries. Flask-Migrate manages database migrations. Flask-Login handles sessions. Jinja templates, Bootstrap, JavaScript and custom CSS build the frontend. ReportLab is used to generate PDF certificates. Gmail SMTP is used for OTP and password reset emails.
 
 ## Resume Bullet Points
 
@@ -355,6 +357,7 @@ The backend is built with Flask. SQLite stores the data. Flask-SQLAlchemy is use
 - Designed admin verification workflows for donor profiles and blood requests.
 - Added pincode-first donor matching with city fallback using SQLAlchemy queries.
 - Built donation invitation and completion workflow with in-app notifications.
+- Added private AJAX chat between requester and donor after donation acceptance.
 - Generated professional PDF donation certificates using ReportLab.
 - Created an admin analytics dashboard using aggregate database queries and CSS charts.
 
@@ -362,7 +365,6 @@ The backend is built with Flask. SQLite stores the data. Flask-SQLAlchemy is use
 
 - Deploy on Render or Railway.
 - Add Google OAuth login.
-- Add private chat between requester and donor.
 - Add SMS alerts for emergency requests.
 - Add map-based distance matching.
 - Add automated tests with pytest.

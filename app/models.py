@@ -55,6 +55,12 @@ class User(UserMixin, db.Model):
         cascade="all, delete-orphan",
         lazy="select",
     )
+    chat_messages = db.relationship(
+        "ChatMessage",
+        back_populates="sender",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -258,9 +264,44 @@ class Donation(db.Model):
 
     blood_request = db.relationship("BloodRequest", back_populates="donations")
     donor_profile = db.relationship("DonorProfile", back_populates="donations")
+    chat_messages = db.relationship(
+        "ChatMessage",
+        back_populates="donation",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
 
     def __repr__(self):
         return f"<Donation id={self.id} status={self.status}>"
+
+
+class ChatMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    donation_id = db.Column(
+        db.Integer,
+        db.ForeignKey("donation.id"),
+        nullable=False,
+        index=True,
+    )
+    sender_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False,
+        index=True,
+    )
+    message = db.Column(db.String(1000), nullable=False)
+    created_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+        index=True,
+    )
+
+    donation = db.relationship("Donation", back_populates="chat_messages")
+    sender = db.relationship("User", back_populates="chat_messages")
+
+    def __repr__(self):
+        return f"<ChatMessage id={self.id} donation_id={self.donation_id}>"
 
 
 class Notification(db.Model):

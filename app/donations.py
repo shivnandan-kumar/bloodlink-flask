@@ -1,17 +1,28 @@
 from datetime import date, datetime, timezone
 
-from flask import Blueprint, abort, flash, redirect, render_template, send_file, url_for
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    url_for,
+)
 from flask_login import current_user, login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.certificates import generate_donation_certificate
 from app.extensions import db
 from app.matching import find_matching_donors
-from app.models import BloodRequest, Donation, DonorProfile
+from app.models import BloodRequest, ChatMessage, Donation, DonorProfile
 from app.notifications import create_notification
 
 
 donation = Blueprint("donation", __name__, url_prefix="/donations")
+CHAT_ENABLED_STATUSES = ("Accepted", "DonorCompleted", "Completed")
 
 
 def get_donation_or_404(donation_id):
@@ -34,6 +45,40 @@ def get_requester_donation_or_403(donation_id):
     if donation_record.blood_request.requester_id != current_user.id:
         abort(403)
     return donation_record
+
+
+def is_donation_participant(donation_record):
+    donor_profile = current_user.donor_profile
+    return donation_record.blood_request.requester_id == current_user.id or (
+        donor_profile and donation_record.donor_profile_id == donor_profile.id
+    )
+
+
+def get_chat_donation_or_403(donation_id):
+    donation_record = get_donation_or_404(donation_id)
+    if not is_donation_participant(donation_record):
+        abort(403)
+    if donation_record.status not in CHAT_ENABLED_STATUSES:
+        flash("Chat opens after the donor accepts the invitation.", "warning")
+        return None
+    return donation_record
+
+
+def chat_recipient_user(donation_record):
+    if donation_record.blood_request.requester_id == current_user.id:
+        return donation_record.donor_profile.user
+    return donation_record.blood_request.requester
+
+
+def serialize_chat_message(message_record):
+    return {
+        "id": message_record.id,
+        "message": message_record.message,
+        "sender_id": message_record.sender_id,
+        "sender_name": message_record.sender.name,
+        "is_mine": message_record.sender_id == current_user.id,
+        "created_at": message_record.created_at.strftime("%d %b %Y, %I:%M %p"),
+    }
 
 
 def can_view_donation_certificate(donation_record):
@@ -68,7 +113,89 @@ def index():
         "donations.html",
         incoming=incoming,
         outgoing=outgoing,
+        chat_enabled_statuses=CHAT_ENABLED_STATUSES,
     )
+
+
+@donation.route("/<int:donation_id>/chat")
+@login_required
+def chat(donation_id):
+    donation_record = get_chat_donation_or_403(donation_id)
+    if not donation_record:
+        return redirect(url_for("donation.index"))
+    messages = db.session.scalars(
+        db.select(ChatMessage)
+        .where(ChatMessage.donation_id == donation_id)
+        .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
+    ).all()
+    return render_template(
+        "donation_chat.html",
+        donation_record=donation_record,
+        messages=messages,
+        recipient=chat_recipient_user(donation_record),
+    )
+
+
+@donation.route("/<int:donation_id>/chat/messages")
+@login_required
+def chat_messages(donation_id):
+    donation_record = get_chat_donation_or_403(donation_id)
+    if not donation_record:
+        return jsonify({"messages": []}), 403
+
+    last_id = request.args.get("after", 0, type=int)
+    messages = db.session.scalars(
+        db.select(ChatMessage)
+        .where(
+            ChatMessage.donation_id == donation_id,
+            ChatMessage.id > last_id,
+        )
+        .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
+    ).all()
+    return jsonify(
+        {"messages": [serialize_chat_message(message) for message in messages]}
+    )
+
+
+@donation.route("/<int:donation_id>/chat/messages", methods=["POST"])
+@login_required
+def send_chat_message(donation_id):
+    donation_record = get_chat_donation_or_403(donation_id)
+    if not donation_record:
+        return jsonify({"error": "Chat is not available."}), 403
+
+    message_text = request.form.get("message", "").strip()
+    if not message_text:
+        return jsonify({"error": "Message cannot be empty."}), 400
+    if len(message_text) > 1000:
+        return jsonify({"error": "Message must be 1000 characters or fewer."}), 400
+
+    message_record = ChatMessage(
+        donation=donation_record,
+        sender=current_user,
+        message=message_text,
+    )
+    recipient = chat_recipient_user(donation_record)
+    try:
+        db.session.add(message_record)
+        db.session.flush()
+        create_notification(
+            user_id=recipient.id,
+            title="New chat message",
+            message=(
+                f"{current_user.name} sent a message about request "
+                f"#{donation_record.blood_request.id}."
+            ),
+            category="info",
+            link=f"/donations/{donation_record.id}/chat",
+            event_key=f"chat-message-{message_record.id}",
+        )
+        db.session.commit()
+    except SQLAlchemyError:
+        db.session.rollback()
+        return jsonify({"error": "Message could not be sent."}), 500
+
+    return jsonify({"message": serialize_chat_message(message_record)}), 201
 
 
 @donation.route("/<int:donation_id>/certificate")

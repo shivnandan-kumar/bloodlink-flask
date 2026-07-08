@@ -40,6 +40,9 @@
                         <div class="donation-card-footer">
                             <small>Invited {{ record.invited_at.strftime("%d %b %Y, %I:%M %p") }}</small>
                             <div class="donation-actions">
+                                {% if record.status in chat_enabled_statuses %}
+                                    <a class="btn btn-outline-blood btn-sm" href="{{ url_for('donation.chat', donation_id=record.id) }}"><i data-lucide="messages-square" aria-hidden="true"></i>Chat</a>
+                                {% endif %}
                                 {% if record.status == "Invited" %}
                                     <form method="post" action="{{ url_for('donation.decline', donation_id=record.id) }}"><button class="btn btn-light btn-sm" type="submit">Decline</button></form>
                                     <form method="post" action="{{ url_for('donation.accept', donation_id=record.id) }}"><button class="btn btn-blood btn-sm" type="submit"><i data-lucide="check" aria-hidden="true"></i>Accept</button></form>
@@ -82,6 +85,9 @@
                         <div class="donation-card-footer">
                             <small>Invited {{ record.invited_at.strftime("%d %b %Y, %I:%M %p") }}</small>
                             <div class="donation-actions">
+                                {% if record.status in chat_enabled_statuses %}
+                                    <a class="btn btn-outline-blood btn-sm" href="{{ url_for('donation.chat', donation_id=record.id) }}"><i data-lucide="messages-square" aria-hidden="true"></i>Chat</a>
+                                {% endif %}
                                 {% if record.status in ("Invited", "Accepted") %}
                                     <form method="post" action="{{ url_for('donation.cancel', donation_id=record.id) }}"><button class="btn btn-light btn-sm" type="submit">Cancel invitation</button></form>
                                 {% elif record.status == "DonorCompleted" %}

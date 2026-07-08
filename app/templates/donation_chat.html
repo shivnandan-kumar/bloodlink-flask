@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Donation Chat | BloodLink{% endblock %}
+{% block body_class %}dashboard-page overview-dashboard-page{% endblock %}
+
+{% block content %}
+<section class="module-header">
+    <div class="container py-4 py-md-5">
+        <a class="back-link" href="{{ url_for('donation.index') }}">Back to donation activity</a>
+        <p class="section-kicker mt-4 mb-2">Private coordination</p>
+        <h1 class="h2 fw-bold mb-2">Chat with {{ recipient.name }}</h1>
+        <p class="text-secondary mb-0">Coordinate timing, hospital details and donation updates for this accepted invitation.</p>
+    </div>
+</section>
+
+<section class="container py-4 py-md-5">
+    <div class="donation-chat-layout">
+        <aside class="dashboard-panel donation-chat-summary">
+            <span class="request-blood-group">{{ donation_record.blood_request.blood_group }}</span>
+            <h2>{{ donation_record.blood_request.patient_name }}</h2>
+            <p>{{ donation_record.blood_request.hospital_name }}</p>
+            <dl class="chat-summary-list">
+                <div><dt>Request</dt><dd>#{{ donation_record.blood_request.id }}</dd></div>
+                <div><dt>Status</dt><dd><span class="donation-status donation-status-{{ donation_record.status|lower }}">{{ "Awaiting requester" if donation_record.status == "DonorCompleted" else donation_record.status }}</span></dd></div>
+                <div><dt>Location</dt><dd>{{ donation_record.blood_request.city }}{% if donation_record.blood_request.pincode %} - {{ donation_record.blood_request.pincode }}{% endif %}</dd></div>
+                <div><dt>Contact</dt><dd><a href="tel:{{ donation_record.blood_request.contact_phone }}">{{ donation_record.blood_request.contact_phone }}</a></dd></div>
+            </dl>
+        </aside>
+
+        <section class="dashboard-panel donation-chat-panel" aria-labelledby="chat-heading">
+            <div class="section-heading">
+                <h2 class="h5 fw-bold mb-1" id="chat-heading">Messages</h2>
+                <p class="text-secondary mb-0">Only the requester and accepted donor can access this conversation.</p>
+            </div>
+            <div class="chat-message-list" id="chatMessages" data-last-id="{{ messages[-1].id if messages else 0 }}">
+                {% for message in messages %}
+                    <article class="chat-message {% if message.sender_id == current_user.id %}chat-message-mine{% endif %}" data-message-id="{{ message.id }}">
+                        <div>
+                            <strong>{{ message.sender.name }}</strong>
+                            <small>{{ message.created_at.strftime("%d %b %Y, %I:%M %p") }}</small>
+                        </div>
+                        <p>{{ message.message }}</p>
+                    </article>
+                {% else %}
+                    <div class="chat-empty-state" id="chatEmptyState">
+                        <i data-lucide="messages-square" aria-hidden="true"></i>
+                        <h3>No messages yet</h3>
+                        <p>Send the first message to coordinate this donation.</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <form class="chat-compose" id="chatForm" action="{{ url_for('donation.send_chat_message', donation_id=donation_record.id) }}" data-messages-url="{{ url_for('donation.chat_messages', donation_id=donation_record.id) }}">
+                <label class="visually-hidden" for="message">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="2" maxlength="1000" placeholder="Type your message..." required></textarea>
+                <button class="btn btn-blood" type="submit"><i data-lucide="send" aria-hidden="true"></i>Send</button>
+            </form>
+            <p class="chat-error" id="chatError" aria-live="polite"></p>
+        </section>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const chatMessages = document.getElementById("chatMessages");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("message");
+    const chatError = document.getElementById("chatError");
+    const chatEmptyState = document.getElementById("chatEmptyState");
+
+    function renderMessage(message) {
+        const article = document.createElement("article");
+        article.className = `chat-message ${message.is_mine ? "chat-message-mine" : ""}`;
+        article.dataset.messageId = message.id;
+
+        const meta = document.createElement("div");
+        const sender = document.createElement("strong");
+        sender.textContent = message.sender_name;
+        const time = document.createElement("small");
+        time.textContent = message.created_at;
+        meta.append(sender, time);
+
+        const text = document.createElement("p");
+        text.textContent = message.message;
+        article.append(meta, text);
+        chatMessages.append(article);
+        chatMessages.dataset.lastId = message.id;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (chatEmptyState) {
+            chatEmptyState.remove();
+        }
+    }
+
+    async function loadMessages() {
+        const lastId = chatMessages.dataset.lastId || "0";
+        const response = await fetch(`${chatForm.dataset.messagesUrl}?after=${lastId}`);
+        if (!response.ok) {
+            return;
+        }
+        const data = await response.json();
+        data.messages.forEach(renderMessage);
+    }
+
+    chatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        chatError.textContent = "";
+        const formData = new FormData(chatForm);
+        const response = await fetch(chatForm.action, {
+            method: "POST",
+            body: formData,
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            chatError.textContent = data.error || "Message could not be sent.";
+            return;
+        }
+        renderMessage(data.message);
+        chatInput.value = "";
+        chatInput.focus();
+    });
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    window.setInterval(loadMessages, 4000);
+</script>
+{% endblock %}
